@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   SearchBar,
@@ -8,7 +8,7 @@ import {
   CardPagination,
   DeleteConfirmDialog,
 } from "../components";
-import { useCards } from "../hooks";
+import { useCards, useSyncCards } from "../hooks";
 import type { CardListParams } from "../types";
 
 const DEFAULT_PAGE_SIZE = 10;
@@ -22,6 +22,9 @@ const DEFAULT_PAGE_SIZE = 10;
  */
 export function CardListPage() {
   const [searchParams] = useSearchParams();
+
+  // Sync cards between API and IndexedDB on mount
+  const { isSyncing } = useSyncCards();
 
   // Parse query params with defaults
   const params: CardListParams = {
@@ -40,7 +43,12 @@ export function CardListPage() {
       <div className="flex flex-col gap-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-3xl font-bold">Card Collection</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-3xl font-bold">Card Collection</h1>
+            {isSyncing && (
+              <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
+            )}
+          </div>
           <Button asChild>
             <Link to="/cards/new">
               <Plus className="h-4 w-4" />

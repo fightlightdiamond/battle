@@ -98,6 +98,27 @@ export const CardService = {
   },
 
   /**
+   * Create a new card with a pre-generated ID
+   * Used for syncing between API and IndexedDB with consistent IDs
+   */
+  async createWithId(cardData: StoredCard): Promise<Card> {
+    const db = await getDB();
+    await db.add("cards", cardData);
+    return toCard(cardData);
+  },
+
+  /**
+   * Create or update a card (upsert)
+   * If card with same ID exists, it will be replaced
+   * Used for syncing to avoid duplicate key errors
+   */
+  async upsert(cardData: StoredCard): Promise<Card> {
+    const db = await getDB();
+    await db.put("cards", cardData);
+    return toCard(cardData);
+  },
+
+  /**
    * Update an existing card
    */
   async update(id: string, input: CardFormInput): Promise<Card | null> {

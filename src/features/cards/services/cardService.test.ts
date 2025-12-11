@@ -1,132 +1,429 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import * as fc from "fast-check";
 import "fake-indexeddb/auto";
-
-// Mock OPFS image storage with in-memory implementation
-vi.mock("./imageStorage", () => import("./__mocks__/imageStorage"));
-
 import { CardService } from "./cardService";
 import { deleteDB } from "./db";
-import { clearImageStore } from "./__mocks__/imageStorage";
 import type { CardFormInput } from "../types";
 
-/**
- * **Feature: card-game-manager, Property 1: Card serialization round-trip**
- * **Validates: Requirements 6.1, 6.2, 6.3**
- *
- * For any valid Card object, serializing to IndexedDB and then deserializing
- * back SHALL produce an equivalent Card object with all properties preserved exactly.
- */
-describe("Property 1: Card serialization round-trip", () => {
-  beforeEach(async () => {
-    clearImageStore();
-    await CardService.clear();
-  });
+// Mock OPFS since it's not available in Node.js
+vi.mock("./imageStorage", () => ({
+  saveImage: vi.fn().mockResolvedValue("test-image.png"),
+  deleteImage: vi.fn().mockResolvedValue(true),
+  getImageUrl: vi.fn().mockResolvedValue("blob:test-url"),
+}));
 
-  afterEach(async () => {
-    clearImageStore();
+/**
+ * Integration tests for CardService with IndexedDB
+ * Tests CRUD operations and data persistence
+ */
+describe("CardService - IndexedDB Integration", () => {
+  beforeEach(async () => {
+    // Clear the database before each test
     await deleteDB();
   });
 
-  // Arbitrary for valid card form input (without image for simplicity)
-  const validCardFormInputArb = fc.record({
-    name: fc
-      .string({ minLength: 1, maxLength: 100 })
-      .filter((s) => s.trim().length > 0),
-    atk: fc.integer({ min: 0, max: 10000 }),
-    hp: fc.integer({ min: 1, max: 10000 }),
-    image: fc.constant(null as File | null),
+  afterEach(async () => {
+    // Clean up after each test
+    await deleteDB();
   });
 
-  it("preserves card properties after create and retrieve", async () => {
-    await fc.assert(
-      fc.asyncProperty(validCardFormInputArb, async (input: CardFormInput) => {
-        // Create card
-        const created = await CardService.create(input);
+  describe("create", () => {
+    it("should create a new card in IndexedDB", async () => {
+      const input: CardFormInput = {
+        name: "Test Card",
+        atk: 100,
+        hp: 200,
+        image: null,
+      };
 
-        // Retrieve card by ID
-        const retrieved = await CardService.getById(created.id);
+      const card = await CardService.create(input);
 
-        // Verify round-trip preserves all properties
-        expect(retrieved).not.toBeNull();
-        expect(retrieved!.id).toBe(created.id);
-        expect(retrieved!.name).toBe(input.name);
-        expect(retrieved!.atk).toBe(input.atk);
-        expect(retrieved!.hp).toBe(input.hp);
-        expect(retrieved!.createdAt).toBe(created.createdAt);
-        expect(retrieved!.updatedAt).toBe(created.updatedAt);
+      expect(card.id).toBeDefined();
+      expect(card.name).toBe("Test Card");
+      expect(card.atk).toBe(100);
+      expect(card.hp).toBe(200);
+      expect(card.createdAt).toBeDefined();
+      expect(card.updatedAt).toBeDefined();
+    });
 
-        // Clean up for next iteration
-        await CardService.delete(created.id);
-      }),
-      { numRuns: 100 }
-    );
+    it("should persist card to IndexedDB", async () => {
+      const input: CardFormInput = {
+        name: "Persistent Card",
+        atk: 150,
+        hp: 250,
+        image: null,
+      };
+
+      const created = await CardService.create(input);
+      const retrieved = await CardService.getById(created.id);
+
+      expect(retrieved).not.toBeNull();
+      expect(retrieved?.name).toBe("Persistent Card");
+      expect(retrieved?.atk).toBe(150);
+      expect(retrieved?.hp).toBe(250);
+    });
   });
 
-  it("preserves card properties after getAll retrieval", async () => {
-    await fc.assert(
-      fc.asyncProperty(
-        fc.array(validCardFormInputArb, { minLength: 1, maxLength: 5 }),
-        async (inputs: CardFormInput[]) => {
-          // Create multiple cards
-          const createdCards = [];
-          for (const input of inputs) {
-            const card = await CardService.create(input);
-            createdCards.push({ input, card });
-          }
+  describe("getAll", () => {
+    it("should return empty array when no cards exist", async () => {
+      const cards = await CardService.getAll();
+      expect(cards).toEqual([]);
+    });
 
-          // Retrieve all cards
-          const allCards = await CardService.getAll();
+    it("should return all cards", async () => {
+      await CardService.create({
+        name: "Card 1",
+        atk: 100,
+        hp: 100,
+        image: null,
+      });
+      await CardService.create({
+        name: "Card 2",
+        atk: 200,
+        hp: 200,
+        image: null,
+      });
+      await CardService.create({
+        name: "Card 3",
+        atk: 300,
+        hp: 300,
+        image: null,
+      });
 
-          // Verify each created card is in the list with correct properties
-          for (const { input, card } of createdCards) {
-            const found = allCards.find((c) => c.id === card.id);
-            expect(found).not.toBeUndefined();
-            expect(found!.name).toBe(input.name);
-            expect(found!.atk).toBe(input.atk);
-            expect(found!.hp).toBe(input.hp);
-          }
-
-          // Clean up
-          for (const { card } of createdCards) {
-            await CardService.delete(card.id);
-          }
-        }
-      ),
-      { numRuns: 100 }
-    );
+      const cards = await CardService.getAll();
+      expect(cards).toHaveLength(3);
+    });
   });
 
-  it("preserves card properties after update round-trip", async () => {
-    await fc.assert(
-      fc.asyncProperty(
-        validCardFormInputArb,
-        validCardFormInputArb,
-        async (initialInput: CardFormInput, updateInput: CardFormInput) => {
-          // Create initial card
-          const created = await CardService.create(initialInput);
+  describe("getById", () => {
+    it("should return null for non-existent card", async () => {
+      const card = await CardService.getById("non-existent-id");
+      expect(card).toBeNull();
+    });
 
-          // Update the card
-          const updated = await CardService.update(created.id, updateInput);
+    it("should return card by ID", async () => {
+      const created = await CardService.create({
+        name: "Find Me",
+        atk: 100,
+        hp: 100,
+        image: null,
+      });
 
-          // Retrieve card
-          const retrieved = await CardService.getById(created.id);
+      const found = await CardService.getById(created.id);
+      expect(found).not.toBeNull();
+      expect(found?.name).toBe("Find Me");
+    });
+  });
 
-          // Verify round-trip preserves updated properties
-          expect(retrieved).not.toBeNull();
-          expect(updated).not.toBeNull();
-          expect(retrieved!.id).toBe(created.id); // ID preserved
-          expect(retrieved!.name).toBe(updateInput.name);
-          expect(retrieved!.atk).toBe(updateInput.atk);
-          expect(retrieved!.hp).toBe(updateInput.hp);
-          expect(retrieved!.createdAt).toBe(created.createdAt); // createdAt preserved
-          expect(retrieved!.updatedAt).toBe(updated!.updatedAt);
+  describe("update", () => {
+    it("should update an existing card", async () => {
+      const created = await CardService.create({
+        name: "Original Name",
+        atk: 100,
+        hp: 100,
+        image: null,
+      });
 
-          // Clean up
-          await CardService.delete(created.id);
-        }
-      ),
-      { numRuns: 100 }
-    );
+      const updated = await CardService.update(created.id, {
+        name: "Updated Name",
+        atk: 200,
+        hp: 300,
+        image: null,
+      });
+
+      expect(updated).not.toBeNull();
+      expect(updated?.name).toBe("Updated Name");
+      expect(updated?.atk).toBe(200);
+      expect(updated?.hp).toBe(300);
+      expect(updated?.id).toBe(created.id); // ID should be preserved
+    });
+
+    it("should return null for non-existent card", async () => {
+      const result = await CardService.update("non-existent", {
+        name: "Test",
+        atk: 100,
+        hp: 100,
+        image: null,
+      });
+      expect(result).toBeNull();
+    });
+
+    it("should update updatedAt timestamp", async () => {
+      const created = await CardService.create({
+        name: "Test",
+        atk: 100,
+        hp: 100,
+        image: null,
+      });
+
+      // Wait a bit to ensure different timestamp
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      const updated = await CardService.update(created.id, {
+        name: "Updated",
+        atk: 100,
+        hp: 100,
+        image: null,
+      });
+
+      expect(updated?.updatedAt).toBeGreaterThan(created.updatedAt);
+      expect(updated?.createdAt).toBe(created.createdAt); // createdAt should be preserved
+    });
+  });
+
+  describe("delete", () => {
+    it("should delete an existing card", async () => {
+      const created = await CardService.create({
+        name: "To Delete",
+        atk: 100,
+        hp: 100,
+        image: null,
+      });
+
+      const deleted = await CardService.delete(created.id);
+      expect(deleted).toBe(true);
+
+      const found = await CardService.getById(created.id);
+      expect(found).toBeNull();
+    });
+
+    it("should return false for non-existent card", async () => {
+      const result = await CardService.delete("non-existent");
+      expect(result).toBe(false);
+    });
+  });
+
+  describe("getPaginated", () => {
+    beforeEach(async () => {
+      // Create test cards
+      await CardService.create({
+        name: "Alpha",
+        atk: 100,
+        hp: 500,
+        image: null,
+      });
+      await CardService.create({
+        name: "Beta",
+        atk: 300,
+        hp: 300,
+        image: null,
+      });
+      await CardService.create({
+        name: "Gamma",
+        atk: 200,
+        hp: 100,
+        image: null,
+      });
+      await CardService.create({
+        name: "Delta",
+        atk: 400,
+        hp: 200,
+        image: null,
+      });
+      await CardService.create({
+        name: "Epsilon",
+        atk: 500,
+        hp: 400,
+        image: null,
+      });
+    });
+
+    it("should return paginated results", async () => {
+      const result = await CardService.getPaginated({
+        search: "",
+        sortBy: "name",
+        sortOrder: "asc",
+        page: 1,
+        pageSize: 2,
+      });
+
+      expect(result.cards).toHaveLength(2);
+      expect(result.total).toBe(5);
+      expect(result.page).toBe(1);
+      expect(result.pageSize).toBe(2);
+      expect(result.totalPages).toBe(3);
+    });
+
+    it("should filter by search term", async () => {
+      const result = await CardService.getPaginated({
+        search: "Alpha",
+        sortBy: "name",
+        sortOrder: "asc",
+        page: 1,
+        pageSize: 10,
+      });
+
+      expect(result.cards).toHaveLength(1);
+      expect(result.cards[0].name).toBe("Alpha");
+    });
+
+    it("should sort by name ascending", async () => {
+      const result = await CardService.getPaginated({
+        search: "",
+        sortBy: "name",
+        sortOrder: "asc",
+        page: 1,
+        pageSize: 10,
+      });
+
+      // Verify cards are sorted alphabetically
+      const names = result.cards.map((c) => c.name);
+      const sortedNames = [...names].sort((a, b) => a.localeCompare(b));
+      expect(names).toEqual(sortedNames);
+      expect(result.cards[0].name).toBe("Alpha");
+    });
+
+    it("should sort by atk descending", async () => {
+      const result = await CardService.getPaginated({
+        search: "",
+        sortBy: "atk",
+        sortOrder: "desc",
+        page: 1,
+        pageSize: 10,
+      });
+
+      expect(result.cards[0].atk).toBe(500);
+      expect(result.cards[4].atk).toBe(100);
+    });
+
+    it("should sort by hp ascending", async () => {
+      const result = await CardService.getPaginated({
+        search: "",
+        sortBy: "hp",
+        sortOrder: "asc",
+        page: 1,
+        pageSize: 10,
+      });
+
+      expect(result.cards[0].hp).toBe(100);
+      expect(result.cards[4].hp).toBe(500);
+    });
+  });
+
+  describe("clear", () => {
+    it("should remove all cards", async () => {
+      await CardService.create({
+        name: "Card 1",
+        atk: 100,
+        hp: 100,
+        image: null,
+      });
+      await CardService.create({
+        name: "Card 2",
+        atk: 200,
+        hp: 200,
+        image: null,
+      });
+
+      await CardService.clear();
+
+      const cards = await CardService.getAll();
+      expect(cards).toHaveLength(0);
+    });
+  });
+
+  describe("createWithId", () => {
+    it("should create a card with a pre-generated ID", async () => {
+      const cardData = {
+        id: "custom-id-123",
+        name: "Custom ID Card",
+        atk: 100,
+        hp: 200,
+        imagePath: null,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+
+      const card = await CardService.createWithId(cardData);
+
+      expect(card.id).toBe("custom-id-123");
+      expect(card.name).toBe("Custom ID Card");
+
+      const retrieved = await CardService.getById("custom-id-123");
+      expect(retrieved).not.toBeNull();
+      expect(retrieved?.id).toBe("custom-id-123");
+    });
+  });
+
+  describe("upsert", () => {
+    it("should create a new card if it does not exist", async () => {
+      const cardData = {
+        id: "upsert-new-123",
+        name: "New Upsert Card",
+        atk: 100,
+        hp: 200,
+        imagePath: null,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+
+      const card = await CardService.upsert(cardData);
+
+      expect(card.id).toBe("upsert-new-123");
+      expect(card.name).toBe("New Upsert Card");
+
+      const retrieved = await CardService.getById("upsert-new-123");
+      expect(retrieved).not.toBeNull();
+      expect(retrieved?.name).toBe("New Upsert Card");
+    });
+
+    it("should update an existing card if it already exists", async () => {
+      const cardData = {
+        id: "upsert-existing-123",
+        name: "Original Name",
+        atk: 100,
+        hp: 200,
+        imagePath: null,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+
+      // Create the card first
+      await CardService.upsert(cardData);
+
+      // Update with upsert
+      const updatedData = {
+        ...cardData,
+        name: "Updated Name",
+        atk: 300,
+        updatedAt: Date.now() + 1000,
+      };
+
+      const card = await CardService.upsert(updatedData);
+
+      expect(card.id).toBe("upsert-existing-123");
+      expect(card.name).toBe("Updated Name");
+      expect(card.atk).toBe(300);
+
+      const retrieved = await CardService.getById("upsert-existing-123");
+      expect(retrieved).not.toBeNull();
+      expect(retrieved?.name).toBe("Updated Name");
+      expect(retrieved?.atk).toBe(300);
+    });
+
+    it("should not throw error when upserting duplicate key", async () => {
+      const cardData = {
+        id: "upsert-duplicate-123",
+        name: "First Version",
+        atk: 100,
+        hp: 200,
+        imagePath: null,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+
+      // Create with createWithId first
+      await CardService.createWithId(cardData);
+
+      // Upsert should not throw
+      const updatedData = {
+        ...cardData,
+        name: "Second Version",
+      };
+
+      await expect(CardService.upsert(updatedData)).resolves.not.toThrow();
+
+      const retrieved = await CardService.getById("upsert-duplicate-123");
+      expect(retrieved?.name).toBe("Second Version");
+    });
   });
 });

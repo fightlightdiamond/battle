@@ -1,0 +1,67 @@
+{
+  "cards": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "name": "Fire Dragon",
+      "atk": 3000,
+      "hp": 2500,
+      "imagePath": "550e8400-e29b-41d4-a716-446655440001.jpeg",
+      "createdAt": 1702300800000,
+      "updatedAt": 1765440555714
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440002",
+      "name": "Ice Wizard",
+      "atk": 1800,
+      "hp": 1500,
+      "imagePath": "550e8400-e29b-41d4-a716-446655440002.png",
+      "createdAt": 1702387200000,
+      "updatedAt": 1765440566411
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440003",
+      "name": "Thunder Knight",
+      "atk": 2200,
+      "hp": 2000,
+      "imagePath": "550e8400-e29b-41d4-a716-446655440003.png",
+      "createdAt": 1702473600000,
+      "updatedAt": 1765442052656
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440004",
+      "name": "Shadow Assassin",
+      "atk": 2800,
+      "hp": 1200,
+      "imagePath": "550e8400-e29b-41d4-a716-446655440004.png",
+      "createdAt": 1702560000000,
+      "updatedAt": 1765440576783
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440005",
+      "name": "Earth Golem",
+      "atk": 1500,
+      "hp": 3500,
+      "imagePath": "550e8400-e29b-41d4-a716-446655440005.jpeg",
+      "createdAt": 1702646400000,
+      "updatedAt": 1765440541268
+    },
+    {
+      "id": "2bd03d48-8bc4-438e-9314-de6851113ccb",
+      "name": "Education",
+      "atk": 800,
+      "hp": 1900,
+      "imagePath": "2bd03d48-8bc4-438e-9314-de6851113ccb.png",
+      "createdAt": 1765420354441,
+      "updatedAt": 1765421683890
+    },
+    {
+      "id": "5aac4773-2825-4a96-9432-0caeb1c873d1",
+      "name": "Spinx",
+      "atk": 1200,
+      "hp": 100000,
+      "imagePath": "5aac4773-2825-4a96-9432-0caeb1c873d1.png",
+      "createdAt": 1765420268279,
+      "updatedAt": 1765421696133
+    }
+  ]
+}

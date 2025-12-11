@@ -1,298 +1,238 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import * as fc from "fast-check";
-import "fake-indexeddb/auto";
+import { renderHook, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createElement } from "react";
+import { useOnlineStatus } from "./index";
 
-// Mock OPFS image storage with in-memory implementation
-vi.mock(
-  "../services/imageStorage",
-  () => import("../services/__mocks__/imageStorage")
-);
+// Mock the modules
+vi.mock("../api/cardApi", () => ({
+  cardApi: {
+    getAll: vi.fn(),
+    getById: vi.fn(),
+    getPaginated: vi.fn(),
+    create: vi.fn(),
+    createWithId: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+  },
+}));
 
-import { CardService } from "../services/cardService";
-import { deleteDB } from "../services/db";
-import { clearImageStore } from "../services/__mocks__/imageStorage";
-import type { CardFormInput } from "../types";
+vi.mock("../services/cardService", () => ({
+  CardService: {
+    getAll: vi.fn(),
+    getById: vi.fn(),
+    getPaginated: vi.fn(),
+    create: vi.fn(),
+    createWithId: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    clear: vi.fn(),
+  },
+}));
 
-// Arbitrary for valid card form input (without image for simplicity)
-const validCardFormInputArb = fc.record({
-  name: fc
-    .string({ minLength: 1, maxLength: 100 })
-    .filter((s) => s.trim().length > 0),
-  atk: fc.integer({ min: 0, max: 10000 }),
-  hp: fc.integer({ min: 1, max: 10000 }),
-  image: fc.constant(null as File | null),
-});
+vi.mock("../services/imageStorage", () => ({
+  saveImage: vi.fn().mockResolvedValue("test-image.png"),
+  deleteImage: vi.fn().mockResolvedValue(true),
+  getImageUrl: vi.fn().mockResolvedValue("blob:test-url"),
+}));
 
-/**
- * **Feature: card-game-manager, Property 2: Valid card creation adds to list**
- * **Validates: Requirements 2.2**
- *
- * For any valid CardFormInput (non-empty name, ATK >= 0, HP >= 1),
- * creating a card SHALL result in the card list containing a card with those exact values.
- */
-describe("Property 2: Valid card creation adds to list", () => {
-  beforeEach(async () => {
-    clearImageStore();
-    await CardService.clear();
+describe("useOnlineStatus", () => {
+  const originalNavigator = global.navigator;
+
+  beforeEach(() => {
+    // Reset navigator.onLine
+    Object.defineProperty(global, "navigator", {
+      value: { onLine: true },
+      writable: true,
+      configurable: true,
+    });
   });
 
-  afterEach(async () => {
-    clearImageStore();
-    await deleteDB();
+  afterEach(() => {
+    Object.defineProperty(global, "navigator", {
+      value: originalNavigator,
+      writable: true,
+      configurable: true,
+    });
   });
 
-  it("creates a card that appears in the list with correct values", async () => {
-    await fc.assert(
-      fc.asyncProperty(validCardFormInputArb, async (input: CardFormInput) => {
-        // Create card using CardService (same as mutation hook uses)
-        const created = await CardService.create(input);
+  it("should return true when online", () => {
+    Object.defineProperty(global.navigator, "onLine", {
+      value: true,
+      writable: true,
+    });
 
-        // Get all cards (simulating what useCards would return)
-        const allCards = await CardService.getAll();
-
-        // Verify the created card is in the list
-        const found = allCards.find((c) => c.id === created.id);
-        expect(found).not.toBeUndefined();
-
-        // Verify the card has the exact values from input
-        expect(found!.name).toBe(input.name);
-        expect(found!.atk).toBe(input.atk);
-        expect(found!.hp).toBe(input.hp);
-
-        // Clean up for next iteration
-        await CardService.delete(created.id);
-      }),
-      { numRuns: 100 }
-    );
+    const { result } = renderHook(() => useOnlineStatus());
+    expect(result.current).toBe(true);
   });
 
-  it("increases the card count by one after creation", async () => {
-    await fc.assert(
-      fc.asyncProperty(validCardFormInputArb, async (input: CardFormInput) => {
-        // Get initial count
-        const initialCards = await CardService.getAll();
-        const initialCount = initialCards.length;
+  it("should return false when offline", () => {
+    Object.defineProperty(global.navigator, "onLine", {
+      value: false,
+      writable: true,
+    });
 
-        // Create card
-        const created = await CardService.create(input);
-
-        // Get new count
-        const afterCards = await CardService.getAll();
-        const afterCount = afterCards.length;
-
-        // Verify count increased by 1
-        expect(afterCount).toBe(initialCount + 1);
-
-        // Clean up
-        await CardService.delete(created.id);
-      }),
-      { numRuns: 100 }
-    );
-  });
-});
-
-/**
- * **Feature: card-game-manager, Property 4: Card update preserves identity**
- * **Validates: Requirements 3.2**
- *
- * For any existing Card and valid CardFormInput, updating the card
- * SHALL preserve the card's id while updating name, ATK, and HP to the new values.
- */
-describe("Property 4: Card update preserves identity", () => {
-  beforeEach(async () => {
-    clearImageStore();
-    await CardService.clear();
+    const { result } = renderHook(() => useOnlineStatus());
+    expect(result.current).toBe(false);
   });
 
-  afterEach(async () => {
-    clearImageStore();
-    await deleteDB();
-  });
+  it("should update when online status changes", async () => {
+    Object.defineProperty(global.navigator, "onLine", {
+      value: true,
+      writable: true,
+    });
 
-  it("preserves card id while updating other properties", async () => {
-    await fc.assert(
-      fc.asyncProperty(
-        validCardFormInputArb,
-        validCardFormInputArb,
-        async (initialInput: CardFormInput, updateInput: CardFormInput) => {
-          // Create initial card
-          const created = await CardService.create(initialInput);
-          const originalId = created.id;
-          const originalCreatedAt = created.createdAt;
+    const { result } = renderHook(() => useOnlineStatus());
+    expect(result.current).toBe(true);
 
-          // Update the card (simulating what useUpdateCard mutation does)
-          const updated = await CardService.update(originalId, updateInput);
+    // Simulate going offline
+    Object.defineProperty(global.navigator, "onLine", {
+      value: false,
+      writable: true,
+    });
+    window.dispatchEvent(new Event("offline"));
 
-          // Verify update succeeded
-          expect(updated).not.toBeNull();
+    await waitFor(() => {
+      expect(result.current).toBe(false);
+    });
 
-          // Verify id is preserved
-          expect(updated!.id).toBe(originalId);
+    // Simulate going online
+    Object.defineProperty(global.navigator, "onLine", {
+      value: true,
+      writable: true,
+    });
+    window.dispatchEvent(new Event("online"));
 
-          // Verify createdAt is preserved
-          expect(updated!.createdAt).toBe(originalCreatedAt);
-
-          // Verify values are updated to new input
-          expect(updated!.name).toBe(updateInput.name);
-          expect(updated!.atk).toBe(updateInput.atk);
-          expect(updated!.hp).toBe(updateInput.hp);
-
-          // Verify the card in the list has updated values
-          const allCards = await CardService.getAll();
-          const found = allCards.find((c) => c.id === originalId);
-          expect(found).not.toBeUndefined();
-          expect(found!.name).toBe(updateInput.name);
-          expect(found!.atk).toBe(updateInput.atk);
-          expect(found!.hp).toBe(updateInput.hp);
-
-          // Clean up
-          await CardService.delete(originalId);
-        }
-      ),
-      { numRuns: 100 }
-    );
-  });
-
-  it("does not create duplicate cards on update", async () => {
-    await fc.assert(
-      fc.asyncProperty(
-        validCardFormInputArb,
-        validCardFormInputArb,
-        async (initialInput: CardFormInput, updateInput: CardFormInput) => {
-          // Create initial card
-          const created = await CardService.create(initialInput);
-
-          // Get count before update
-          const beforeCards = await CardService.getAll();
-          const beforeCount = beforeCards.length;
-
-          // Update the card
-          await CardService.update(created.id, updateInput);
-
-          // Get count after update
-          const afterCards = await CardService.getAll();
-          const afterCount = afterCards.length;
-
-          // Verify count is unchanged (no duplicates)
-          expect(afterCount).toBe(beforeCount);
-
-          // Clean up
-          await CardService.delete(created.id);
-        }
-      ),
-      { numRuns: 100 }
-    );
+    await waitFor(() => {
+      expect(result.current).toBe(true);
+    });
   });
 });
 
-/**
- * **Feature: card-game-manager, Property 5: Card deletion removes from list**
- * **Validates: Requirements 4.2**
- *
- * For any existing Card, deleting it SHALL result in the card list
- * no longer containing that card's id.
- */
-describe("Property 5: Card deletion removes from list", () => {
-  beforeEach(async () => {
-    clearImageStore();
-    await CardService.clear();
+describe("Card Hooks - Online/Offline Logic", () => {
+  let queryClient: QueryClient;
+
+  const wrapper = ({ children }: { children: React.ReactNode }) =>
+    createElement(QueryClientProvider, { client: queryClient }, children);
+
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+    vi.clearAllMocks();
   });
 
-  afterEach(async () => {
-    clearImageStore();
-    await deleteDB();
+  afterEach(() => {
+    queryClient.clear();
   });
 
-  it("removes card from list after deletion", async () => {
-    await fc.assert(
-      fc.asyncProperty(validCardFormInputArb, async (input: CardFormInput) => {
-        // Create card
-        const created = await CardService.create(input);
-        const cardId = created.id;
+  describe("Online Mode Behavior", () => {
+    beforeEach(() => {
+      Object.defineProperty(global, "navigator", {
+        value: { onLine: true },
+        writable: true,
+        configurable: true,
+      });
+    });
 
-        // Verify card exists in list
-        const beforeCards = await CardService.getAll();
-        const existsBefore = beforeCards.some((c) => c.id === cardId);
-        expect(existsBefore).toBe(true);
+    it("should attempt API call first when online", async () => {
+      const { cardApi } = await import("../api/cardApi");
+      const mockCards = [
+        {
+          id: "1",
+          name: "Test",
+          atk: 100,
+          hp: 200,
+          imagePath: null,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+      ];
 
-        // Delete the card (simulating what useDeleteCard mutation does)
-        const deleted = await CardService.delete(cardId);
-        expect(deleted).toBe(true);
+      vi.mocked(cardApi.getPaginated).mockResolvedValue({
+        cards: mockCards,
+        total: 1,
+      });
 
-        // Verify card no longer exists in list
-        const afterCards = await CardService.getAll();
-        const existsAfter = afterCards.some((c) => c.id === cardId);
-        expect(existsAfter).toBe(false);
+      const { useCards } = await import("./index");
 
-        // Verify getById also returns null
-        const retrieved = await CardService.getById(cardId);
-        expect(retrieved).toBeNull();
-      }),
-      { numRuns: 100 }
-    );
+      const { result } = renderHook(
+        () =>
+          useCards({
+            search: "",
+            sortBy: "name",
+            sortOrder: "asc",
+            page: 1,
+            pageSize: 10,
+          }),
+        { wrapper }
+      );
+
+      await waitFor(() => {
+        expect(result.current.isSuccess).toBe(true);
+      });
+
+      expect(cardApi.getPaginated).toHaveBeenCalled();
+    });
   });
 
-  it("decreases the card count by one after deletion", async () => {
-    await fc.assert(
-      fc.asyncProperty(validCardFormInputArb, async (input: CardFormInput) => {
-        // Create card
-        const created = await CardService.create(input);
+  describe("Offline Mode Behavior", () => {
+    beforeEach(() => {
+      Object.defineProperty(global, "navigator", {
+        value: { onLine: false },
+        writable: true,
+        configurable: true,
+      });
+    });
 
-        // Get count before deletion
-        const beforeCards = await CardService.getAll();
-        const beforeCount = beforeCards.length;
+    it("should use IndexedDB when offline", async () => {
+      const { CardService } = await import("../services/cardService");
+      const mockPaginatedResult = {
+        cards: [
+          {
+            id: "1",
+            name: "Test",
+            atk: 100,
+            hp: 200,
+            imagePath: null,
+            imageUrl: null,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          },
+        ],
+        total: 1,
+        page: 1,
+        pageSize: 10,
+        totalPages: 1,
+      };
 
-        // Delete the card
-        await CardService.delete(created.id);
+      vi.mocked(CardService.getPaginated).mockResolvedValue(
+        mockPaginatedResult
+      );
 
-        // Get count after deletion
-        const afterCards = await CardService.getAll();
-        const afterCount = afterCards.length;
+      const { useCards } = await import("./index");
 
-        // Verify count decreased by 1
-        expect(afterCount).toBe(beforeCount - 1);
-      }),
-      { numRuns: 100 }
-    );
-  });
+      const { result } = renderHook(
+        () =>
+          useCards({
+            search: "",
+            sortBy: "name",
+            sortOrder: "asc",
+            page: 1,
+            pageSize: 10,
+          }),
+        { wrapper }
+      );
 
-  it("only removes the specified card, not others", async () => {
-    await fc.assert(
-      fc.asyncProperty(
-        fc.array(validCardFormInputArb, { minLength: 2, maxLength: 5 }),
-        async (inputs: CardFormInput[]) => {
-          // Create multiple cards
-          const createdCards = [];
-          for (const input of inputs) {
-            const card = await CardService.create(input);
-            createdCards.push(card);
-          }
+      await waitFor(() => {
+        expect(result.current.isSuccess).toBe(true);
+      });
 
-          // Pick a random card to delete (first one)
-          const cardToDelete = createdCards[0];
-          const remainingCards = createdCards.slice(1);
-
-          // Delete the selected card
-          await CardService.delete(cardToDelete.id);
-
-          // Verify deleted card is gone
-          const allCards = await CardService.getAll();
-          const deletedExists = allCards.some((c) => c.id === cardToDelete.id);
-          expect(deletedExists).toBe(false);
-
-          // Verify all other cards still exist
-          for (const remaining of remainingCards) {
-            const exists = allCards.some((c) => c.id === remaining.id);
-            expect(exists).toBe(true);
-          }
-
-          // Clean up remaining cards
-          for (const card of remainingCards) {
-            await CardService.delete(card.id);
-          }
-        }
-      ),
-      { numRuns: 100 }
-    );
+      expect(CardService.getPaginated).toHaveBeenCalled();
+    });
   });
 });

@@ -1,6 +1,7 @@
 import { openDB } from "idb";
 import type { DBSchema, IDBPDatabase } from "idb";
 import type { Card } from "../types";
+import type { SyncQueueItem } from "./syncQueue";
 
 // Database schema definition
 interface CardGameDB extends DBSchema {
@@ -12,10 +13,18 @@ interface CardGameDB extends DBSchema {
       "by-createdAt": number;
     };
   };
+  syncQueue: {
+    key: string;
+    value: SyncQueueItem;
+    indexes: {
+      "by-cardId": string;
+      "by-timestamp": number;
+    };
+  };
 }
 
 const DB_NAME = "card-game-db";
-const DB_VERSION = 1;
+const DB_VERSION = 2; // Bumped for syncQueue store
 
 let dbInstance: IDBPDatabase<CardGameDB> | null = null;
 
@@ -29,15 +38,21 @@ export async function getDB(): Promise<IDBPDatabase<CardGameDB>> {
   }
 
   dbInstance = await openDB<CardGameDB>(DB_NAME, DB_VERSION, {
-    upgrade(db, oldVersion, _newVersion, _transaction) {
+    upgrade(db, oldVersion) {
       // Version 1: Initial schema
       if (oldVersion < 1) {
         const cardStore = db.createObjectStore("cards", { keyPath: "id" });
         cardStore.createIndex("by-name", "name");
         cardStore.createIndex("by-createdAt", "createdAt");
       }
-      // Future migrations can be added here:
-      // if (oldVersion < 2) { ... }
+      // Version 2: Add syncQueue store
+      if (oldVersion < 2) {
+        const syncQueueStore = db.createObjectStore("syncQueue", {
+          keyPath: "id",
+        });
+        syncQueueStore.createIndex("by-cardId", "cardId");
+        syncQueueStore.createIndex("by-timestamp", "timestamp");
+      }
     },
     blocked() {
       console.warn("Database upgrade blocked. Please close other tabs.");
