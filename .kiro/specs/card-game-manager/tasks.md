@@ -66,28 +66,28 @@
 
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 8. Implement UI components and pages
+- [x] 8. Implement UI components and pages
 
-  - [ ] 8.1 Create SearchBar component
+  - [x] 8.1 Create SearchBar component
     - Debounced search input
     - Updates URL search param via useSearchParams
     - _Requirements: 1.5_
-  - [ ] 8.2 Create SortControls component
+  - [x] 8.2 Create SortControls component
     - Dropdown/buttons for sortBy (name, ATK, HP) and sortOrder (asc, desc)
     - Updates URL params
     - _Requirements: 1.6_
-  - [ ] 8.3 Create Pagination component
+  - [x] 8.3 Create Pagination component
     - Previous/Next buttons, page numbers
     - Updates URL page param
     - _Requirements: 1.7, 1.8, 1.9_
-  - [ ] 8.4 Create CardList component
+  - [x] 8.4 Create CardList component
     - Display cards in a grid with image, name, ATK, HP
     - Show placeholder image for cards without image
     - Implement empty state and loading state
     - Edit button links to `/cards/:id/edit`
     - Delete button opens confirmation dialog
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
-  - [ ] 8.5 Create CardForm component
+  - [x] 8.5 Create CardForm component
     - Build form with React Hook Form and Zod resolver
     - Add fields: name, ATK, HP, image upload with drag-and-drop
     - Show image preview
@@ -95,38 +95,38 @@
     - Handle create and edit modes via props
     - Cancel button navigates back to `/cards`
     - _Requirements: 2.1, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.1, 3.3, 3.4, 3.5_
-  - [ ] 8.6 Create DeleteConfirmDialog component
+  - [x] 8.6 Create DeleteConfirmDialog component
     - Show confirmation message with card name
     - Implement confirm and cancel actions
     - _Requirements: 4.1, 4.2, 4.3_
-  - [ ] 8.7 Create CardListPage
+  - [x] 8.7 Create CardListPage
     - Render SearchBar, SortControls, CardList, Pagination, DeleteConfirmDialog
     - Read/write URL query params for search, sort, page
     - Add "Add Card" button linking to `/cards/new`
     - _Requirements: 1.1, 1.5, 1.6, 1.7, 2.1_
-  - [ ] 8.8 Create CardCreatePage
+  - [x] 8.8 Create CardCreatePage
     - Render CardForm in create mode
     - On success navigate to `/cards`
     - _Requirements: 2.1, 2.6_
-  - [ ] 8.9 Create CardEditPage
+  - [x] 8.9 Create CardEditPage
     - Fetch card by id from URL params
     - Render CardForm in edit mode with pre-filled data
     - On success navigate to `/cards`
     - _Requirements: 3.1, 3.4_
 
-- [ ] 9. Set up routing and integrate into App
+- [x] 9. Set up routing and integrate into App
 
-  - [ ] 9.1 Configure React Router
+  - [x] 9.1 Configure React Router
     - Set up BrowserRouter in main.tsx
     - Define routes: `/cards`, `/cards/new`, `/cards/:id/edit`
     - Add redirect from `/` to `/cards`
     - _Requirements: 1.1_
-  - [ ] 9.2 Update App.tsx
+  - [x] 9.2 Update App.tsx
     - Set up QueryClientProvider
     - Render router outlet
     - _Requirements: 1.1_
 
-- [ ] 10. Checkpoint - Ensure all tests pass
+- [x] 10. Checkpoint - Ensure all tests pass
 
   - Ensure all tests pass, ask the user if questions arise.
 

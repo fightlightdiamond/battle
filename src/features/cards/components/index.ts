@@ -1,3 +1,7 @@
 // Card UI components
-// Will be implemented in task 8
-export {};
+export { SearchBar } from "./SearchBar";
+export { SortControls } from "./SortControls";
+export { CardPagination } from "./CardPagination";
+export { CardList } from "./CardList";
+export { CardForm } from "./CardForm";
+export { DeleteConfirmDialog } from "./DeleteConfirmDialog";
