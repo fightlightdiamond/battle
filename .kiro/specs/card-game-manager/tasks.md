@@ -6,63 +6,63 @@
   - Create folder structure: `src/features/cards/` with subfolders for components, hooks, services, store, types, pages
   - _Requirements: 5.1, 5.2_
 
-- [ ] 2. Implement Card types and validation schemas
+- [x] 2. Implement Card types and validation schemas
 
-  - [ ] 2.1 Create Card types and interfaces
+  - [x] 2.1 Create Card types and interfaces
     - Define Card, CardFormInput, CardUIState interfaces in `src/features/cards/types.ts`
     - _Requirements: 1.1, 2.1_
-  - [ ] 2.2 Create Zod validation schemas
+  - [x] 2.2 Create Zod validation schemas
     - Implement cardSchema and cardFormSchema with all validation rules (name, ATK, HP, image)
     - _Requirements: 2.3, 2.4, 2.5, 2.7, 2.8_
-  - [ ] 2.3 Write property test for validation
+  - [x] 2.3 Write property test for validation
     - **Property 3: Invalid card validation rejection**
     - **Validates: Requirements 2.3, 2.4, 2.5, 2.7, 2.8**
 
-- [ ] 3. Implement IndexedDB service layer
+- [x] 3. Implement IndexedDB service layer
 
-  - [ ] 3.1 Create IndexedDB database setup
+  - [x] 3.1 Create IndexedDB database setup
     - Initialize database with `card-game-db` name and `cards` object store
     - Handle database versioning and migrations
     - _Requirements: 5.1, 5.2, 5.3_
-  - [ ] 3.2 Implement CardService CRUD operations
+  - [x] 3.2 Implement CardService CRUD operations
     - Create `getAll`, `getById`, `create`, `update`, `delete` methods
     - Implement `getPaginated` with search, sort, pagination support
     - Handle Blob storage for images
     - _Requirements: 1.5, 1.6, 1.7, 1.8, 1.9, 2.2, 3.2, 4.2, 5.1_
-  - [ ] 3.3 Write property test for serialization round-trip
+  - [x] 3.3 Write property test for serialization round-trip
     - **Property 1: Card serialization round-trip**
     - **Validates: Requirements 6.1, 6.2, 6.3**
 
-- [ ] 4. Checkpoint - Ensure all tests pass
+- [x] 4. Checkpoint - Ensure all tests pass
 
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 5. Implement Zustand UI state store
+- [x] 5. Implement Zustand UI state store
 
-  - [ ] 5.1 Create card UI store
+  - [x] 5.1 Create card UI store
     - Implement `useCardUIStore` for delete dialog state management only
     - Add actions: openDeleteDialog, closeDeleteDialog
     - _Requirements: 4.1_
 
-- [ ] 6. Implement TanStack Query hooks
+- [x] 6. Implement TanStack Query hooks
 
-  - [ ] 6.1 Create query hooks for card operations
+  - [x] 6.1 Create query hooks for card operations
     - Implement `useCards` query hook with search, sort, pagination params
     - Implement `useCard` query hook for fetching single card by id
     - Implement `useCreateCard`, `useUpdateCard`, `useDeleteCard` mutation hooks
     - Handle query invalidation on mutations
     - _Requirements: 1.1, 1.5, 1.6, 1.7, 2.2, 3.2, 4.2_
-  - [ ] 6.2 Write property test for card creation
+  - [x] 6.2 Write property test for card creation
     - **Property 2: Valid card creation adds to list**
     - **Validates: Requirements 2.2**
-  - [ ] 6.3 Write property test for card update
+  - [x] 6.3 Write property test for card update
     - **Property 4: Card update preserves identity**
     - **Validates: Requirements 3.2**
-  - [ ] 6.4 Write property test for card deletion
+  - [x] 6.4 Write property test for card deletion
     - **Property 5: Card deletion removes from list**
     - **Validates: Requirements 4.2**
 
-- [ ] 7. Checkpoint - Ensure all tests pass
+- [x] 7. Checkpoint - Ensure all tests pass
 
   - Ensure all tests pass, ask the user if questions arise.
 

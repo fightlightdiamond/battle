@@ -1,3 +1,7 @@
-// Card service layer for IndexedDB operations
-// Will be implemented in task 3
-export {};
+export {
+  CardService,
+  revokeCardImageUrl,
+  revokeCardImageUrls,
+} from "./cardService";
+export { getDB, closeDB, deleteDB } from "./db";
+export type { CardGameDB } from "./db";
