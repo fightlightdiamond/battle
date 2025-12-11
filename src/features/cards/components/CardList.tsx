@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Card as CardType } from "../types";
-import { useCardUIStore } from "../store";
+import { useDeleteDialog } from "../store";
 
 interface CardListProps {
   cards: CardType[];
@@ -22,7 +22,7 @@ interface CardListProps {
  * Requirements: 1.1, 1.2, 1.3, 1.4
  */
 export function CardList({ cards, isLoading, isEmpty }: CardListProps) {
-  const openDeleteDialog = useCardUIStore((state) => state.openDeleteDialog);
+  const { open: openDeleteDialog } = useDeleteDialog();
 
   if (isLoading) {
     return (

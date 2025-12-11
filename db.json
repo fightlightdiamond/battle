@@ -62,6 +62,15 @@
       "imagePath": "5aac4773-2825-4a96-9432-0caeb1c873d1.png",
       "createdAt": 1765420268279,
       "updatedAt": 1765421696133
+    },
+    {
+      "id": "9c07be55-b903-4592-9d24-c3b948bb7274",
+      "name": "Supper vip",
+      "atk": 0,
+      "hp": 1,
+      "imagePath": "9c07be55-b903-4592-9d24-c3b948bb7274.png",
+      "createdAt": 1765442701780,
+      "updatedAt": 1765442701780
     }
   ]
 }

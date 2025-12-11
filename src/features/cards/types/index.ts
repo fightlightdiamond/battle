@@ -18,14 +18,6 @@ export interface CardFormInput {
   image: File | null;
 }
 
-// Zustand UI state (for delete dialog only)
-export interface CardUIState {
-  isDeleteDialogOpen: boolean;
-  deletingCard: Card | null;
-  openDeleteDialog: (card: Card) => void;
-  closeDeleteDialog: () => void;
-}
-
 // Query params for card list
 export interface CardListParams {
   search: string;
