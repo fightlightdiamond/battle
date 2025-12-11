@@ -5,3 +5,4 @@ export {
 } from "./cardService";
 export { getDB, closeDB, deleteDB } from "./db";
 export type { CardGameDB } from "./db";
+export { isOPFSSupported } from "./imageStorage";

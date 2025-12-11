@@ -1,4 +1,5 @@
 import { getDB } from "./db";
+import { saveImage, deleteImage, getImageUrl } from "./imageStorage";
 import type {
   Card,
   CardFormInput,
@@ -17,32 +18,15 @@ function generateId(): string {
 }
 
 /**
- * Ensure a value is a proper Blob instance
- * This handles cases where IndexedDB may return a serialized object
- */
-function ensureBlob(value: Blob | null | unknown): Blob | null {
-  if (!value) return null;
-  if (value instanceof Blob) return value;
-  // Handle case where Blob was serialized (e.g., in fake-indexeddb)
-  if (typeof value === "object" && value !== null) {
-    const obj = value as { type?: string; size?: number };
-    if ("type" in obj && "size" in obj) {
-      // It's a Blob-like object, try to reconstruct
-      return new Blob([], { type: obj.type || "application/octet-stream" });
-    }
-  }
-  return null;
-}
-
-/**
  * Convert a stored card to a Card with imageUrl
  */
-function toCard(stored: StoredCard): Card {
-  const imageBlob = ensureBlob(stored.imageBlob);
+async function toCard(stored: StoredCard): Promise<Card> {
+  const imageUrl = stored.imagePath
+    ? await getImageUrl(stored.imagePath)
+    : null;
   return {
     ...stored,
-    imageBlob,
-    imageUrl: imageBlob ? URL.createObjectURL(imageBlob) : null,
+    imageUrl,
   };
 }
 
@@ -64,6 +48,7 @@ export function revokeCardImageUrls(cards: Card[]): void {
 
 /**
  * CardService - CRUD operations for cards in IndexedDB
+ * Images are stored separately in OPFS
  */
 export const CardService = {
   /**
@@ -72,7 +57,7 @@ export const CardService = {
   async getAll(): Promise<Card[]> {
     const db = await getDB();
     const storedCards = await db.getAll("cards");
-    return storedCards.map(toCard);
+    return Promise.all(storedCards.map(toCard));
   },
 
   /**
@@ -90,15 +75,20 @@ export const CardService = {
   async create(input: CardFormInput): Promise<Card> {
     const db = await getDB();
     const now = Date.now();
+    const id = generateId();
+
+    // Save image to OPFS if provided
+    let imagePath: string | null = null;
+    if (input.image) {
+      imagePath = await saveImage(id, input.image);
+    }
 
     const storedCard: StoredCard = {
-      id: generateId(),
+      id,
       name: input.name,
       atk: input.atk,
       hp: input.hp,
-      imageBlob: input.image
-        ? new Blob([input.image], { type: input.image.type })
-        : null,
+      imagePath,
       createdAt: now,
       updatedAt: now,
     };
@@ -119,14 +109,24 @@ export const CardService = {
     }
 
     const now = Date.now();
+    let imagePath = existing.imagePath;
+
+    // Handle image update
+    if (input.image) {
+      // Delete old image if exists
+      if (existing.imagePath) {
+        await deleteImage(existing.imagePath);
+      }
+      // Save new image
+      imagePath = await saveImage(id, input.image);
+    }
+
     const updatedCard: StoredCard = {
       ...existing,
       name: input.name,
       atk: input.atk,
       hp: input.hp,
-      imageBlob: input.image
-        ? new Blob([input.image], { type: input.image.type })
-        : existing.imageBlob,
+      imagePath,
       updatedAt: now,
     };
 
@@ -143,6 +143,11 @@ export const CardService = {
 
     if (!existing) {
       return false;
+    }
+
+    // Delete image from OPFS if exists
+    if (existing.imagePath) {
+      await deleteImage(existing.imagePath);
     }
 
     await db.delete("cards", id);
@@ -196,7 +201,9 @@ export const CardService = {
     const endIndex = startIndex + pageSize;
 
     // Get page slice and convert to Card with imageUrl
-    const pageCards = cards.slice(startIndex, endIndex).map(toCard);
+    const pageCards = await Promise.all(
+      cards.slice(startIndex, endIndex).map(toCard)
+    );
 
     return {
       cards: pageCards,
@@ -212,6 +219,15 @@ export const CardService = {
    */
   async clear(): Promise<void> {
     const db = await getDB();
+
+    // Delete all images from OPFS
+    const cards = await db.getAll("cards");
+    await Promise.all(
+      cards
+        .filter((card) => card.imagePath)
+        .map((card) => deleteImage(card.imagePath!))
+    );
+
     await db.clear("cards");
   },
 };

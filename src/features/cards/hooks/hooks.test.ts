@@ -1,8 +1,16 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import * as fc from "fast-check";
 import "fake-indexeddb/auto";
+
+// Mock OPFS image storage with in-memory implementation
+vi.mock(
+  "../services/imageStorage",
+  () => import("../services/__mocks__/imageStorage")
+);
+
 import { CardService } from "../services/cardService";
 import { deleteDB } from "../services/db";
+import { clearImageStore } from "../services/__mocks__/imageStorage";
 import type { CardFormInput } from "../types";
 
 // Arbitrary for valid card form input (without image for simplicity)
@@ -24,10 +32,12 @@ const validCardFormInputArb = fc.record({
  */
 describe("Property 2: Valid card creation adds to list", () => {
   beforeEach(async () => {
+    clearImageStore();
     await CardService.clear();
   });
 
   afterEach(async () => {
+    clearImageStore();
     await deleteDB();
   });
 
@@ -90,10 +100,12 @@ describe("Property 2: Valid card creation adds to list", () => {
  */
 describe("Property 4: Card update preserves identity", () => {
   beforeEach(async () => {
+    clearImageStore();
     await CardService.clear();
   });
 
   afterEach(async () => {
+    clearImageStore();
     await deleteDB();
   });
 
@@ -182,10 +194,12 @@ describe("Property 4: Card update preserves identity", () => {
  */
 describe("Property 5: Card deletion removes from list", () => {
   beforeEach(async () => {
+    clearImageStore();
     await CardService.clear();
   });
 
   afterEach(async () => {
+    clearImageStore();
     await deleteDB();
   });
 

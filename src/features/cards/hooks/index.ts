@@ -123,3 +123,6 @@ export function useDeleteCard(
     ...options,
   });
 }
+
+// OPFS hooks
+export { useOPFSSupport, useOPFSImage, useOPFSOperations } from "./useOPFS";

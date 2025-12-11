@@ -1,8 +1,13 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import * as fc from "fast-check";
 import "fake-indexeddb/auto";
+
+// Mock OPFS image storage with in-memory implementation
+vi.mock("./imageStorage", () => import("./__mocks__/imageStorage"));
+
 import { CardService } from "./cardService";
 import { deleteDB } from "./db";
+import { clearImageStore } from "./__mocks__/imageStorage";
 import type { CardFormInput } from "../types";
 
 /**
@@ -14,10 +19,12 @@ import type { CardFormInput } from "../types";
  */
 describe("Property 1: Card serialization round-trip", () => {
   beforeEach(async () => {
+    clearImageStore();
     await CardService.clear();
   });
 
   afterEach(async () => {
+    clearImageStore();
     await deleteDB();
   });
 
