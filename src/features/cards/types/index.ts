@@ -1,40 +1,8 @@
-// Card entity stored in IndexedDB
-export interface Card {
-  id: string;
-  name: string;
-  atk: number;
-  hp: number;
-  imagePath: string | null; // Path to image in OPFS
-  imageUrl: string | null; // Object URL for display (generated at runtime)
-  createdAt: number;
-  updatedAt: number;
-}
+// Card types
+export type { Card, CardFormInput } from "./card";
 
-// Form input (without id and timestamps)
-export interface CardFormInput {
-  name: string;
-  atk: number;
-  hp: number;
-  image: File | null;
-}
+// Pagination types
+export type { CardListParams, PaginatedCards } from "./pagination";
 
-// Query params for card list
-export interface CardListParams {
-  search: string;
-  sortBy: "name" | "atk" | "hp";
-  sortOrder: "asc" | "desc";
-  page: number;
-  pageSize: number;
-}
-
-// Paginated response
-export interface PaginatedCards {
-  cards: Card[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
-
-// Re-export schemas
+// Schemas
 export * from "./schemas";

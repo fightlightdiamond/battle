@@ -71,6 +71,15 @@
       "imagePath": "9c07be55-b903-4592-9d24-c3b948bb7274.png",
       "createdAt": 1765442701780,
       "updatedAt": 1765442701780
+    },
+    {
+      "id": "f4670f56-921e-4b4c-b4a3-259d5b696855",
+      "name": "uu",
+      "atk": 0,
+      "hp": 1,
+      "imagePath": "f4670f56-921e-4b4c-b4a3-259d5b696855.png",
+      "createdAt": 1765464488083,
+      "updatedAt": 1765464488083
     }
   ]
 }
