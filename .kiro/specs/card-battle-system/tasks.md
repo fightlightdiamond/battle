@@ -54,36 +54,36 @@
     - **Property 10: Auto-Battle Stops on Victory**
     - **Validates: Requirements 7.4**
 
-- [ ] 4. Implement formatting utilities
+- [x] 4. Implement formatting utilities
 
-  - [ ] 4.1 Create formatters utility functions
+  - [x] 4.1 Create formatters utility functions
     - Implement formatHpDisplay(currentHp, maxHp) → "current / max"
     - Implement formatBattleLogEntry(attacker, defender, damage, remainingHp)
     - Implement formatVictoryLog(winnerName)
     - _Requirements: 4.4, 6.1, 6.2, 6.3_
-  - [ ] 4.2 Write property test for HP display format
+  - [x] 4.2 Write property test for HP display format
     - **Property 6: HP Display Format**
     - **Validates: Requirements 4.4**
-  - [ ] 4.3 Write property test for battle log format
+  - [x] 4.3 Write property test for battle log format
     - **Property 9: Battle Log Format**
     - **Validates: Requirements 6.1, 6.2, 6.3**
 
-- [ ] 5. Checkpoint - Ensure all tests pass
+- [x] 5. Checkpoint - Ensure all tests pass
 
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 6. Implement HP Bar component
+- [x] 6. Implement HP Bar component
 
-  - [ ] 6.1 Create HPBar component with animations
+  - [x] 6.1 Create HPBar component with animations
     - Display current/max HP with formatHpDisplay
     - Animate width transition (500ms) when HP changes
     - Color based on getHpBarColor (green/yellow/red)
     - Flash effect on damage received
     - _Requirements: 2.2, 2.3, 4.1, 4.2, 4.3, 4.4, 4.5_
 
-- [ ] 7. Implement BattleCard component
+- [x] 7. Implement BattleCard component
 
-  - [ ] 7.1 Create BattleCard component with visual states
+  - [x] 7.1 Create BattleCard component with visual states
     - Display card image, name, ATK stat
     - Include HPBar component
     - Attack animation (shake/lunge effect 400ms)
@@ -92,9 +92,9 @@
     - Winner/Loser visual states
     - _Requirements: 2.1, 3.5, 8.1, 8.3_
 
-- [ ] 8. Implement DamageNumber component
+- [x] 8. Implement DamageNumber component
 
-  - [ ] 8.1 Create floating damage number animation
+  - [x] 8.1 Create floating damage number animation
     - Display damage value with fly-up animation (800ms)
     - Enhanced style for critical damage
     - Position based on defender location

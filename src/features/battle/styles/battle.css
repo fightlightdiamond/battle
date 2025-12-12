@@ -1,0 +1,164 @@
+/**
+ * Battle Feature Styles
+ * All animations and component styles for the battle system
+ */
+
+/* ============================================
+   BATTLE CARD ANIMATIONS
+   ============================================ */
+
+/* Attack lunge animation - card moves toward opponent */
+@keyframes attack-lunge-right {
+  0% {
+    transform: translateX(0);
+  }
+  30% {
+    transform: translateX(30px) scale(1.05);
+  }
+  60% {
+    transform: translateX(15px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes attack-lunge-left {
+  0% {
+    transform: translateX(0);
+  }
+  30% {
+    transform: translateX(-30px) scale(1.05);
+  }
+  60% {
+    transform: translateX(-15px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Damage shake animation - card shakes when hit */
+@keyframes damage-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+/* Danger pulse - red glow when HP < 25% */
+@keyframes danger-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+}
+
+/* Winner glow - golden glow effect */
+@keyframes winner-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px 5px rgba(250, 204, 21, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px 10px rgba(250, 204, 21, 0.8);
+  }
+}
+
+.animate-attack-lunge-right {
+  animation: attack-lunge-right 400ms ease-out;
+}
+
+.animate-attack-lunge-left {
+  animation: attack-lunge-left 400ms ease-out;
+}
+
+.animate-damage-shake {
+  animation: damage-shake 400ms ease-out;
+}
+
+.animate-danger-pulse {
+  animation: danger-pulse 1.5s ease-in-out infinite;
+}
+
+.animate-winner-glow {
+  animation: winner-glow 2s ease-in-out infinite;
+}
+
+/* ============================================
+   DAMAGE NUMBER ANIMATIONS & STYLES
+   ============================================ */
+
+/* Fly up animation - damage number floats up and fades */
+@keyframes damage-fly-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) scale(0.8);
+  }
+}
+
+/* Critical hit pulse effect */
+@keyframes critical-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-damage-fly-up {
+  animation: damage-fly-up 800ms ease-out forwards;
+}
+
+.animate-critical-pulse {
+  animation: critical-pulse 200ms ease-in-out 2;
+}
+
+/* Damage Number Component Styles */
+.damage-number {
+  @apply absolute pointer-events-none z-50 left-1/2 -translate-x-1/2;
+  top: 30%;
+}
+
+.damage-text {
+  @apply font-bold drop-shadow-lg;
+}
+
+.damage-text-normal {
+  @apply text-3xl text-red-500;
+}
+
+.damage-text-critical {
+  @apply text-5xl text-orange-500;
+  filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.8));
+}
+
+.damage-crit-label {
+  @apply ml-1 text-2xl text-yellow-400 font-extrabold;
+}

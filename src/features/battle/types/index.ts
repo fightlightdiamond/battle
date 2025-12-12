@@ -9,6 +9,7 @@ export type {
   BattleResult,
   CurrentAttacker,
   HpBarColor,
+  CardPosition,
 } from "./battle";
 
 export {
@@ -17,4 +18,5 @@ export {
   BATTLE_PARTICIPANTS,
   BATTLE_PHASES,
   BATTLE_RESULTS,
+  CARD_POSITIONS,
 } from "./battle";

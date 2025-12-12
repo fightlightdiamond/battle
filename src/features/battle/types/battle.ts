@@ -127,3 +127,18 @@ export const HP_THRESHOLDS = {
   HIGH: 50, // Above this = green
   LOW: 25, // Below this = red, between LOW and HIGH = yellow
 } as const;
+
+/**
+ * Card position constants for battle arena layout
+ * - LEFT: Card displayed on the left side (typically challenger)
+ * - RIGHT: Card displayed on the right side (typically opponent)
+ */
+export const CARD_POSITIONS = {
+  LEFT: "left",
+  RIGHT: "right",
+} as const;
+
+/**
+ * Card position type derived from constants
+ */
+export type CardPosition = (typeof CARD_POSITIONS)[keyof typeof CARD_POSITIONS];
