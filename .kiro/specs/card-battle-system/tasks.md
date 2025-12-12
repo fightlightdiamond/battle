@@ -100,59 +100,59 @@
     - Position based on defender location
     - _Requirements: 3.4, 8.2_
 
-- [ ] 9. Implement Battle Log component
+- [x] 9. Implement Battle Log component
 
-  - [ ] 9.1 Create BattleLog component
+  - [x] 9.1 Create BattleLog component
     - Display list of BattleLogEntry items
     - Auto-scroll to latest entry
     - Different styling for attack/damage/victory entries
     - _Requirements: 6.1, 6.2, 6.3, 6.4_
 
-- [ ] 10. Implement Battle Controls component
+- [x] 10. Implement Battle Controls component
 
-  - [ ] 10.1 Create BattleControls with action buttons
+  - [x] 10.1 Create BattleControls with action buttons
     - Attack button (enabled only in 'fighting' phase)
     - Auto-battle toggle (Pause/Resume)
     - New Battle button (visible in 'finished' phase)
     - _Requirements: 3.1, 7.1, 7.2, 7.3, 5.5_
 
-- [ ] 11. Implement Victory Overlay component
+- [x] 11. Implement Victory Overlay component
 
-  - [ ] 11.1 Create VictoryOverlay with celebration effects
+  - [x] 11.1 Create VictoryOverlay with celebration effects
     - Display winner card with "VICTORY" text and glow effect
     - Display loser card with "DEFEATED" text
     - Confetti/particle animation
     - New Battle button
     - _Requirements: 5.2, 5.3, 8.5_
 
-- [ ] 12. Implement Card Selector component
+- [x] 12. Implement Card Selector component
 
-  - [ ] 12.1 Create CardSelector for match setup
+  - [x] 12.1 Create CardSelector for match setup
     - Display grid of available cards from existing card store
     - Highlight selected cards
     - Prevent selecting same card twice with warning toast
     - Show selected cards preview with stats
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
-- [ ] 13. Implement Battle Setup Page
+- [x] 13. Implement Battle Setup Page
 
-  - [ ] 13.1 Create BattleSetupPage
+  - [x] 13.1 Create BattleSetupPage
     - Two CardSelector areas for card1 and card2
     - Display selected cards side by side
     - Start Battle button (enabled when both cards selected)
     - Navigation to BattleArenaPage
     - _Requirements: 1.1, 1.2, 1.3, 1.5_
 
-- [ ] 14. Implement Battle Arena Page
+- [x] 14. Implement Battle Arena Page
 
-  - [ ] 14.1 Create BattleArenaPage with combat UI
+  - [x] 14.1 Create BattleArenaPage with combat UI
     - Layout: Card1 (left) vs Card2 (right)
     - Entrance animation on load
     - BattleControls at bottom
     - BattleLog panel (collapsible sidebar)
     - VictoryOverlay when battle ends
     - _Requirements: 2.1, 8.4_
-  - [ ] 14.2 Implement auto-battle timer logic
+  - [x] 14.2 Implement auto-battle timer logic
     - useEffect with setInterval for 1.5s delay
     - Clear interval on pause or battle end
     - _Requirements: 7.1, 7.4_
