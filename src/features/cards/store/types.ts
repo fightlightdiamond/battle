@@ -88,10 +88,17 @@ export type CardUIStore = CardUIState & CardUIActions;
 // Default values
 // ============================================
 
+import {
+  SORT_FIELDS,
+  SORT_ORDERS,
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+} from "../types";
+
 export const DEFAULT_PARAMS: CardListParams = {
   search: "",
-  sortBy: "name",
-  sortOrder: "asc",
-  page: 1,
-  pageSize: 10,
+  sortBy: SORT_FIELDS.NAME,
+  sortOrder: SORT_ORDERS.ASC,
+  page: DEFAULT_PAGE,
+  pageSize: DEFAULT_PAGE_SIZE,
 };

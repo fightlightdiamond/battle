@@ -38,11 +38,29 @@ export interface SyncQueueResult {
   results: SyncItemResult[];
 }
 
-// Conflict resolution strategies
-export type ConflictStrategy = "local-wins" | "server-wins" | "newest-wins";
+// ============================================
+// Conflict resolution constants
+// ============================================
 
-const QUEUE_STORE = "syncQueue";
-const MAX_RETRIES = 3;
+/** Conflict resolution strategies */
+export const CONFLICT_STRATEGIES = {
+  LOCAL_WINS: "local-wins",
+  SERVER_WINS: "server-wins",
+  NEWEST_WINS: "newest-wins",
+} as const;
+
+export type ConflictStrategy =
+  (typeof CONFLICT_STRATEGIES)[keyof typeof CONFLICT_STRATEGIES];
+
+// ============================================
+// Queue constants
+// ============================================
+
+/** IndexedDB store name for sync queue */
+export const QUEUE_STORE = "syncQueue";
+
+/** Maximum number of retry attempts for failed sync operations */
+export const MAX_RETRIES = 3;
 
 /**
  * Check if we're online
@@ -242,7 +260,7 @@ export const SyncQueue = {
    */
   async processItem(
     item: SyncQueueItem,
-    conflictStrategy: ConflictStrategy = "newest-wins"
+    conflictStrategy: ConflictStrategy = CONFLICT_STRATEGIES.NEWEST_WINS
   ): Promise<SyncItemResult> {
     try {
       switch (item.operation) {
@@ -327,11 +345,11 @@ export const SyncQueue = {
     strategy: ConflictStrategy
   ): Promise<ApiCard> {
     switch (strategy) {
-      case "local-wins":
+      case CONFLICT_STRATEGIES.LOCAL_WINS:
         return local;
-      case "server-wins":
+      case CONFLICT_STRATEGIES.SERVER_WINS:
         return server;
-      case "newest-wins":
+      case CONFLICT_STRATEGIES.NEWEST_WINS:
       default:
         return local.updatedAt >= server.updatedAt ? local : server;
     }
@@ -342,7 +360,7 @@ export const SyncQueue = {
    * Returns results for each item processed
    */
   async processQueue(
-    conflictStrategy: ConflictStrategy = "newest-wins"
+    conflictStrategy: ConflictStrategy = CONFLICT_STRATEGIES.NEWEST_WINS
   ): Promise<SyncQueueResult> {
     if (!isOnline()) {
       console.log("[SyncQueue] Offline, skipping queue processing");
