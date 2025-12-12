@@ -129,6 +129,16 @@ export const HP_THRESHOLDS = {
 } as const;
 
 /**
+ * Combat calculation constants
+ */
+export const COMBAT_CONSTANTS = {
+  /** Critical damage threshold as percentage of defender's max HP (0.3 = 30%) */
+  CRITICAL_DAMAGE_THRESHOLD: 0.3,
+  /** Danger threshold for HP warning (0.25 = 25%) */
+  DANGER_THRESHOLD: 0.25,
+} as const;
+
+/**
  * Card position constants for battle arena layout
  * - LEFT: Card displayed on the left side (typically challenger)
  * - RIGHT: Card displayed on the right side (typically opponent)

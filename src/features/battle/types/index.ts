@@ -19,4 +19,5 @@ export {
   BATTLE_PHASES,
   BATTLE_RESULTS,
   CARD_POSITIONS,
+  COMBAT_CONSTANTS,
 } from "./battle";

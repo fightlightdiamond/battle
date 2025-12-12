@@ -9,7 +9,12 @@ import type {
   BattleResult,
   HpBarColor,
 } from "../types";
-import { HP_BAR_COLORS, HP_THRESHOLDS, BATTLE_RESULTS } from "../types";
+import {
+  HP_BAR_COLORS,
+  HP_THRESHOLDS,
+  BATTLE_RESULTS,
+  COMBAT_CONSTANTS,
+} from "../types";
 
 /**
  * Calculate HP percentage
@@ -61,7 +66,8 @@ export function calculateAttack(
 ): AttackResult {
   const damage = attacker.atk;
   const defenderNewHp = Math.max(0, defender.currentHp - damage);
-  const isCritical = damage > defender.maxHp * 0.3;
+  const isCritical =
+    damage > defender.maxHp * COMBAT_CONSTANTS.CRITICAL_DAMAGE_THRESHOLD;
   const isKnockout = defenderNewHp <= 0;
 
   return {

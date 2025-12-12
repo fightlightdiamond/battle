@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { Plus, RefreshCw } from "lucide-react";
+import { Plus, RefreshCw, Swords } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   SearchBar,
@@ -49,12 +49,20 @@ export function CardListPage() {
               <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
             )}
           </div>
-          <Button asChild>
-            <Link to="/cards/new">
-              <Plus className="h-4 w-4" />
-              Add Card
-            </Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button asChild variant="secondary">
+              <Link to="/battle/setup">
+                <Swords className="h-4 w-4" />
+                Battle
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link to="/cards/new">
+                <Plus className="h-4 w-4" />
+                Add Card
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}

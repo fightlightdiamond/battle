@@ -157,13 +157,13 @@
     - Clear interval on pause or battle end
     - _Requirements: 7.1, 7.4_
 
-- [ ] 15. Integrate battle feature with app routing
+- [x] 15. Integrate battle feature with app routing
 
-  - [ ] 15.1 Add battle routes to App.tsx
+  - [x] 15.1 Add battle routes to App.tsx
     - /battle/setup → BattleSetupPage
     - /battle/arena → BattleArenaPage
     - Add navigation link to battle from main app
     - _Requirements: 1.1_
 
-- [ ] 16. Final Checkpoint - Ensure all tests pass
+- [x] 16. Final Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.

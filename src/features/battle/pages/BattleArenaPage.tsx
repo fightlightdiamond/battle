@@ -26,7 +26,8 @@ import {
   selectIsBattleFinished,
   selectWinner,
   selectLoser,
-  selectDangerStatus,
+  selectChallengerInDanger,
+  selectOpponentInDanger,
 } from "../store/battleStore";
 import { BATTLE_PHASES } from "../types/battle";
 import type { AttackResult, CardPosition } from "../types";
@@ -64,7 +65,8 @@ export function BattleArenaPage() {
   const isBattleFinished = useBattleStore(selectIsBattleFinished);
   const winner = useBattleStore(selectWinner);
   const loser = useBattleStore(selectLoser);
-  const dangerStatus = useBattleStore(selectDangerStatus);
+  const challengerInDanger = useBattleStore(selectChallengerInDanger);
+  const opponentInDanger = useBattleStore(selectOpponentInDanger);
 
   // Battle store actions
   const executeAttack = useBattleStore((state) => state.executeAttack);
@@ -259,7 +261,7 @@ export function BattleArenaPage() {
                 isReceivingDamage={
                   animationState.receivingDamagePosition === "left"
                 }
-                isDanger={dangerStatus.challengerInDanger}
+                isDanger={challengerInDanger}
                 isWinner={isBattleFinished && winner?.id === challenger.id}
                 isLoser={isBattleFinished && loser?.id === challenger.id}
               />
@@ -315,7 +317,7 @@ export function BattleArenaPage() {
                 isReceivingDamage={
                   animationState.receivingDamagePosition === "right"
                 }
-                isDanger={dangerStatus.opponentInDanger}
+                isDanger={opponentInDanger}
                 isWinner={isBattleFinished && winner?.id === opponent.id}
                 isLoser={isBattleFinished && loser?.id === opponent.id}
               />

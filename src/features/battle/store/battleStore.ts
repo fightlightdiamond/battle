@@ -16,6 +16,7 @@ import {
   BATTLE_PARTICIPANTS,
   BATTLE_PHASES,
   BATTLE_RESULTS,
+  COMBAT_CONSTANTS,
 } from "../types/battle";
 import { calculateAttack, checkBattleEnd } from "../services/battleService";
 import type { Card } from "../../cards/types";
@@ -331,15 +332,21 @@ export const selectLatestLogEntry = (
     ? state.battleLog[state.battleLog.length - 1]
     : null;
 
-const DANGER_THRESHOLD = 0.25;
+export const selectChallengerInDanger = (state: BattleState): boolean =>
+  state.challenger
+    ? state.challenger.currentHp / state.challenger.maxHp <
+      COMBAT_CONSTANTS.DANGER_THRESHOLD
+    : false;
+
+export const selectOpponentInDanger = (state: BattleState): boolean =>
+  state.opponent
+    ? state.opponent.currentHp / state.opponent.maxHp <
+      COMBAT_CONSTANTS.DANGER_THRESHOLD
+    : false;
 
 export const selectDangerStatus = (
   state: BattleState
 ): Readonly<{ challengerInDanger: boolean; opponentInDanger: boolean }> => ({
-  challengerInDanger: state.challenger
-    ? state.challenger.currentHp / state.challenger.maxHp < DANGER_THRESHOLD
-    : false,
-  opponentInDanger: state.opponent
-    ? state.opponent.currentHp / state.opponent.maxHp < DANGER_THRESHOLD
-    : false,
+  challengerInDanger: selectChallengerInDanger(state),
+  opponentInDanger: selectOpponentInDanger(state),
 });

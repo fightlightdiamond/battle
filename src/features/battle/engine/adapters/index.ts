@@ -1,0 +1,1 @@
+// Adapters module barrel exports
