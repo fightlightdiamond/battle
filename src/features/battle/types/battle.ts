@@ -4,6 +4,32 @@
  */
 
 /**
+ * Battle participant constants
+ */
+export const BATTLE_PARTICIPANTS = {
+  CHALLENGER: "challenger",
+  OPPONENT: "opponent",
+} as const;
+
+/**
+ * Battle phase constants
+ */
+export const BATTLE_PHASES = {
+  SETUP: "setup",
+  READY: "ready",
+  FIGHTING: "fighting",
+  FINISHED: "finished",
+} as const;
+
+/**
+ * Battle result constants
+ */
+export const BATTLE_RESULTS = {
+  CHALLENGER_WINS: "challenger_wins",
+  OPPONENT_WINS: "opponent_wins",
+} as const;
+
+/**
  * Represents a card in battle with combat-relevant stats
  */
 export interface BattleCard {
@@ -37,17 +63,20 @@ export interface BattleLogEntry {
  * - fighting: Battle in progress
  * - finished: Battle ended, winner determined
  */
-export type BattlePhase = "setup" | "ready" | "fighting" | "finished";
+export type BattlePhase = (typeof BATTLE_PHASES)[keyof typeof BATTLE_PHASES];
 
 /**
  * The result of a completed battle
  */
-export type BattleResult = "card1_wins" | "card2_wins" | null;
+export type BattleResult =
+  | (typeof BATTLE_RESULTS)[keyof typeof BATTLE_RESULTS]
+  | null;
 
 /**
  * Which card is currently attacking
  */
-export type CurrentAttacker = "card1" | "card2";
+export type CurrentAttacker =
+  (typeof BATTLE_PARTICIPANTS)[keyof typeof BATTLE_PARTICIPANTS];
 
 /**
  * Result of a single attack action
@@ -66,8 +95,8 @@ export interface AttackResult {
  */
 export interface BattleState {
   phase: BattlePhase;
-  card1: BattleCard | null;
-  card2: BattleCard | null;
+  challenger: BattleCard | null;
+  opponent: BattleCard | null;
   currentAttacker: CurrentAttacker;
   battleLog: BattleLogEntry[];
   result: BattleResult;

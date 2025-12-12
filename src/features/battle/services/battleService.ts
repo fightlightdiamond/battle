@@ -9,7 +9,7 @@ import type {
   BattleResult,
   HpBarColor,
 } from "../types";
-import { HP_BAR_COLORS, HP_THRESHOLDS } from "../types";
+import { HP_BAR_COLORS, HP_THRESHOLDS, BATTLE_RESULTS } from "../types";
 
 /**
  * Calculate HP percentage
@@ -77,22 +77,22 @@ export function calculateAttack(
 /**
  * Check if battle has ended and determine winner
  * Property 7: Victory Determination
- * - card1.currentHp <= 0 → 'card2_wins'
- * - card2.currentHp <= 0 → 'card1_wins'
+ * - challenger.currentHp <= 0 → 'opponent_wins'
+ * - opponent.currentHp <= 0 → 'challenger_wins'
  *
- * @param card1 - First battle card
- * @param card2 - Second battle card
+ * @param challenger - Challenger battle card
+ * @param opponent - Opponent battle card
  * @returns BattleResult or null if battle continues
  */
 export function checkBattleEnd(
-  card1: BattleCard,
-  card2: BattleCard
+  challenger: BattleCard,
+  opponent: BattleCard
 ): BattleResult {
-  if (card1.currentHp <= 0) {
-    return "card2_wins";
+  if (challenger.currentHp <= 0) {
+    return BATTLE_RESULTS.OPPONENT_WINS;
   }
-  if (card2.currentHp <= 0) {
-    return "card1_wins";
+  if (opponent.currentHp <= 0) {
+    return BATTLE_RESULTS.CHALLENGER_WINS;
   }
   return null;
 }

@@ -31,26 +31,26 @@
     - **Property 11: Critical Damage Threshold**
     - **Validates: Requirements 8.2**
 
-- [ ] 3. Implement battle store with Zustand
+- [x] 3. Implement battle store with Zustand
 
-  - [ ] 3.1 Create battleStore with state and actions
+  - [x] 3.1 Create battleStore with state and actions
     - Implement selectCard1, selectCard2 with duplicate prevention
     - Implement startBattle, executeAttack, toggleAutoBattle, resetBattle
     - Manage phase transitions: setup → ready → fighting → finished
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 3.3, 5.4, 7.4_
-  - [ ] 3.2 Write property test for card selection prevents duplicates
+  - [x] 3.2 Write property test for card selection prevents duplicates
     - **Property 1: Card Selection Prevents Duplicates**
     - **Validates: Requirements 1.4**
-  - [ ] 3.3 Write property test for battle phase transitions
+  - [x] 3.3 Write property test for battle phase transitions
     - **Property 2: Battle Phase Transitions**
     - **Validates: Requirements 1.2, 1.3, 1.5**
-  - [ ] 3.4 Write property test for turn alternation
+  - [x] 3.4 Write property test for turn alternation
     - **Property 4: Turn Alternation**
     - **Validates: Requirements 3.3**
-  - [ ] 3.5 Write property test for battle end disables attacks
+  - [x] 3.5 Write property test for battle end disables attacks
     - **Property 8: Battle End Disables Attacks**
     - **Validates: Requirements 5.4**
-  - [ ] 3.6 Write property test for auto-battle stops on victory
+  - [x] 3.6 Write property test for auto-battle stops on victory
     - **Property 10: Auto-Battle Stops on Victory**
     - **Validates: Requirements 7.4**
 

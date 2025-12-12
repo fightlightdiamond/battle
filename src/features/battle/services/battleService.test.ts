@@ -11,6 +11,7 @@ import {
   getHpBarColor,
 } from "./battleService";
 import type { BattleCard } from "../types";
+import { BATTLE_RESULTS } from "../types";
 
 /**
  * Arbitrary generator for BattleCard
@@ -105,32 +106,32 @@ describe("battleService", () => {
    * **Feature: card-battle-system, Property 7: Victory Determination**
    * **Validates: Requirements 5.1**
    *
-   * For any battle state where card1.currentHp <= 0, the result SHALL be 'card2_wins'.
-   * For any battle state where card2.currentHp <= 0, the result SHALL be 'card1_wins'.
+   * For any battle state where challenger.currentHp <= 0, the result SHALL be 'opponent_wins'.
+   * For any battle state where opponent.currentHp <= 0, the result SHALL be 'challenger_wins'.
    */
   describe("Property 7: Victory Determination", () => {
-    it("returns card2_wins when card1 HP <= 0", () => {
+    it("returns opponent_wins when challenger HP <= 0", () => {
       fc.assert(
         fc.property(
           battleCardArb.map((card) => ({ ...card, currentHp: 0 })),
           battleCardArb.filter((card) => card.currentHp > 0),
-          (card1, card2) => {
-            const result = checkBattleEnd(card1, card2);
-            expect(result).toBe("card2_wins");
+          (challenger, opponent) => {
+            const result = checkBattleEnd(challenger, opponent);
+            expect(result).toBe(BATTLE_RESULTS.OPPONENT_WINS);
           }
         ),
         { numRuns: 100 }
       );
     });
 
-    it("returns card1_wins when card2 HP <= 0", () => {
+    it("returns challenger_wins when opponent HP <= 0", () => {
       fc.assert(
         fc.property(
           battleCardArb.filter((card) => card.currentHp > 0),
           battleCardArb.map((card) => ({ ...card, currentHp: 0 })),
-          (card1, card2) => {
-            const result = checkBattleEnd(card1, card2);
-            expect(result).toBe("card1_wins");
+          (challenger, opponent) => {
+            const result = checkBattleEnd(challenger, opponent);
+            expect(result).toBe(BATTLE_RESULTS.CHALLENGER_WINS);
           }
         ),
         { numRuns: 100 }
@@ -142,8 +143,8 @@ describe("battleService", () => {
         fc.property(
           battleCardArb.filter((card) => card.currentHp > 0),
           battleCardArb.filter((card) => card.currentHp > 0),
-          (card1, card2) => {
-            const result = checkBattleEnd(card1, card2);
+          (challenger, opponent) => {
+            const result = checkBattleEnd(challenger, opponent);
             expect(result).toBeNull();
           }
         ),
