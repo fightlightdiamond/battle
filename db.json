@@ -7,13 +7,13 @@
       "hp": 2500,
       "imagePath": "550e8400-e29b-41d4-a716-446655440001.jpeg",
       "createdAt": 1702300800000,
-      "updatedAt": 1765619925123,
-      "def": 50,
-      "spd": 100,
-      "critChance": 5,
+      "updatedAt": 1765629058784,
+      "def": 150,
+      "spd": 90,
+      "critChance": 35,
       "critDamage": 150,
       "armorPen": 10,
-      "lifesteal": 10
+      "lifesteal": 20
     },
     {
       "id": "550e8400-e29b-41d4-a716-446655440002",
@@ -90,17 +90,17 @@
     {
       "id": "28e39fad-6da3-4cd3-a336-16f02fcb4517",
       "name": "Sythina",
-      "atk": 100,
-      "hp": 1000,
+      "atk": 200,
+      "hp": 2000,
       "imagePath": "28e39fad-6da3-4cd3-a336-16f02fcb4517.jpeg",
       "createdAt": 1765601568008,
-      "updatedAt": 1765619940070,
+      "updatedAt": 1765628886088,
       "def": 50,
       "spd": 100,
-      "critChance": 65,
-      "critDamage": 150,
+      "critChance": 75,
+      "critDamage": 250,
       "armorPen": 80,
-      "lifesteal": 10
+      "lifesteal": 30
     }
   ]
 }

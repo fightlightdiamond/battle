@@ -8,6 +8,9 @@ export type { BattleCardProps } from "./BattleCard";
 export { DamageNumber } from "./DamageNumber";
 export type { DamageNumberProps } from "./DamageNumber";
 
+export { HealNumber } from "./HealNumber";
+export type { HealNumberProps } from "./HealNumber";
+
 export { BattleLog } from "./BattleLog";
 export type { BattleLogProps } from "./BattleLog";
 

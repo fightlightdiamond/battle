@@ -246,9 +246,11 @@ describe("battleStore", () => {
           ([challengerCard, opponentCard, numAttacks]) => {
             useBattleStore.getState().resetBattle();
 
-            // Use high HP cards to ensure battle doesn't end early
-            const highHpChallenger = { ...challengerCard, hp: 10000 };
-            const highHpOpponent = { ...opponentCard, hp: 10000 };
+            // Use very high HP cards to ensure battle doesn't end early
+            // With crit damage up to 300% and ATK up to 1000, max damage per hit is ~3000
+            // So 100000 HP ensures at least 30+ turns
+            const highHpChallenger = { ...challengerCard, hp: 100000 };
+            const highHpOpponent = { ...opponentCard, hp: 100000 };
 
             useBattleStore.getState().selectChallenger(highHpChallenger);
             useBattleStore.getState().selectOpponent(highHpOpponent);
@@ -258,14 +260,20 @@ describe("battleStore", () => {
             const attackers: string[] = [];
 
             for (let i = 0; i < numAttacks; i++) {
+              // Only continue if battle is still in progress
+              if (useBattleStore.getState().phase !== BATTLE_PHASES.FIGHTING) {
+                break;
+              }
               const currentAttacker = useBattleStore.getState().currentAttacker;
               attackers.push(currentAttacker);
               useBattleStore.getState().executeAttack();
             }
 
-            // Verify alternation
-            for (let i = 1; i < attackers.length; i++) {
-              expect(attackers[i]).not.toBe(attackers[i - 1]);
+            // Verify alternation (only if we have at least 2 attacks)
+            if (attackers.length >= 2) {
+              for (let i = 1; i < attackers.length; i++) {
+                expect(attackers[i]).not.toBe(attackers[i - 1]);
+              }
             }
 
             // First attacker should be challenger

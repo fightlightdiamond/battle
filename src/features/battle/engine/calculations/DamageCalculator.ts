@@ -2,12 +2,50 @@ import type { DamageCalculationInput } from "../core/types";
 import { type CombatConfig, DEFAULT_COMBAT_CONFIG } from "../core/config";
 
 // ============================================================================
+// DAMAGE RESULT INTERFACE
+// ============================================================================
+
+/**
+ * Detailed damage calculation result with full breakdown.
+ * Used by UI components to display accurate combat information.
+ *
+ * Requirements: 4.1, 4.2, 4.3
+ */
+export interface DamageResult {
+  /** Total damage after all modifiers */
+  readonly finalDamage: number;
+  /** Damage before crit multiplier */
+  readonly baseDamage: number;
+  /** Whether critical hit was rolled */
+  readonly isCrit: boolean;
+  /** Extra damage from crit (0 if no crit) */
+  readonly critBonus: number;
+  /** HP healed from lifesteal (0 if no lifesteal) */
+  readonly lifestealAmount: number;
+}
+
+// ============================================================================
+// DAMAGE CALCULATION INPUT WITH LIFESTEAL
+// ============================================================================
+
+/**
+ * Extended input for calculateWithDetails that includes lifesteal.
+ */
+export interface DamageCalculationInputWithLifesteal
+  extends DamageCalculationInput {
+  readonly lifesteal?: number; // 0-100 (percentage)
+}
+
+// ============================================================================
 // DAMAGE CALCULATOR INTERFACE
 // ============================================================================
 
 export interface DamageCalculator {
   readonly config: CombatConfig;
   calculate(input: DamageCalculationInput): number;
+  calculateWithDetails(
+    input: DamageCalculationInputWithLifesteal
+  ): DamageResult;
   calculateWithDef(atk: number, def: number, armorPen?: number): number;
   calculateEffectiveDef(def: number, armorPen: number): number;
   rollCritical(critChance: number): boolean;
@@ -56,6 +94,61 @@ export function createDamageCalculator(
 
       // Simple damage = ATK × skillMultiplier (minimum 1)
       return Math.max(config.minDamage, Math.floor(baseDamage));
+    },
+
+    /**
+     * Calculate damage with full breakdown including crit and lifesteal.
+     * Returns a DamageResult object with all details for UI display.
+     *
+     * Requirements: 4.1, 4.2, 4.3
+     */
+    calculateWithDetails(
+      input: DamageCalculationInputWithLifesteal
+    ): DamageResult {
+      const {
+        attackerAtk,
+        defenderDef,
+        skillMultiplier = 1,
+        armorPen = 0,
+        critChance = 0,
+        critDamage = 100,
+        lifesteal = 0,
+      } = input;
+
+      // Step 1: Calculate base damage (before crit)
+      let baseDamage: number;
+      const rawDamage = attackerAtk * skillMultiplier;
+
+      if (config.useDefense && defenderDef !== undefined) {
+        baseDamage = this.calculateWithDef(rawDamage, defenderDef, armorPen);
+      } else {
+        baseDamage = Math.max(config.minDamage, Math.floor(rawDamage));
+      }
+
+      // Step 2: Roll for crit and calculate final damage
+      const isCrit = this.rollCritical(critChance);
+      let finalDamage: number;
+      let critBonus: number;
+
+      if (isCrit) {
+        finalDamage = this.applyCritical(baseDamage, critDamage);
+        critBonus = finalDamage - baseDamage;
+      } else {
+        finalDamage = baseDamage;
+        critBonus = 0;
+      }
+
+      // Step 3: Calculate lifesteal amount
+      // Formula: floor(finalDamage × lifesteal / 100)
+      const lifestealAmount = Math.floor((finalDamage * lifesteal) / 100);
+
+      return {
+        finalDamage,
+        baseDamage,
+        isCrit,
+        critBonus,
+        lifestealAmount,
+      };
     },
 
     /**

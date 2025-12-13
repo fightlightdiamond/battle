@@ -19,6 +19,7 @@ import {
   BattleControls,
   BattleLog,
   DamageNumber,
+  HealNumber,
   VictoryOverlay,
 } from "../components";
 import {
@@ -44,12 +45,18 @@ interface AnimationState {
     isCritical: boolean;
     position: CardPosition;
   } | null;
+  /** Heal number for lifesteal display (Requirements 3.3) */
+  healNumber: {
+    healAmount: number;
+    position: CardPosition;
+  } | null;
 }
 
 const initialAnimationState: AnimationState = {
   attackingPosition: null,
   receivingDamagePosition: null,
   damageNumber: null,
+  healNumber: null,
 };
 
 export function BattleArenaPage() {
@@ -87,6 +94,7 @@ export function BattleArenaPage() {
 
   /**
    * Handle attack action with animations
+   * Updated to display HealNumber when lifesteal triggers (Requirements 3.3)
    */
   const handleAttack = useCallback(() => {
     const currentPhase = useBattleStore.getState().phase;
@@ -105,6 +113,7 @@ export function BattleArenaPage() {
       attackingPosition: attackerPosition,
       receivingDamagePosition: null,
       damageNumber: null,
+      healNumber: null,
     });
 
     // Execute attack after brief delay for attack animation
@@ -113,6 +122,9 @@ export function BattleArenaPage() {
 
       if (result) {
         // Show damage animation on defender
+        // Also show heal number on attacker if lifesteal triggered (Requirements 3.3)
+        const lifestealHeal = result.lifestealHeal ?? 0;
+
         setAnimationState({
           attackingPosition: null,
           receivingDamagePosition: defenderPosition,
@@ -121,9 +133,17 @@ export function BattleArenaPage() {
             isCritical: result.isCritical,
             position: defenderPosition,
           },
+          // Show heal number on attacker if lifesteal healed any HP
+          healNumber:
+            lifestealHeal > 0
+              ? {
+                  healAmount: lifestealHeal,
+                  position: attackerPosition,
+                }
+              : null,
         });
 
-        // Clear damage animation after it completes
+        // Clear damage and heal animations after they complete
         setTimeout(() => {
           setAnimationState(initialAnimationState);
         }, 800);
@@ -148,6 +168,16 @@ export function BattleArenaPage() {
     setAnimationState((prev) => ({
       ...prev,
       damageNumber: null,
+    }));
+  }, []);
+
+  /**
+   * Handle heal number animation end (Requirements 3.3)
+   */
+  const handleHealAnimationEnd = useCallback(() => {
+    setAnimationState((prev) => ({
+      ...prev,
+      healNumber: null,
     }));
   }, []);
 
@@ -275,6 +305,15 @@ export function BattleArenaPage() {
                   onAnimationEnd={handleDamageAnimationEnd}
                 />
               )}
+
+              {/* Heal Number for Challenger (lifesteal) - Requirements 3.3 */}
+              {animationState.healNumber?.position === "left" && (
+                <HealNumber
+                  healAmount={animationState.healNumber.healAmount}
+                  position="left"
+                  onAnimationEnd={handleHealAnimationEnd}
+                />
+              )}
             </div>
 
             {/* VS Indicator */}
@@ -329,6 +368,15 @@ export function BattleArenaPage() {
                   isCritical={animationState.damageNumber.isCritical}
                   position="right"
                   onAnimationEnd={handleDamageAnimationEnd}
+                />
+              )}
+
+              {/* Heal Number for Opponent (lifesteal) - Requirements 3.3 */}
+              {animationState.healNumber?.position === "right" && (
+                <HealNumber
+                  healAmount={animationState.healNumber.healAmount}
+                  position="right"
+                  onAnimationEnd={handleHealAnimationEnd}
                 />
               )}
             </div>

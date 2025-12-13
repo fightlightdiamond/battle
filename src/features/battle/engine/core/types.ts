@@ -201,6 +201,14 @@ export interface AttackResult {
   readonly isCritical: boolean;
   readonly isKnockout: boolean;
   readonly lifestealHeal: number; // Amount healed via lifesteal
+  /** Detailed damage breakdown for UI display (Requirements 4.1, 4.2, 4.3) */
+  readonly damageResult?: {
+    readonly finalDamage: number;
+    readonly baseDamage: number;
+    readonly isCrit: boolean;
+    readonly critBonus: number;
+    readonly lifestealAmount: number;
+  };
 }
 
 export interface DamageCalculationInput {

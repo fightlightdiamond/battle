@@ -202,6 +202,136 @@ describe("DamageCalculator", () => {
     );
   });
 
+  /**
+   * **Feature: battle-combat-visuals, Property 4: DamageResult Structure Completeness**
+   *
+   * For any damage calculation, the returned DamageResult SHALL contain all required fields:
+   * finalDamage, baseDamage, isCrit, critBonus, lifestealAmount.
+   *
+   * **Validates: Requirements 4.1**
+   */
+  it("Property 4: DamageResult structure completeness", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 1, max: 9999 }), // attackerAtk
+        fc.integer({ min: 0, max: 9999 }), // defenderDef
+        fc.integer({ min: 0, max: 100 }), // critChance
+        fc.integer({ min: 100, max: 500 }), // critDamage
+        fc.integer({ min: 0, max: 100 }), // lifesteal
+        (attackerAtk, defenderDef, critChance, critDamage, lifesteal) => {
+          const result = damageCalculator.calculateWithDetails({
+            attackerAtk,
+            defenderDef,
+            critChance,
+            critDamage,
+            lifesteal,
+          });
+
+          // Verify all required fields exist and are of correct type
+          expect(result).toHaveProperty("finalDamage");
+          expect(result).toHaveProperty("baseDamage");
+          expect(result).toHaveProperty("isCrit");
+          expect(result).toHaveProperty("critBonus");
+          expect(result).toHaveProperty("lifestealAmount");
+
+          expect(typeof result.finalDamage).toBe("number");
+          expect(typeof result.baseDamage).toBe("number");
+          expect(typeof result.isCrit).toBe("boolean");
+          expect(typeof result.critBonus).toBe("number");
+          expect(typeof result.lifestealAmount).toBe("number");
+
+          // Verify values are non-negative
+          expect(result.finalDamage).toBeGreaterThanOrEqual(1);
+          expect(result.baseDamage).toBeGreaterThanOrEqual(1);
+          expect(result.critBonus).toBeGreaterThanOrEqual(0);
+          expect(result.lifestealAmount).toBeGreaterThanOrEqual(0);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * **Feature: battle-combat-visuals, Property 5: Crit Bonus Calculation**
+   *
+   * For any DamageResult where isCrit=true, critBonus SHALL equal (finalDamage - baseDamage).
+   * For any DamageResult where isCrit=false, critBonus SHALL equal 0.
+   *
+   * **Validates: Requirements 4.2**
+   */
+  it("Property 5: crit bonus calculation correctness", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 1, max: 9999 }), // attackerAtk
+        fc.integer({ min: 0, max: 9999 }), // defenderDef
+        fc.integer({ min: 100, max: 500 }), // critDamage
+        fc.boolean(), // forceCrit - we'll use 0 or 100 critChance to control crit
+        (attackerAtk, defenderDef, critDamage, forceCrit) => {
+          // Use 100% or 0% crit chance to deterministically control crit
+          const critChance = forceCrit ? 100 : 0;
+
+          const result = damageCalculator.calculateWithDetails({
+            attackerAtk,
+            defenderDef,
+            critChance,
+            critDamage,
+            lifesteal: 0,
+          });
+
+          if (result.isCrit) {
+            // When crit occurs, critBonus = finalDamage - baseDamage
+            // This is the core property we're testing
+            expect(result.critBonus).toBe(
+              result.finalDamage - result.baseDamage
+            );
+            // critBonus should be non-negative (can be 0 due to floor rounding)
+            expect(result.critBonus).toBeGreaterThanOrEqual(0);
+          } else {
+            // When no crit, critBonus = 0
+            expect(result.critBonus).toBe(0);
+            expect(result.finalDamage).toBe(result.baseDamage);
+          }
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * **Feature: battle-combat-visuals, Property 6: Lifesteal Calculation**
+   *
+   * For any damage and lifesteal percentage, lifestealAmount SHALL equal
+   * floor(finalDamage × lifesteal / 100).
+   *
+   * **Validates: Requirements 4.3**
+   */
+  it("Property 6: lifesteal calculation correctness", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 1, max: 9999 }), // attackerAtk
+        fc.integer({ min: 0, max: 9999 }), // defenderDef
+        fc.integer({ min: 0, max: 100 }), // lifesteal percentage
+        (attackerAtk, defenderDef, lifesteal) => {
+          // Use 0% crit chance to get predictable finalDamage
+          const result = damageCalculator.calculateWithDetails({
+            attackerAtk,
+            defenderDef,
+            critChance: 0,
+            critDamage: 100,
+            lifesteal,
+          });
+
+          // Verify lifesteal formula: floor(finalDamage × lifesteal / 100)
+          const expectedLifesteal = Math.floor(
+            (result.finalDamage * lifesteal) / 100
+          );
+          expect(result.lifestealAmount).toBe(expectedLifesteal);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
   // ============================================================================
   // UNIT TESTS
   // ============================================================================

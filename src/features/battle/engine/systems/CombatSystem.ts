@@ -3,6 +3,7 @@ import { type CombatConfig, DEFAULT_COMBAT_CONFIG } from "../core/config";
 import {
   createDamageCalculator,
   type DamageCalculator,
+  type DamageResult,
 } from "../calculations/DamageCalculator";
 
 // ============================================================================
@@ -34,34 +35,36 @@ export function createCombatSystem(
 
     /**
      * Calculate the result of an attack from attacker to defender.
+     * Uses calculateWithDetails() for full damage breakdown including crit and lifesteal.
      * Includes lifesteal mechanic: heal = damage × (lifesteal/100), capped at maxHp
      *
-     * Requirements: 2.4, 5.1, 5.2, 5.3
+     * Requirements: 2.4, 4.1, 4.2, 4.3, 5.1, 5.2, 5.3
      */
     calculateAttack(attacker: Combatant, defender: Combatant): AttackResult {
-      // Calculate damage using attacker's ATK and armor penetration (Requirements 2.3, 4.2)
-      const damage = calculator.calculate({
+      // Calculate damage with full breakdown using calculateWithDetails (Requirements 4.1, 4.2, 4.3)
+      const damageResult: DamageResult = calculator.calculateWithDetails({
         attackerAtk: attacker.baseStats.atk,
         defenderDef: defender.baseStats.def,
         armorPen: attacker.baseStats.armorPen,
+        critChance: attacker.baseStats.critChance,
+        critDamage: attacker.baseStats.critDamage,
+        lifesteal: attacker.baseStats.lifesteal ?? 0,
       });
 
+      const { finalDamage, isCrit, lifestealAmount } = damageResult;
+
       // Calculate new HP: max(0, currentHp - damage) (Property 7)
-      const defenderNewHp = Math.max(0, defender.currentHp - damage);
+      const defenderNewHp = Math.max(0, defender.currentHp - finalDamage);
 
       // Check if this is a knockout (Requirements 2.4)
       const isKnockout = defenderNewHp <= 0;
 
-      // Check if damage exceeds critical threshold (Property 11)
-      const isCritical = calculator.isCriticalDamage(damage, defender.maxHp);
+      // Check if damage exceeds critical threshold OR crit was rolled (Property 11)
+      const isCritical =
+        isCrit || calculator.isCriticalDamage(finalDamage, defender.maxHp);
 
-      // Calculate lifesteal healing (Requirements 2.4, 5.1, 5.2, 5.3)
-      // heal = damage × (lifesteal/100), capped at maxHp
-      const lifestealPercent = attacker.baseStats.lifesteal ?? 0;
-      const rawLifestealHeal = damage * (lifestealPercent / 100);
-      const lifestealHeal = Math.floor(rawLifestealHeal);
-
-      // Calculate attacker's new HP after lifesteal, capped at maxHp (Requirement 5.3)
+      // Lifesteal heal is already calculated in damageResult, cap at maxHp (Requirement 5.3)
+      const lifestealHeal = lifestealAmount;
       const attackerNewHp = Math.min(
         attacker.maxHp,
         attacker.currentHp + lifestealHeal
@@ -83,12 +86,20 @@ export function createCombatSystem(
       return {
         attacker: updatedAttacker,
         defender: updatedDefender,
-        damage,
+        damage: finalDamage,
         defenderNewHp,
         attackerNewHp,
         isCritical,
         isKnockout,
         lifestealHeal,
+        // Include full damage breakdown for UI components (Requirements 4.1)
+        damageResult: {
+          finalDamage: damageResult.finalDamage,
+          baseDamage: damageResult.baseDamage,
+          isCrit: damageResult.isCrit,
+          critBonus: damageResult.critBonus,
+          lifestealAmount: damageResult.lifestealAmount,
+        },
       };
     },
 

@@ -228,9 +228,19 @@ export const useBattleStore = create<BattleStoreState>((set, get) => ({
       currentHp: attackResult.defenderNewHp,
     };
 
-    // Determine new cards
-    const newChallenger = isChallengerAttacking ? challenger : updatedDefender;
-    const newOpponent = isChallengerAttacking ? updatedDefender : opponent;
+    // Create updated attacker with lifesteal healing (immutable spread)
+    const updatedAttacker: Readonly<BattleCard> = {
+      ...attacker,
+      currentHp: attackResult.attackerNewHp,
+    };
+
+    // Determine new cards (apply lifesteal to attacker)
+    const newChallenger = isChallengerAttacking
+      ? updatedAttacker
+      : updatedDefender;
+    const newOpponent = isChallengerAttacking
+      ? updatedDefender
+      : updatedAttacker;
 
     // Check battle end
     const battleResult = checkBattleEnd(newChallenger, newOpponent);

@@ -15,6 +15,7 @@ import {
   BATTLE_RESULTS,
   COMBAT_CONSTANTS,
 } from "../types";
+import { createDamageCalculator } from "../engine/calculations/DamageCalculator";
 
 /**
  * Calculate HP percentage
@@ -52,31 +53,61 @@ export function getHpBarColor(percentage: number): HpBarColor {
 }
 
 /**
- * Calculate attack result
+ * Calculate attack result using calculateWithDetails for full damage breakdown
  * Property 3: Attack Damage Equals ATK
  * Property 11: Critical Damage Threshold (damage > 30% of defender's maxHp)
+ * Requirements: 4.1, 4.2, 4.3
  *
  * @param attacker - The attacking card
  * @param defender - The defending card
- * @returns AttackResult with damage, new HP, critical and knockout flags
+ * @returns AttackResult with damage, new HP, critical, knockout flags, and damageResult
  */
 export function calculateAttack(
   attacker: BattleCard,
   defender: BattleCard
 ): AttackResult {
-  const damage = attacker.atk;
-  const defenderNewHp = Math.max(0, defender.currentHp - damage);
+  // Use calculateWithDetails for full damage breakdown (Requirements 4.1, 4.2, 4.3)
+  const calculator = createDamageCalculator();
+  const damageResult = calculator.calculateWithDetails({
+    attackerAtk: attacker.atk,
+    defenderDef: defender.def,
+    armorPen: attacker.armorPen,
+    critChance: attacker.critChance,
+    critDamage: attacker.critDamage,
+    lifesteal: attacker.lifesteal,
+  });
+
+  const { finalDamage, isCrit, lifestealAmount } = damageResult;
+
+  const defenderNewHp = Math.max(0, defender.currentHp - finalDamage);
   const isCritical =
-    damage > defender.maxHp * COMBAT_CONSTANTS.CRITICAL_DAMAGE_THRESHOLD;
+    isCrit ||
+    finalDamage > defender.maxHp * COMBAT_CONSTANTS.CRITICAL_DAMAGE_THRESHOLD;
   const isKnockout = defenderNewHp <= 0;
+
+  // Calculate attacker's new HP after lifesteal, capped at maxHp
+  const attackerNewHp = Math.min(
+    attacker.maxHp,
+    attacker.currentHp + lifestealAmount
+  );
 
   return {
     attacker,
     defender,
-    damage,
+    damage: finalDamage,
     defenderNewHp,
+    attackerNewHp,
     isCritical,
     isKnockout,
+    lifestealHeal: lifestealAmount,
+    // Include full damage breakdown for UI components
+    damageResult: {
+      finalDamage: damageResult.finalDamage,
+      baseDamage: damageResult.baseDamage,
+      isCrit: damageResult.isCrit,
+      critBonus: damageResult.critBonus,
+      lifestealAmount: damageResult.lifestealAmount,
+    },
   };
 }
 

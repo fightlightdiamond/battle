@@ -1,6 +1,9 @@
 /**
  * Property-based tests for Battle Service
  * Using fast-check for property-based testing
+ *
+ * Updated for battle-combat-visuals feature with calculateWithDetails
+ * Requirements: 4.1, 4.2, 4.3
  */
 
 import { describe, it, expect } from "vitest";
@@ -11,7 +14,7 @@ import {
   getHpBarColor,
 } from "./battleService";
 import type { BattleCard } from "../types";
-import { BATTLE_RESULTS } from "../types";
+import { BATTLE_RESULTS, COMBAT_CONSTANTS } from "../types";
 
 /**
  * Arbitrary generator for BattleCard
@@ -46,21 +49,42 @@ const battleCardArb = fc
 
 describe("battleService", () => {
   /**
-   * **Feature: card-battle-system, Property 3: Attack Damage Equals ATK**
-   * **Validates: Requirements 3.1, 3.2**
+   * **Feature: battle-combat-visuals, Property 4: DamageResult Structure Completeness**
+   * **Validates: Requirements 4.1**
    *
-   * For any attack action where attacker has ATK value A and defender has
-   * current HP value H, after the attack the defender's new HP SHALL equal max(0, H - A).
+   * For any damage calculation, the returned DamageResult SHALL contain all required fields:
+   * finalDamage, baseDamage, isCrit, critBonus, lifestealAmount.
    */
-  describe("Property 3: Attack Damage Equals ATK", () => {
-    it("defender's new HP equals max(0, currentHp - attacker.atk)", () => {
+  describe("Property 4: DamageResult Structure Completeness", () => {
+    it("damageResult contains all required fields", () => {
       fc.assert(
         fc.property(battleCardArb, battleCardArb, (attacker, defender) => {
           const result = calculateAttack(attacker, defender);
 
-          const expectedNewHp = Math.max(0, defender.currentHp - attacker.atk);
+          // DamageResult should be present
+          expect(result.damageResult).toBeDefined();
 
-          expect(result.damage).toBe(attacker.atk);
+          // All required fields should be present
+          expect(typeof result.damageResult!.finalDamage).toBe("number");
+          expect(typeof result.damageResult!.baseDamage).toBe("number");
+          expect(typeof result.damageResult!.isCrit).toBe("boolean");
+          expect(typeof result.damageResult!.critBonus).toBe("number");
+          expect(typeof result.damageResult!.lifestealAmount).toBe("number");
+
+          // finalDamage should match result.damage
+          expect(result.damageResult!.finalDamage).toBe(result.damage);
+        }),
+        { numRuns: 100 }
+      );
+    });
+
+    it("defender's new HP equals max(0, currentHp - finalDamage)", () => {
+      fc.assert(
+        fc.property(battleCardArb, battleCardArb, (attacker, defender) => {
+          const result = calculateAttack(attacker, defender);
+
+          const expectedNewHp = Math.max(0, defender.currentHp - result.damage);
+
           expect(result.defenderNewHp).toBe(expectedNewHp);
         }),
         { numRuns: 100 }
@@ -167,20 +191,92 @@ describe("battleService", () => {
   });
 
   /**
-   * **Feature: card-battle-system, Property 11: Critical Damage Threshold**
-   * **Validates: Requirements 8.2**
+   * **Feature: battle-combat-visuals, Property 5: Crit Bonus Calculation**
+   * **Validates: Requirements 4.2**
    *
-   * For any attack where damage D and defender's maxHp is M,
-   * the attack SHALL be marked as critical if and only if D > (M * 0.3).
+   * For any DamageResult where isCrit=true, critBonus SHALL equal (finalDamage - baseDamage).
+   * For any DamageResult where isCrit=false, critBonus SHALL equal 0.
    */
-  describe("Property 11: Critical Damage Threshold", () => {
-    it("isCritical is true when damage > 30% of defender maxHp", () => {
+  describe("Property 5: Crit Bonus Calculation", () => {
+    it("critBonus equals (finalDamage - baseDamage) when isCrit is true", () => {
       fc.assert(
         fc.property(battleCardArb, battleCardArb, (attacker, defender) => {
           const result = calculateAttack(attacker, defender);
 
-          const criticalThreshold = defender.maxHp * 0.3;
-          const expectedCritical = result.damage > criticalThreshold;
+          if (result.damageResult!.isCrit) {
+            expect(result.damageResult!.critBonus).toBe(
+              result.damageResult!.finalDamage - result.damageResult!.baseDamage
+            );
+          } else {
+            expect(result.damageResult!.critBonus).toBe(0);
+          }
+        }),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  /**
+   * **Feature: battle-combat-visuals, Property 6: Lifesteal Calculation**
+   * **Validates: Requirements 4.3**
+   *
+   * For any damage and lifesteal percentage, lifestealAmount SHALL equal
+   * floor(finalDamage × lifesteal / 100).
+   */
+  describe("Property 6: Lifesteal Calculation", () => {
+    it("lifestealAmount equals floor(finalDamage × lifesteal / 100)", () => {
+      fc.assert(
+        fc.property(battleCardArb, battleCardArb, (attacker, defender) => {
+          const result = calculateAttack(attacker, defender);
+
+          const expectedLifesteal = Math.floor(
+            (result.damage * attacker.lifesteal) / 100
+          );
+
+          expect(result.damageResult!.lifestealAmount).toBe(expectedLifesteal);
+          expect(result.lifestealHeal).toBe(expectedLifesteal);
+        }),
+        { numRuns: 100 }
+      );
+    });
+
+    it("attackerNewHp is capped at maxHp after lifesteal", () => {
+      fc.assert(
+        fc.property(battleCardArb, battleCardArb, (attacker, defender) => {
+          const result = calculateAttack(attacker, defender);
+
+          const expectedAttackerHp = Math.min(
+            attacker.maxHp,
+            attacker.currentHp + result.lifestealHeal
+          );
+
+          expect(result.attackerNewHp).toBe(expectedAttackerHp);
+        }),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  /**
+   * **Feature: card-battle-system, Property 11: Critical Damage Threshold**
+   * **Validates: Requirements 8.2**
+   *
+   * For any attack where damage D and defender's maxHp is M,
+   * the attack SHALL be marked as critical if D > (M * 0.3) OR if crit was rolled.
+   */
+  describe("Property 11: Critical Damage Threshold", () => {
+    it("isCritical is true when damage > 30% of defender maxHp OR crit was rolled", () => {
+      fc.assert(
+        fc.property(battleCardArb, battleCardArb, (attacker, defender) => {
+          const result = calculateAttack(attacker, defender);
+
+          const criticalThreshold =
+            defender.maxHp * COMBAT_CONSTANTS.CRITICAL_DAMAGE_THRESHOLD;
+          const damageExceedsThreshold = result.damage > criticalThreshold;
+          const critWasRolled = result.damageResult!.isCrit;
+
+          // isCritical should be true if either condition is met
+          const expectedCritical = damageExceedsThreshold || critWasRolled;
 
           expect(result.isCritical).toBe(expectedCritical);
         }),

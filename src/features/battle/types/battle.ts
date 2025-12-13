@@ -61,12 +61,22 @@ export type BattleLogEntryType = "attack" | "damage" | "victory";
 
 /**
  * A single entry in the battle log
+ * Extended to support crit and lifesteal visual indicators
+ * Requirements: 2.1, 2.2, 2.3, 2.4
  */
 export interface BattleLogEntry {
   id: string;
   timestamp: number;
   type: BattleLogEntryType;
   message: string;
+  /** Whether this attack was a critical hit */
+  isCrit?: boolean;
+  /** Whether this attack triggered lifesteal */
+  hasLifesteal?: boolean;
+  /** The lifesteal amount healed (if any) */
+  lifestealAmount?: number;
+  /** The crit bonus damage (if any) */
+  critBonus?: number;
 }
 
 /**
@@ -93,14 +103,26 @@ export type CurrentAttacker =
 
 /**
  * Result of a single attack action
+ * Extended to include DamageResult for detailed combat visuals
+ * Requirements: 4.1, 4.2, 4.3
  */
 export interface AttackResult {
   attacker: BattleCard;
   defender: BattleCard;
   damage: number;
   defenderNewHp: number;
-  isCritical: boolean; // damage > 30% of defender's maxHp
+  attackerNewHp: number; // For lifesteal tracking
+  isCritical: boolean; // damage > 30% of defender's maxHp OR crit rolled
   isKnockout: boolean; // defender HP <= 0
+  lifestealHeal: number; // Amount healed via lifesteal
+  /** Detailed damage breakdown for UI display */
+  damageResult?: {
+    finalDamage: number;
+    baseDamage: number;
+    isCrit: boolean;
+    critBonus: number;
+    lifestealAmount: number;
+  };
 }
 
 /**

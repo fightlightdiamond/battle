@@ -163,6 +163,16 @@
   @apply ml-1 text-2xl text-yellow-400 font-extrabold;
 }
 
+/* Heal Number Component Styles */
+.heal-number {
+  @apply absolute pointer-events-none z-50 left-1/2 -translate-x-1/2;
+  top: 20%;
+}
+
+.heal-text {
+  @apply font-bold drop-shadow-lg;
+}
+
 /* ============================================
    VICTORY OVERLAY ANIMATIONS
    ============================================ */

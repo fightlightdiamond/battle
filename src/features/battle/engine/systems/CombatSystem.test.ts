@@ -226,6 +226,7 @@ describe("CombatSystem", () => {
   });
 
   describe("calculateAttack()", () => {
+    // Use 0% crit chance for deterministic tests
     const attacker: Combatant = {
       id: "attacker-1",
       name: "Attacker",
@@ -234,7 +235,7 @@ describe("CombatSystem", () => {
         atk: 50,
         def: 30,
         spd: 100,
-        critChance: 5,
+        critChance: 0, // 0% crit for deterministic damage
         critDamage: 150,
         armorPen: 0,
         lifesteal: 0,
@@ -253,7 +254,7 @@ describe("CombatSystem", () => {
         atk: 40,
         def: 40,
         spd: 100,
-        critChance: 5,
+        critChance: 0, // 0% crit for deterministic damage
         critDamage: 150,
         armorPen: 0,
         lifesteal: 0,
@@ -266,7 +267,7 @@ describe("CombatSystem", () => {
 
     it("returns AttackResult with correct damage", () => {
       const result = combatSystem.calculateAttack(attacker, defender);
-      // Damage should equal attacker's ATK (50)
+      // Damage should equal attacker's ATK (50) when useDefense is false and no crit
       expect(result.damage).toBe(50);
     });
 
@@ -284,7 +285,8 @@ describe("CombatSystem", () => {
     });
 
     it("marks critical when damage exceeds 30% of maxHp", () => {
-      // 50 damage > 100 * 0.3 = 30, so should be critical
+      // 50 damage > 100 * 0.3 = 30, so should be critical (based on damage threshold)
+      // Note: isCritical is true if damage > 30% of maxHp OR if crit was rolled
       const result = combatSystem.calculateAttack(attacker, defender);
       expect(result.isCritical).toBe(true);
     });
