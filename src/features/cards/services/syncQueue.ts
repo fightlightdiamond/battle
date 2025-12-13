@@ -277,11 +277,17 @@ export const SyncQueue = {
               existingCreate,
               conflictStrategy
             );
-            // Always update to ensure we have the resolved version
+            // Always update to ensure we have the resolved version with all stats
             await cardApi.update(item.cardId, {
               name: resolved.name,
-              atk: resolved.atk,
               hp: resolved.hp,
+              atk: resolved.atk,
+              def: resolved.def,
+              spd: resolved.spd,
+              critChance: resolved.critChance,
+              critDamage: resolved.critDamage,
+              armorPen: resolved.armorPen,
+              lifesteal: resolved.lifesteal,
               imagePath: resolved.imagePath,
             });
           } else {
@@ -303,10 +309,17 @@ export const SyncQueue = {
               existingUpdate,
               conflictStrategy
             );
+            // Update with all stats
             await cardApi.update(item.cardId, {
               name: resolved.name,
-              atk: resolved.atk,
               hp: resolved.hp,
+              atk: resolved.atk,
+              def: resolved.def,
+              spd: resolved.spd,
+              critChance: resolved.critChance,
+              critDamage: resolved.critDamage,
+              armorPen: resolved.armorPen,
+              lifesteal: resolved.lifesteal,
               imagePath: resolved.imagePath,
             });
           } else {

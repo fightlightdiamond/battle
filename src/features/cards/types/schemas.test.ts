@@ -5,19 +5,27 @@ import {
   cardFormSchemaWithDefaults,
   cardSchema,
   imageSchema,
-  CARD_CRIT_CHANCE_MIN,
-  CARD_CRIT_CHANCE_MAX,
-  CARD_CRIT_DAMAGE_MIN,
-  CARD_ARMOR_PEN_MIN,
-  CARD_ARMOR_PEN_MAX,
-  CARD_LIFESTEAL_MIN,
-  CARD_LIFESTEAL_MAX,
-  CARD_DEF_MIN,
-  CARD_SPD_MIN,
-  CARD_HP_MIN,
-  CARD_ATK_MIN,
 } from "./schemas";
-import { DEFAULT_STATS, STAT_RANGES } from "./constants";
+import { STAT_REGISTRY, getStatByKey, getDefaultStats } from "./statConfig";
+
+// Helper to get stat range from registry
+const getStatRange = (key: string) => {
+  const stat = getStatByKey(key);
+  return stat ? { min: stat.min, max: stat.max } : { min: 0, max: Infinity };
+};
+
+// Get ranges from registry
+const HP_RANGE = getStatRange("hp");
+const ATK_RANGE = getStatRange("atk");
+const DEF_RANGE = getStatRange("def");
+const SPD_RANGE = getStatRange("spd");
+const CRIT_CHANCE_RANGE = getStatRange("critChance");
+const CRIT_DAMAGE_RANGE = getStatRange("critDamage");
+const ARMOR_PEN_RANGE = getStatRange("armorPen");
+const LIFESTEAL_RANGE = getStatRange("lifesteal");
+
+// Get default stats from registry
+const DEFAULT_STATS = getDefaultStats();
 
 /**
  * **Feature: card-game-manager, Property 3: Invalid card validation rejection**
@@ -51,8 +59,14 @@ describe("Property 3: Invalid card validation rejection", () => {
       fc.property(whitespaceArb, (emptyOrWhitespaceName) => {
         const input = {
           name: emptyOrWhitespaceName,
-          atk: 10,
-          hp: 10,
+          hp: DEFAULT_STATS.hp,
+          atk: DEFAULT_STATS.atk,
+          def: DEFAULT_STATS.def,
+          spd: DEFAULT_STATS.spd,
+          critChance: DEFAULT_STATS.critChance,
+          critDamage: DEFAULT_STATS.critDamage,
+          armorPen: DEFAULT_STATS.armorPen,
+          lifesteal: DEFAULT_STATS.lifesteal,
           image: null,
         };
         const result = cardFormSchema.safeParse(input);
@@ -70,11 +84,17 @@ describe("Property 3: Invalid card validation rejection", () => {
 
   it("rejects negative ATK values (Requirement 2.4)", () => {
     fc.assert(
-      fc.property(fc.integer({ max: -1 }), (negativeAtk) => {
+      fc.property(fc.integer({ max: ATK_RANGE.min - 1 }), (negativeAtk) => {
         const input = {
           name: "Valid Card",
+          hp: DEFAULT_STATS.hp,
           atk: negativeAtk,
-          hp: 10,
+          def: DEFAULT_STATS.def,
+          spd: DEFAULT_STATS.spd,
+          critChance: DEFAULT_STATS.critChance,
+          critDamage: DEFAULT_STATS.critDamage,
+          armorPen: DEFAULT_STATS.armorPen,
+          lifesteal: DEFAULT_STATS.lifesteal,
           image: null,
         };
         const result = cardFormSchema.safeParse(input);
@@ -92,11 +112,17 @@ describe("Property 3: Invalid card validation rejection", () => {
 
   it("rejects HP values less than 1 (Requirement 2.5)", () => {
     fc.assert(
-      fc.property(fc.integer({ max: 0 }), (invalidHp) => {
+      fc.property(fc.integer({ max: HP_RANGE.min - 1 }), (invalidHp) => {
         const input = {
           name: "Valid Card",
-          atk: 10,
           hp: invalidHp,
+          atk: DEFAULT_STATS.atk,
+          def: DEFAULT_STATS.def,
+          spd: DEFAULT_STATS.spd,
+          critChance: DEFAULT_STATS.critChance,
+          critDamage: DEFAULT_STATS.critDamage,
+          armorPen: DEFAULT_STATS.armorPen,
+          lifesteal: DEFAULT_STATS.lifesteal,
           image: null,
         };
         const result = cardFormSchema.safeParse(input);
@@ -155,29 +181,33 @@ describe("Property 3: Invalid card validation rejection", () => {
           name: fc
             .string({ minLength: 1, maxLength: 100 })
             .filter((s) => s.trim().length > 0),
-          hp: fc.integer({ min: CARD_HP_MIN, max: 10000 }),
-          atk: fc.integer({ min: CARD_ATK_MIN, max: 10000 }),
-          def: fc.integer({ min: CARD_DEF_MIN, max: 10000 }),
-          spd: fc.integer({ min: CARD_SPD_MIN, max: 10000 }),
+          hp: fc.integer({ min: HP_RANGE.min, max: 10000 }),
+          atk: fc.integer({ min: ATK_RANGE.min, max: 10000 }),
+          def: fc.integer({ min: DEF_RANGE.min, max: 10000 }),
+          spd: fc.integer({ min: SPD_RANGE.min, max: 10000 }),
           critChance: fc.double({
-            min: CARD_CRIT_CHANCE_MIN,
-            max: CARD_CRIT_CHANCE_MAX,
+            min: CRIT_CHANCE_RANGE.min,
+            max: CRIT_CHANCE_RANGE.max,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
           critDamage: fc.double({
-            min: CARD_CRIT_DAMAGE_MIN,
+            min: CRIT_DAMAGE_RANGE.min,
             max: 500,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
           armorPen: fc.double({
-            min: CARD_ARMOR_PEN_MIN,
-            max: CARD_ARMOR_PEN_MAX,
+            min: ARMOR_PEN_RANGE.min,
+            max: ARMOR_PEN_RANGE.max,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
           lifesteal: fc.double({
-            min: CARD_LIFESTEAL_MIN,
-            max: CARD_LIFESTEAL_MAX,
+            min: LIFESTEAL_RANGE.min,
+            max: LIFESTEAL_RANGE.max,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
         }),
         (stats) => {
@@ -220,17 +250,17 @@ describe("Property 3: Invalid card validation rejection", () => {
 describe("Property 8: Stat Validation Ranges", () => {
   it("rejects def values less than 0 (Requirement 9.1)", () => {
     fc.assert(
-      fc.property(fc.integer({ max: -1 }), (invalidDef) => {
+      fc.property(fc.integer({ max: DEF_RANGE.min - 1 }), (invalidDef) => {
         const input = {
           name: "Valid Card",
-          hp: 1000,
-          atk: 100,
+          hp: DEFAULT_STATS.hp,
+          atk: DEFAULT_STATS.atk,
           def: invalidDef,
-          spd: 100,
-          critChance: 5,
-          critDamage: 150,
-          armorPen: 0,
-          lifesteal: 0,
+          spd: DEFAULT_STATS.spd,
+          critChance: DEFAULT_STATS.critChance,
+          critDamage: DEFAULT_STATS.critDamage,
+          armorPen: DEFAULT_STATS.armorPen,
+          lifesteal: DEFAULT_STATS.lifesteal,
           image: null,
         };
         const result = cardFormSchema.safeParse(input);
@@ -248,17 +278,17 @@ describe("Property 8: Stat Validation Ranges", () => {
 
   it("rejects spd values less than 1 (Requirement 9.2)", () => {
     fc.assert(
-      fc.property(fc.integer({ max: 0 }), (invalidSpd) => {
+      fc.property(fc.integer({ max: SPD_RANGE.min - 1 }), (invalidSpd) => {
         const input = {
           name: "Valid Card",
-          hp: 1000,
-          atk: 100,
-          def: 50,
+          hp: DEFAULT_STATS.hp,
+          atk: DEFAULT_STATS.atk,
+          def: DEFAULT_STATS.def,
           spd: invalidSpd,
-          critChance: 5,
-          critDamage: 150,
-          armorPen: 0,
-          lifesteal: 0,
+          critChance: DEFAULT_STATS.critChance,
+          critDamage: DEFAULT_STATS.critDamage,
+          armorPen: DEFAULT_STATS.armorPen,
+          lifesteal: DEFAULT_STATS.lifesteal,
           image: null,
         };
         const result = cardFormSchema.safeParse(input);
@@ -278,18 +308,22 @@ describe("Property 8: Stat Validation Ranges", () => {
     // Test values below 0
     fc.assert(
       fc.property(
-        fc.double({ max: -0.01, noNaN: true }),
+        fc.double({
+          max: CRIT_CHANCE_RANGE.min - 0.01,
+          noNaN: true,
+          noDefaultInfinity: true,
+        }),
         (invalidCritChance) => {
           const input = {
             name: "Valid Card",
-            hp: 1000,
-            atk: 100,
-            def: 50,
-            spd: 100,
+            hp: DEFAULT_STATS.hp,
+            atk: DEFAULT_STATS.atk,
+            def: DEFAULT_STATS.def,
+            spd: DEFAULT_STATS.spd,
             critChance: invalidCritChance,
-            critDamage: 150,
-            armorPen: 0,
-            lifesteal: 0,
+            critDamage: DEFAULT_STATS.critDamage,
+            armorPen: DEFAULT_STATS.armorPen,
+            lifesteal: DEFAULT_STATS.lifesteal,
             image: null,
           };
           const result = cardFormSchema.safeParse(input);
@@ -302,18 +336,23 @@ describe("Property 8: Stat Validation Ranges", () => {
     // Test values above 100
     fc.assert(
       fc.property(
-        fc.double({ min: 100.01, max: 1000, noNaN: true }),
+        fc.double({
+          min: CRIT_CHANCE_RANGE.max + 0.01,
+          max: 1000,
+          noNaN: true,
+          noDefaultInfinity: true,
+        }),
         (invalidCritChance) => {
           const input = {
             name: "Valid Card",
-            hp: 1000,
-            atk: 100,
-            def: 50,
-            spd: 100,
+            hp: DEFAULT_STATS.hp,
+            atk: DEFAULT_STATS.atk,
+            def: DEFAULT_STATS.def,
+            spd: DEFAULT_STATS.spd,
             critChance: invalidCritChance,
-            critDamage: 150,
-            armorPen: 0,
-            lifesteal: 0,
+            critDamage: DEFAULT_STATS.critDamage,
+            armorPen: DEFAULT_STATS.armorPen,
+            lifesteal: DEFAULT_STATS.lifesteal,
             image: null,
           };
           const result = cardFormSchema.safeParse(input);
@@ -327,18 +366,22 @@ describe("Property 8: Stat Validation Ranges", () => {
   it("rejects critDamage values less than 100 (Requirement 9.4)", () => {
     fc.assert(
       fc.property(
-        fc.double({ max: 99.99, noNaN: true }),
+        fc.double({
+          max: CRIT_DAMAGE_RANGE.min - 0.01,
+          noNaN: true,
+          noDefaultInfinity: true,
+        }),
         (invalidCritDamage) => {
           const input = {
             name: "Valid Card",
-            hp: 1000,
-            atk: 100,
-            def: 50,
-            spd: 100,
-            critChance: 5,
+            hp: DEFAULT_STATS.hp,
+            atk: DEFAULT_STATS.atk,
+            def: DEFAULT_STATS.def,
+            spd: DEFAULT_STATS.spd,
+            critChance: DEFAULT_STATS.critChance,
             critDamage: invalidCritDamage,
-            armorPen: 0,
-            lifesteal: 0,
+            armorPen: DEFAULT_STATS.armorPen,
+            lifesteal: DEFAULT_STATS.lifesteal,
             image: null,
           };
           const result = cardFormSchema.safeParse(input);
@@ -358,40 +401,52 @@ describe("Property 8: Stat Validation Ranges", () => {
   it("rejects armorPen values outside 0-100 range (Requirement 9.5)", () => {
     // Test values below 0
     fc.assert(
-      fc.property(fc.double({ max: -0.01, noNaN: true }), (invalidArmorPen) => {
-        const input = {
-          name: "Valid Card",
-          hp: 1000,
-          atk: 100,
-          def: 50,
-          spd: 100,
-          critChance: 5,
-          critDamage: 150,
-          armorPen: invalidArmorPen,
-          lifesteal: 0,
-          image: null,
-        };
-        const result = cardFormSchema.safeParse(input);
-        expect(result.success).toBe(false);
-      }),
+      fc.property(
+        fc.double({
+          max: ARMOR_PEN_RANGE.min - 0.01,
+          noNaN: true,
+          noDefaultInfinity: true,
+        }),
+        (invalidArmorPen) => {
+          const input = {
+            name: "Valid Card",
+            hp: DEFAULT_STATS.hp,
+            atk: DEFAULT_STATS.atk,
+            def: DEFAULT_STATS.def,
+            spd: DEFAULT_STATS.spd,
+            critChance: DEFAULT_STATS.critChance,
+            critDamage: DEFAULT_STATS.critDamage,
+            armorPen: invalidArmorPen,
+            lifesteal: DEFAULT_STATS.lifesteal,
+            image: null,
+          };
+          const result = cardFormSchema.safeParse(input);
+          expect(result.success).toBe(false);
+        }
+      ),
       { numRuns: 100 }
     );
 
     // Test values above 100
     fc.assert(
       fc.property(
-        fc.double({ min: 100.01, max: 1000, noNaN: true }),
+        fc.double({
+          min: ARMOR_PEN_RANGE.max + 0.01,
+          max: 1000,
+          noNaN: true,
+          noDefaultInfinity: true,
+        }),
         (invalidArmorPen) => {
           const input = {
             name: "Valid Card",
-            hp: 1000,
-            atk: 100,
-            def: 50,
-            spd: 100,
-            critChance: 5,
-            critDamage: 150,
+            hp: DEFAULT_STATS.hp,
+            atk: DEFAULT_STATS.atk,
+            def: DEFAULT_STATS.def,
+            spd: DEFAULT_STATS.spd,
+            critChance: DEFAULT_STATS.critChance,
+            critDamage: DEFAULT_STATS.critDamage,
             armorPen: invalidArmorPen,
-            lifesteal: 0,
+            lifesteal: DEFAULT_STATS.lifesteal,
             image: null,
           };
           const result = cardFormSchema.safeParse(input);
@@ -406,17 +461,21 @@ describe("Property 8: Stat Validation Ranges", () => {
     // Test values below 0
     fc.assert(
       fc.property(
-        fc.double({ max: -0.01, noNaN: true }),
+        fc.double({
+          max: LIFESTEAL_RANGE.min - 0.01,
+          noNaN: true,
+          noDefaultInfinity: true,
+        }),
         (invalidLifesteal) => {
           const input = {
             name: "Valid Card",
-            hp: 1000,
-            atk: 100,
-            def: 50,
-            spd: 100,
-            critChance: 5,
-            critDamage: 150,
-            armorPen: 0,
+            hp: DEFAULT_STATS.hp,
+            atk: DEFAULT_STATS.atk,
+            def: DEFAULT_STATS.def,
+            spd: DEFAULT_STATS.spd,
+            critChance: DEFAULT_STATS.critChance,
+            critDamage: DEFAULT_STATS.critDamage,
+            armorPen: DEFAULT_STATS.armorPen,
             lifesteal: invalidLifesteal,
             image: null,
           };
@@ -430,17 +489,22 @@ describe("Property 8: Stat Validation Ranges", () => {
     // Test values above 100
     fc.assert(
       fc.property(
-        fc.double({ min: 100.01, max: 1000, noNaN: true }),
+        fc.double({
+          min: LIFESTEAL_RANGE.max + 0.01,
+          max: 1000,
+          noNaN: true,
+          noDefaultInfinity: true,
+        }),
         (invalidLifesteal) => {
           const input = {
             name: "Valid Card",
-            hp: 1000,
-            atk: 100,
-            def: 50,
-            spd: 100,
-            critChance: 5,
-            critDamage: 150,
-            armorPen: 0,
+            hp: DEFAULT_STATS.hp,
+            atk: DEFAULT_STATS.atk,
+            def: DEFAULT_STATS.def,
+            spd: DEFAULT_STATS.spd,
+            critChance: DEFAULT_STATS.critChance,
+            critDamage: DEFAULT_STATS.critDamage,
+            armorPen: DEFAULT_STATS.armorPen,
             lifesteal: invalidLifesteal,
             image: null,
           };
@@ -459,29 +523,33 @@ describe("Property 8: Stat Validation Ranges", () => {
           name: fc
             .string({ minLength: 1, maxLength: 100 })
             .filter((s) => s.trim().length > 0),
-          hp: fc.integer({ min: CARD_HP_MIN, max: 10000 }),
-          atk: fc.integer({ min: CARD_ATK_MIN, max: 10000 }),
-          def: fc.integer({ min: CARD_DEF_MIN, max: 10000 }),
-          spd: fc.integer({ min: CARD_SPD_MIN, max: 10000 }),
+          hp: fc.integer({ min: HP_RANGE.min, max: 10000 }),
+          atk: fc.integer({ min: ATK_RANGE.min, max: 10000 }),
+          def: fc.integer({ min: DEF_RANGE.min, max: 10000 }),
+          spd: fc.integer({ min: SPD_RANGE.min, max: 10000 }),
           critChance: fc.double({
-            min: CARD_CRIT_CHANCE_MIN,
-            max: CARD_CRIT_CHANCE_MAX,
+            min: CRIT_CHANCE_RANGE.min,
+            max: CRIT_CHANCE_RANGE.max,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
           critDamage: fc.double({
-            min: CARD_CRIT_DAMAGE_MIN,
+            min: CRIT_DAMAGE_RANGE.min,
             max: 500,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
           armorPen: fc.double({
-            min: CARD_ARMOR_PEN_MIN,
-            max: CARD_ARMOR_PEN_MAX,
+            min: ARMOR_PEN_RANGE.min,
+            max: ARMOR_PEN_RANGE.max,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
           lifesteal: fc.double({
-            min: CARD_LIFESTEAL_MIN,
-            max: CARD_LIFESTEAL_MAX,
+            min: LIFESTEAL_RANGE.min,
+            max: LIFESTEAL_RANGE.max,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
         }),
         (stats) => {
@@ -588,29 +656,33 @@ describe("Property 7: Default Stats Applied", () => {
           name: fc
             .string({ minLength: 1, maxLength: 100 })
             .filter((s) => s.trim().length > 0),
-          hp: fc.integer({ min: CARD_HP_MIN, max: 10000 }),
-          atk: fc.integer({ min: CARD_ATK_MIN, max: 10000 }),
-          def: fc.integer({ min: CARD_DEF_MIN, max: 10000 }),
-          spd: fc.integer({ min: CARD_SPD_MIN, max: 10000 }),
+          hp: fc.integer({ min: HP_RANGE.min, max: 10000 }),
+          atk: fc.integer({ min: ATK_RANGE.min, max: 10000 }),
+          def: fc.integer({ min: DEF_RANGE.min, max: 10000 }),
+          spd: fc.integer({ min: SPD_RANGE.min, max: 10000 }),
           critChance: fc.double({
-            min: CARD_CRIT_CHANCE_MIN,
-            max: CARD_CRIT_CHANCE_MAX,
+            min: CRIT_CHANCE_RANGE.min,
+            max: CRIT_CHANCE_RANGE.max,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
           critDamage: fc.double({
-            min: CARD_CRIT_DAMAGE_MIN,
+            min: CRIT_DAMAGE_RANGE.min,
             max: 500,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
           armorPen: fc.double({
-            min: CARD_ARMOR_PEN_MIN,
-            max: CARD_ARMOR_PEN_MAX,
+            min: ARMOR_PEN_RANGE.min,
+            max: ARMOR_PEN_RANGE.max,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
           lifesteal: fc.double({
-            min: CARD_LIFESTEAL_MIN,
-            max: CARD_LIFESTEAL_MAX,
+            min: LIFESTEAL_RANGE.min,
+            max: LIFESTEAL_RANGE.max,
             noNaN: true,
+            noDefaultInfinity: true,
           }),
         }),
         (stats) => {
@@ -636,33 +708,14 @@ describe("Property 7: Default Stats Applied", () => {
     );
   });
 
-  it("default values match STAT_RANGES minimums for percentage stats", () => {
+  it("default values are within valid ranges", () => {
     // Verify that default values are within valid ranges
-    expect(DEFAULT_STATS.hp).toBeGreaterThanOrEqual(STAT_RANGES.hp.min);
-    expect(DEFAULT_STATS.atk).toBeGreaterThanOrEqual(STAT_RANGES.atk.min);
-    expect(DEFAULT_STATS.def).toBeGreaterThanOrEqual(STAT_RANGES.def.min);
-    expect(DEFAULT_STATS.spd).toBeGreaterThanOrEqual(STAT_RANGES.spd.min);
-    expect(DEFAULT_STATS.critChance).toBeGreaterThanOrEqual(
-      STAT_RANGES.critChance.min
-    );
-    expect(DEFAULT_STATS.critChance).toBeLessThanOrEqual(
-      STAT_RANGES.critChance.max
-    );
-    expect(DEFAULT_STATS.critDamage).toBeGreaterThanOrEqual(
-      STAT_RANGES.critDamage.min
-    );
-    expect(DEFAULT_STATS.armorPen).toBeGreaterThanOrEqual(
-      STAT_RANGES.armorPen.min
-    );
-    expect(DEFAULT_STATS.armorPen).toBeLessThanOrEqual(
-      STAT_RANGES.armorPen.max
-    );
-    expect(DEFAULT_STATS.lifesteal).toBeGreaterThanOrEqual(
-      STAT_RANGES.lifesteal.min
-    );
-    expect(DEFAULT_STATS.lifesteal).toBeLessThanOrEqual(
-      STAT_RANGES.lifesteal.max
-    );
+    for (const stat of STAT_REGISTRY) {
+      expect(stat.defaultValue).toBeGreaterThanOrEqual(stat.min);
+      if (stat.max !== Infinity) {
+        expect(stat.defaultValue).toBeLessThanOrEqual(stat.max);
+      }
+    }
   });
 });
 
@@ -687,31 +740,35 @@ describe("Property 9: Card Serialization Round-Trip", () => {
       .filter((s) => s.trim().length > 0),
 
     // Core Stats (Tier 1)
-    hp: fc.integer({ min: CARD_HP_MIN, max: 10000 }),
-    atk: fc.integer({ min: CARD_ATK_MIN, max: 10000 }),
-    def: fc.integer({ min: CARD_DEF_MIN, max: 10000 }),
-    spd: fc.integer({ min: CARD_SPD_MIN, max: 10000 }),
+    hp: fc.integer({ min: HP_RANGE.min, max: 10000 }),
+    atk: fc.integer({ min: ATK_RANGE.min, max: 10000 }),
+    def: fc.integer({ min: DEF_RANGE.min, max: 10000 }),
+    spd: fc.integer({ min: SPD_RANGE.min, max: 10000 }),
 
     // Combat Stats (Tier 2)
     critChance: fc.double({
-      min: CARD_CRIT_CHANCE_MIN,
-      max: CARD_CRIT_CHANCE_MAX,
+      min: CRIT_CHANCE_RANGE.min,
+      max: CRIT_CHANCE_RANGE.max,
       noNaN: true,
+      noDefaultInfinity: true,
     }),
     critDamage: fc.double({
-      min: CARD_CRIT_DAMAGE_MIN,
+      min: CRIT_DAMAGE_RANGE.min,
       max: 500,
       noNaN: true,
+      noDefaultInfinity: true,
     }),
     armorPen: fc.double({
-      min: CARD_ARMOR_PEN_MIN,
-      max: CARD_ARMOR_PEN_MAX,
+      min: ARMOR_PEN_RANGE.min,
+      max: ARMOR_PEN_RANGE.max,
       noNaN: true,
+      noDefaultInfinity: true,
     }),
     lifesteal: fc.double({
-      min: CARD_LIFESTEAL_MIN,
-      max: CARD_LIFESTEAL_MAX,
+      min: LIFESTEAL_RANGE.min,
+      max: LIFESTEAL_RANGE.max,
       noNaN: true,
+      noDefaultInfinity: true,
     }),
 
     // Metadata

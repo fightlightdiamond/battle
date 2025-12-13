@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDropArea } from "react-use";
-import { NumericFormat } from "react-number-format";
 import { X, ImageOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,8 +15,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { cardFormSchema, type CardFormSchemaType } from "../types/schemas";
-import { DEFAULT_STATS } from "../types/constants";
+import {
+  getStatsByTier,
+  getDefaultStats,
+  TIER_CONFIG,
+  type StatTier,
+} from "../types/statConfig";
 import type { Card } from "../types";
+import { StatFormField } from "./StatFormField";
 
 interface CardFormProps {
   mode: "create" | "edit";
@@ -29,12 +34,13 @@ interface CardFormProps {
 /**
  * CardForm component
  * Build form with React Hook Form and Zod resolver
- * Add fields: name, ATK, HP, image upload with drag-and-drop
+ * Dynamically generates stat fields from STAT_REGISTRY
+ * Add fields: name, image upload with drag-and-drop
  * Show image preview
  * Display validation errors inline
  * Handle create and edit modes via props
  * Cancel button navigates back to `/cards`
- * Requirements: 2.1, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.1, 3.3, 3.4, 3.5
+ * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.1, 3.3, 3.4, 3.5
  */
 export function CardForm({
   mode,
@@ -47,22 +53,27 @@ export function CardForm({
     initialData?.imageUrl || null
   );
 
+  // Get default stats from config
+  const defaultStats = getDefaultStats();
+
+  // Build default values dynamically from config
+  const buildDefaultValues = () => {
+    const values: Record<string, unknown> = {
+      name: initialData?.name || "",
+      image: null,
+    };
+
+    // Add stat defaults from config
+    for (const [key, defaultValue] of Object.entries(defaultStats)) {
+      values[key] = initialData?.[key as keyof Card] ?? defaultValue;
+    }
+
+    return values as CardFormSchemaType;
+  };
+
   const form = useForm<CardFormSchemaType>({
     resolver: zodResolver(cardFormSchema),
-    defaultValues: {
-      name: initialData?.name || "",
-      // Core Stats (Tier 1)
-      hp: initialData?.hp ?? DEFAULT_STATS.hp,
-      atk: initialData?.atk ?? DEFAULT_STATS.atk,
-      def: initialData?.def ?? DEFAULT_STATS.def,
-      spd: initialData?.spd ?? DEFAULT_STATS.spd,
-      // Combat Stats (Tier 2)
-      critChance: initialData?.critChance ?? DEFAULT_STATS.critChance,
-      critDamage: initialData?.critDamage ?? DEFAULT_STATS.critDamage,
-      armorPen: initialData?.armorPen ?? DEFAULT_STATS.armorPen,
-      lifesteal: initialData?.lifesteal ?? DEFAULT_STATS.lifesteal,
-      image: null,
-    },
+    defaultValues: buildDefaultValues(),
   });
 
   const handleImageChange = useCallback(
@@ -100,6 +111,14 @@ export function CardForm({
   const handleSubmit = async (data: CardFormSchemaType) => {
     await onSubmit(data);
   };
+
+  // Get stats grouped by tier for rendering
+  const statsByTier = getStatsByTier();
+
+  // Get ordered tiers
+  const orderedTiers = (Object.keys(TIER_CONFIG) as StatTier[]).sort(
+    (a, b) => TIER_CONFIG[a].order - TIER_CONFIG[b].order
+  );
 
   return (
     <Form {...form}>
@@ -182,229 +201,23 @@ export function CardForm({
           )}
         />
 
-        {/* ═══════════════════════════════════════════════════════════════════ */}
-        {/* CORE STATS (Tier 1) */}
-        {/* ═══════════════════════════════════════════════════════════════════ */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold border-b pb-2">Core Stats</h3>
-          <div className="grid grid-cols-2 gap-4">
-            {/* HP Field */}
-            <FormField
-              control={form.control}
-              name="hp"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>HP (Hit Points)</FormLabel>
-                  <FormControl>
-                    <NumericFormat
-                      value={field.value}
-                      onValueChange={(values) =>
-                        field.onChange(values.floatValue ?? DEFAULT_STATS.hp)
-                      }
-                      thousandSeparator=","
-                      allowNegative={false}
-                      decimalScale={0}
-                      placeholder={String(DEFAULT_STATS.hp)}
-                      customInput={Input}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* ATK Field */}
-            <FormField
-              control={form.control}
-              name="atk"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>ATK (Attack)</FormLabel>
-                  <FormControl>
-                    <NumericFormat
-                      value={field.value}
-                      onValueChange={(values) =>
-                        field.onChange(values.floatValue ?? DEFAULT_STATS.atk)
-                      }
-                      thousandSeparator=","
-                      allowNegative={false}
-                      decimalScale={0}
-                      placeholder={String(DEFAULT_STATS.atk)}
-                      customInput={Input}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* DEF Field */}
-            <FormField
-              control={form.control}
-              name="def"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>DEF (Defense)</FormLabel>
-                  <FormControl>
-                    <NumericFormat
-                      value={field.value}
-                      onValueChange={(values) =>
-                        field.onChange(values.floatValue ?? DEFAULT_STATS.def)
-                      }
-                      thousandSeparator=","
-                      allowNegative={false}
-                      decimalScale={0}
-                      placeholder={String(DEFAULT_STATS.def)}
-                      customInput={Input}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* SPD Field */}
-            <FormField
-              control={form.control}
-              name="spd"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>SPD (Speed)</FormLabel>
-                  <FormControl>
-                    <NumericFormat
-                      value={field.value}
-                      onValueChange={(values) =>
-                        field.onChange(values.floatValue ?? DEFAULT_STATS.spd)
-                      }
-                      thousandSeparator=","
-                      allowNegative={false}
-                      decimalScale={0}
-                      placeholder={String(DEFAULT_STATS.spd)}
-                      customInput={Input}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        {/* Dynamic Stat Fields by Tier */}
+        {orderedTiers.map((tier) => (
+          <div key={tier} className="space-y-4">
+            <h3 className="text-lg font-semibold border-b pb-2">
+              {TIER_CONFIG[tier].label}
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              {statsByTier[tier].map((stat) => (
+                <StatFormField
+                  key={stat.key}
+                  stat={stat}
+                  control={form.control}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-
-        {/* ═══════════════════════════════════════════════════════════════════ */}
-        {/* COMBAT STATS (Tier 2) */}
-        {/* ═══════════════════════════════════════════════════════════════════ */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold border-b pb-2">Combat Stats</h3>
-          <div className="grid grid-cols-2 gap-4">
-            {/* Crit Chance Field */}
-            <FormField
-              control={form.control}
-              name="critChance"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Crit Chance (%)</FormLabel>
-                  <FormControl>
-                    <NumericFormat
-                      value={field.value}
-                      onValueChange={(values) =>
-                        field.onChange(
-                          values.floatValue ?? DEFAULT_STATS.critChance
-                        )
-                      }
-                      allowNegative={false}
-                      decimalScale={1}
-                      placeholder={String(DEFAULT_STATS.critChance)}
-                      suffix="%"
-                      customInput={Input}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Crit Damage Field */}
-            <FormField
-              control={form.control}
-              name="critDamage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Crit Damage (%)</FormLabel>
-                  <FormControl>
-                    <NumericFormat
-                      value={field.value}
-                      onValueChange={(values) =>
-                        field.onChange(
-                          values.floatValue ?? DEFAULT_STATS.critDamage
-                        )
-                      }
-                      allowNegative={false}
-                      decimalScale={0}
-                      placeholder={String(DEFAULT_STATS.critDamage)}
-                      suffix="%"
-                      customInput={Input}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Armor Penetration Field */}
-            <FormField
-              control={form.control}
-              name="armorPen"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Armor Pen (%)</FormLabel>
-                  <FormControl>
-                    <NumericFormat
-                      value={field.value}
-                      onValueChange={(values) =>
-                        field.onChange(
-                          values.floatValue ?? DEFAULT_STATS.armorPen
-                        )
-                      }
-                      allowNegative={false}
-                      decimalScale={1}
-                      placeholder={String(DEFAULT_STATS.armorPen)}
-                      suffix="%"
-                      customInput={Input}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Lifesteal Field */}
-            <FormField
-              control={form.control}
-              name="lifesteal"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Lifesteal (%)</FormLabel>
-                  <FormControl>
-                    <NumericFormat
-                      value={field.value}
-                      onValueChange={(values) =>
-                        field.onChange(
-                          values.floatValue ?? DEFAULT_STATS.lifesteal
-                        )
-                      }
-                      allowNegative={false}
-                      decimalScale={1}
-                      placeholder={String(DEFAULT_STATS.lifesteal)}
-                      suffix="%"
-                      customInput={Input}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
+        ))}
 
         {/* Form Actions */}
         <div className="flex gap-4">

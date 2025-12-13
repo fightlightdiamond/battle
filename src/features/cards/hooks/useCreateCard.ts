@@ -10,6 +10,7 @@ import { saveImage, getImageUrl } from "../services/imageStorage";
 import type { Card, CardFormInput } from "../types";
 import { cardKeys } from "./cardKeys";
 import { isOnline } from "./utils";
+import { DEFAULT_STATS } from "../types/constants";
 
 /**
  * Hook to create a new card
@@ -39,12 +40,21 @@ export function useCreateCard(
         }
       }
 
-      // Create card object
+      // Create card object with all stats from config
       const cardData = {
         id,
         name: input.name,
-        atk: input.atk,
-        hp: input.hp,
+        // Core Stats (Tier 1)
+        hp: input.hp ?? DEFAULT_STATS.hp,
+        atk: input.atk ?? DEFAULT_STATS.atk,
+        def: input.def ?? DEFAULT_STATS.def,
+        spd: input.spd ?? DEFAULT_STATS.spd,
+        // Combat Stats (Tier 2)
+        critChance: input.critChance ?? DEFAULT_STATS.critChance,
+        critDamage: input.critDamage ?? DEFAULT_STATS.critDamage,
+        armorPen: input.armorPen ?? DEFAULT_STATS.armorPen,
+        lifesteal: input.lifesteal ?? DEFAULT_STATS.lifesteal,
+        // Metadata
         imagePath,
         createdAt: now,
         updatedAt: now,

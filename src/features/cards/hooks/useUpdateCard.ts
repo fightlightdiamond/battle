@@ -10,6 +10,7 @@ import { saveImage, deleteImage } from "../services/imageStorage";
 import type { Card, CardFormInput } from "../types";
 import { cardKeys } from "./cardKeys";
 import { toCard, isOnline } from "./utils";
+import { DEFAULT_STATS } from "../types/constants";
 
 /**
  * Hook to update an existing card
@@ -92,12 +93,24 @@ export function useUpdateCard(
         throw new Error("Failed to update card in local storage");
       }
 
-      // Prepare card data for API/queue
+      // Prepare card data for API/queue with all stats
       const cardDataForSync = {
         id,
         name: input.name,
-        atk: input.atk,
-        hp: input.hp,
+        // Core Stats (Tier 1)
+        hp: input.hp ?? existing.hp ?? DEFAULT_STATS.hp,
+        atk: input.atk ?? existing.atk ?? DEFAULT_STATS.atk,
+        def: input.def ?? existing.def ?? DEFAULT_STATS.def,
+        spd: input.spd ?? existing.spd ?? DEFAULT_STATS.spd,
+        // Combat Stats (Tier 2)
+        critChance:
+          input.critChance ?? existing.critChance ?? DEFAULT_STATS.critChance,
+        critDamage:
+          input.critDamage ?? existing.critDamage ?? DEFAULT_STATS.critDamage,
+        armorPen: input.armorPen ?? existing.armorPen ?? DEFAULT_STATS.armorPen,
+        lifesteal:
+          input.lifesteal ?? existing.lifesteal ?? DEFAULT_STATS.lifesteal,
+        // Metadata
         imagePath,
         createdAt: existing.createdAt,
         updatedAt: updatedCard?.updatedAt || Date.now(),
@@ -108,8 +121,17 @@ export function useUpdateCard(
         try {
           await cardApi.update(id, {
             name: input.name,
-            atk: input.atk,
-            hp: input.hp,
+            // Core Stats (Tier 1)
+            hp: cardDataForSync.hp,
+            atk: cardDataForSync.atk,
+            def: cardDataForSync.def,
+            spd: cardDataForSync.spd,
+            // Combat Stats (Tier 2)
+            critChance: cardDataForSync.critChance,
+            critDamage: cardDataForSync.critDamage,
+            armorPen: cardDataForSync.armorPen,
+            lifesteal: cardDataForSync.lifesteal,
+            // Metadata
             imagePath,
           });
         } catch (apiError) {

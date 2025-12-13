@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
-import { Pencil, Trash2, Swords, Heart, ImageOff } from "lucide-react";
+import { Pencil, Trash2, ImageOff } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Card as CardType } from "../types";
 import { useDeleteDialog } from "../store";
+import { getCompactStats } from "../types/statConfig";
+import { StatDisplay } from "./StatDisplay";
 
 interface CardListProps {
   cards: CardType[];
@@ -65,6 +67,8 @@ interface CardItemProps {
 }
 
 function CardItem({ card, onDelete }: CardItemProps) {
+  const compactStats = getCompactStats();
+
   return (
     <Card className="overflow-hidden py-0">
       <div className="aspect-[3/4] relative bg-muted">
@@ -84,15 +88,14 @@ function CardItem({ card, onDelete }: CardItemProps) {
         <h3 className="font-semibold truncate mb-2" title={card.name}>
           {card.name}
         </h3>
-        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-          <span className="flex items-center gap-1">
-            <Swords className="h-4 w-4" />
-            {card.atk}
-          </span>
-          <span className="flex items-center gap-1">
-            <Heart className="h-4 w-4" />
-            {card.hp}
-          </span>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-muted-foreground mb-3">
+          {compactStats.map((stat) => (
+            <StatDisplay
+              key={stat.key}
+              stat={stat}
+              value={card[stat.key as keyof CardType] as number}
+            />
+          ))}
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="flex-1" asChild>

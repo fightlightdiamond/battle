@@ -1,29 +1,34 @@
 // API types for json-server
+import type { CardStats } from "../types/statTypes";
 
 // Card as stored in json-server (without runtime imageUrl)
-export interface ApiCard {
+// Uses CardStats for all stat fields to stay in sync with config
+export interface ApiCard extends Partial<CardStats> {
   id: string;
   name: string;
-  atk: number;
+  // hp and atk are required for backward compatibility
   hp: number;
+  atk: number;
   imagePath: string | null; // Reference to OPFS file
   createdAt: number;
   updatedAt: number;
 }
 
 // Input for creating a card via API (without image - handled separately via OPFS)
-export interface CreateCardInput {
+// All stats are optional - defaults will be applied
+export interface CreateCardInput extends Partial<CardStats> {
   name: string;
-  atk: number;
   hp: number;
+  atk: number;
   imagePath: string | null;
 }
 
 // Input for updating a card via API
-export interface UpdateCardInput {
+// All stats are optional - existing values will be preserved
+export interface UpdateCardInput extends Partial<CardStats> {
   name: string;
-  atk: number;
   hp: number;
+  atk: number;
   imagePath: string | null;
 }
 
