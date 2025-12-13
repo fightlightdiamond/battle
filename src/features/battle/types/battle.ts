@@ -31,14 +31,27 @@ export const BATTLE_RESULTS = {
 
 /**
  * Represents a card in battle with combat-relevant stats
+ * Updated for Tier-Based Stat System (Requirements: 1.1, 7.1-7.6)
  */
 export interface BattleCard {
   id: string;
   name: string;
-  atk: number;
+  imageUrl: string | null;
+
+  // HP tracking
   maxHp: number;
   currentHp: number;
-  imageUrl: string | null;
+
+  // Core Stats (Tier 1)
+  atk: number;
+  def: number;
+  spd: number;
+
+  // Combat Stats (Tier 2)
+  critChance: number; // 0-100 (percentage)
+  critDamage: number; // 100+ (150 = 1.5x multiplier)
+  armorPen: number; // 0-100 (percentage)
+  lifesteal: number; // 0-100 (percentage)
 }
 
 /**

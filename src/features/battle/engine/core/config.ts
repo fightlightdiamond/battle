@@ -35,12 +35,19 @@ export interface StageScalingConfig {
 
 /**
  * Default combatant stats configuration
+ * Updated for Tier-Based Stat System
  */
 export interface DefaultStatsConfig {
+  // Core Stats (Tier 1)
   atk: number;
   def: number;
-  critRate: number;
-  critDamage: number;
+  spd: number;
+
+  // Combat Stats (Tier 2)
+  critChance: number; // 0-100 (percentage)
+  critDamage: number; // 100+ (150 = 1.5x multiplier)
+  armorPen: number; // 0-100 (percentage)
+  lifesteal: number; // 0-100 (percentage)
 }
 
 /**
@@ -91,12 +98,19 @@ export const DEFAULT_STAGE_SCALING_CONFIG: StageScalingConfig = {
 
 /**
  * Default combatant stats
+ * Updated for Tier-Based Stat System
  */
 export const DEFAULT_STATS_CONFIG: DefaultStatsConfig = {
-  atk: 10,
-  def: 0,
-  critRate: 0,
-  critDamage: 1.5,
+  // Core Stats (Tier 1)
+  atk: 100,
+  def: 50,
+  spd: 100,
+
+  // Combat Stats (Tier 2)
+  critChance: 5, // 5%
+  critDamage: 150, // 150% = 1.5x multiplier
+  armorPen: 0, // 0%
+  lifesteal: 0, // 0%
 };
 
 /**

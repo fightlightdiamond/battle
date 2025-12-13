@@ -109,10 +109,16 @@ function validateCombatantStats(data: unknown, name: string): CombatantStats {
   }
 
   return {
+    // Core Stats (Tier 1)
     atk: validateNumber(data.atk, `${name}.atk`),
     def: validateNumber(data.def, `${name}.def`),
-    critRate: validateNumber(data.critRate, `${name}.critRate`),
+    spd: validateNumber(data.spd, `${name}.spd`),
+
+    // Combat Stats (Tier 2)
+    critChance: validateNumber(data.critChance, `${name}.critChance`),
     critDamage: validateNumber(data.critDamage, `${name}.critDamage`),
+    armorPen: validateNumber(data.armorPen, `${name}.armorPen`),
+    lifesteal: validateNumber(data.lifesteal, `${name}.lifesteal`),
   };
 }
 
@@ -140,8 +146,11 @@ function validateActiveBuff(data: unknown, name: string): ActiveBuff {
   const validStats: (keyof CombatantStats)[] = [
     "atk",
     "def",
-    "critRate",
+    "spd",
+    "critChance",
     "critDamage",
+    "armorPen",
+    "lifesteal",
   ];
   if (
     typeof stat !== "string" ||

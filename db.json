@@ -80,6 +80,15 @@
       "imagePath": "f4670f56-921e-4b4c-b4a3-259d5b696855.png",
       "createdAt": 1765464488083,
       "updatedAt": 1765464488083
+    },
+    {
+      "id": "28e39fad-6da3-4cd3-a336-16f02fcb4517",
+      "name": "Sythina",
+      "atk": 100,
+      "hp": 1000,
+      "imagePath": "28e39fad-6da3-4cd3-a336-16f02fcb4517.jpeg",
+      "createdAt": 1765601568008,
+      "updatedAt": 1765601568008
     }
   ]
 }

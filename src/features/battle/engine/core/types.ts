@@ -3,10 +3,16 @@
 // ============================================================================
 
 export interface CombatantStats {
+  // Core Stats (Tier 1)
   readonly atk: number;
   readonly def: number;
-  readonly critRate: number;
-  readonly critDamage: number;
+  readonly spd: number;
+
+  // Combat Stats (Tier 2)
+  readonly critChance: number; // 0-100 (percentage)
+  readonly critDamage: number; // 100+ (150 = 1.5x multiplier)
+  readonly armorPen: number; // 0-100 (percentage)
+  readonly lifesteal: number; // 0-100 (percentage)
 }
 
 export interface ActiveBuff {
@@ -191,14 +197,17 @@ export interface AttackResult {
   readonly defender: Combatant;
   readonly damage: number;
   readonly defenderNewHp: number;
+  readonly attackerNewHp: number; // For lifesteal tracking
   readonly isCritical: boolean;
   readonly isKnockout: boolean;
+  readonly lifestealHeal: number; // Amount healed via lifesteal
 }
 
 export interface DamageCalculationInput {
   readonly attackerAtk: number;
   readonly defenderDef: number;
   readonly skillMultiplier?: number;
-  readonly critRate?: number;
-  readonly critDamage?: number;
+  readonly critChance?: number; // 0-100 (percentage)
+  readonly critDamage?: number; // 100+ (150 = 1.5x multiplier)
+  readonly armorPen?: number; // 0-100 (percentage)
 }

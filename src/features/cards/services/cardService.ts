@@ -6,9 +6,57 @@ import type {
   CardListParams,
   PaginatedCards,
 } from "../types";
+import { DEFAULT_STATS } from "../types/constants";
 
 // Type for stored card (without runtime imageUrl)
 type StoredCard = Omit<Card, "imageUrl">;
+
+// Type for legacy card data (may be missing new stat fields)
+type LegacyStoredCard = {
+  id: string;
+  name: string;
+  hp: number;
+  atk: number;
+  def?: number;
+  spd?: number;
+  critChance?: number;
+  critDamage?: number;
+  armorPen?: number;
+  lifesteal?: number;
+  imagePath: string | null;
+  createdAt: number;
+  updatedAt: number;
+};
+
+/**
+ * Apply default stat values to a card that may be missing new stat fields.
+ * Preserves existing HP and ATK values while adding defaults for missing fields.
+ *
+ * Requirements: 10.1, 10.2, 10.3
+ * - When loading card without new stat fields, apply default values
+ * - When saving card, persist all stat fields to database
+ * - When migrating, do NOT modify existing HP and ATK values
+ */
+export function applyDefaultStats(card: LegacyStoredCard): StoredCard {
+  return {
+    id: card.id,
+    name: card.name,
+    // Preserve existing HP and ATK values (Requirement 10.3)
+    hp: card.hp,
+    atk: card.atk,
+    // Apply defaults for new stat fields if missing (Requirement 10.1)
+    def: card.def ?? DEFAULT_STATS.def,
+    spd: card.spd ?? DEFAULT_STATS.spd,
+    critChance: card.critChance ?? DEFAULT_STATS.critChance,
+    critDamage: card.critDamage ?? DEFAULT_STATS.critDamage,
+    armorPen: card.armorPen ?? DEFAULT_STATS.armorPen,
+    lifesteal: card.lifesteal ?? DEFAULT_STATS.lifesteal,
+    // Preserve metadata
+    imagePath: card.imagePath,
+    createdAt: card.createdAt,
+    updatedAt: card.updatedAt,
+  };
+}
 
 /**
  * Generate a UUID v4
@@ -18,14 +66,17 @@ function generateId(): string {
 }
 
 /**
- * Convert a stored card to a Card with imageUrl
+ * Convert a stored card to a Card with imageUrl.
+ * Applies default stats for any missing fields (migration support).
  */
-async function toCard(stored: StoredCard): Promise<Card> {
+async function toCard(stored: LegacyStoredCard): Promise<Card> {
   const imageUrl = stored.imagePath
     ? await getImageUrl(stored.imagePath)
     : null;
+  // Apply defaults for any missing stat fields
+  const migratedCard = applyDefaultStats(stored);
   return {
-    ...stored,
+    ...migratedCard,
     imageUrl,
   };
 }
@@ -86,8 +137,17 @@ export const CardService = {
     const storedCard: StoredCard = {
       id,
       name: input.name,
-      atk: input.atk,
-      hp: input.hp,
+      // Core Stats (Tier 1)
+      hp: input.hp ?? DEFAULT_STATS.hp,
+      atk: input.atk ?? DEFAULT_STATS.atk,
+      def: input.def ?? DEFAULT_STATS.def,
+      spd: input.spd ?? DEFAULT_STATS.spd,
+      // Combat Stats (Tier 2)
+      critChance: input.critChance ?? DEFAULT_STATS.critChance,
+      critDamage: input.critDamage ?? DEFAULT_STATS.critDamage,
+      armorPen: input.armorPen ?? DEFAULT_STATS.armorPen,
+      lifesteal: input.lifesteal ?? DEFAULT_STATS.lifesteal,
+      // Metadata
       imagePath,
       createdAt: now,
       updatedAt: now,
@@ -100,22 +160,26 @@ export const CardService = {
   /**
    * Create a new card with a pre-generated ID
    * Used for syncing between API and IndexedDB with consistent IDs
+   * Applies default stats for any missing fields (migration support)
    */
-  async createWithId(cardData: StoredCard): Promise<Card> {
+  async createWithId(cardData: LegacyStoredCard): Promise<Card> {
     const db = await getDB();
-    await db.add("cards", cardData);
-    return toCard(cardData);
+    const migratedCard = applyDefaultStats(cardData);
+    await db.add("cards", migratedCard);
+    return toCard(migratedCard);
   },
 
   /**
    * Create or update a card (upsert)
    * If card with same ID exists, it will be replaced
    * Used for syncing to avoid duplicate key errors
+   * Applies default stats for any missing fields (migration support)
    */
-  async upsert(cardData: StoredCard): Promise<Card> {
+  async upsert(cardData: LegacyStoredCard): Promise<Card> {
     const db = await getDB();
-    await db.put("cards", cardData);
-    return toCard(cardData);
+    const migratedCard = applyDefaultStats(cardData);
+    await db.put("cards", migratedCard);
+    return toCard(migratedCard);
   },
 
   /**
@@ -123,7 +187,9 @@ export const CardService = {
    */
   async update(id: string, input: CardFormInput): Promise<Card | null> {
     const db = await getDB();
-    const existing = await db.get("cards", id);
+    const existing = (await db.get("cards", id)) as
+      | LegacyStoredCard
+      | undefined;
 
     if (!existing) {
       return null;
@@ -142,11 +208,23 @@ export const CardService = {
       imagePath = await saveImage(id, input.image);
     }
 
+    // Apply migration to existing card first, then update with new values
+    const migratedExisting = applyDefaultStats(existing);
+
     const updatedCard: StoredCard = {
-      ...existing,
+      ...migratedExisting,
       name: input.name,
-      atk: input.atk,
-      hp: input.hp,
+      // Core Stats (Tier 1)
+      hp: input.hp ?? migratedExisting.hp,
+      atk: input.atk ?? migratedExisting.atk,
+      def: input.def ?? migratedExisting.def,
+      spd: input.spd ?? migratedExisting.spd,
+      // Combat Stats (Tier 2)
+      critChance: input.critChance ?? migratedExisting.critChance,
+      critDamage: input.critDamage ?? migratedExisting.critDamage,
+      armorPen: input.armorPen ?? migratedExisting.armorPen,
+      lifesteal: input.lifesteal ?? migratedExisting.lifesteal,
+      // Metadata
       imagePath,
       updatedAt: now,
     };

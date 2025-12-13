@@ -2,8 +2,20 @@
 export interface Card {
   id: string;
   name: string;
-  atk: number;
+
+  // Core Stats (Tier 1)
   hp: number;
+  atk: number;
+  def: number;
+  spd: number;
+
+  // Combat Stats (Tier 2)
+  critChance: number;
+  critDamage: number;
+  armorPen: number;
+  lifesteal: number;
+
+  // Metadata
   imagePath: string | null; // Path to image in OPFS
   imageUrl: string | null; // Object URL for display (generated at runtime)
   createdAt: number;
@@ -11,9 +23,21 @@ export interface Card {
 }
 
 // Form input (without id and timestamps)
+// New stat fields are optional - defaults will be applied by CardService
 export interface CardFormInput {
   name: string;
-  atk: number;
-  hp: number;
+
+  // Core Stats (Tier 1)
+  hp?: number;
+  atk?: number;
+  def?: number;
+  spd?: number;
+
+  // Combat Stats (Tier 2)
+  critChance?: number;
+  critDamage?: number;
+  armorPen?: number;
+  lifesteal?: number;
+
   image: File | null;
 }

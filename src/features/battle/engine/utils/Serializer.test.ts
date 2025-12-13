@@ -17,19 +17,31 @@ import type {
 // ============================================================================
 
 const combatantStatsArb: fc.Arbitrary<CombatantStats> = fc.record({
+  // Core Stats (Tier 1)
   atk: fc.integer({ min: 1, max: 9999 }),
   def: fc.integer({ min: 0, max: 9999 }),
-  critRate: fc.float({ min: 0, max: 1, noNaN: true }),
-  critDamage: fc.float({ min: 1, max: 5, noNaN: true }),
+  spd: fc.integer({ min: 1, max: 500 }),
+
+  // Combat Stats (Tier 2)
+  critChance: fc.integer({ min: 0, max: 100 }),
+  critDamage: fc.integer({ min: 100, max: 300 }),
+  armorPen: fc.integer({ min: 0, max: 100 }),
+  lifesteal: fc.integer({ min: 0, max: 100 }),
 });
 
 const activeBuffArb: fc.Arbitrary<ActiveBuff> = fc.record({
   id: fc.uuid(),
   name: fc.string({ minLength: 1, maxLength: 50 }),
   type: fc.constantFrom("buff", "debuff") as fc.Arbitrary<"buff" | "debuff">,
-  stat: fc.constantFrom("atk", "def", "critRate", "critDamage") as fc.Arbitrary<
-    keyof CombatantStats
-  >,
+  stat: fc.constantFrom(
+    "atk",
+    "def",
+    "spd",
+    "critChance",
+    "critDamage",
+    "armorPen",
+    "lifesteal"
+  ) as fc.Arbitrary<keyof CombatantStats>,
   value: fc.integer({ min: 1, max: 1000 }),
   isPercentage: fc.boolean(),
   remainingDuration: fc.integer({ min: 0, max: 100 }),

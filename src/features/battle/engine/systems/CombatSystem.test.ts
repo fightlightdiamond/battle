@@ -10,8 +10,11 @@ import type { Combatant, CombatantStats } from "../core/types";
 const combatantStatsArb: fc.Arbitrary<CombatantStats> = fc.record({
   atk: fc.integer({ min: 1, max: 9999 }),
   def: fc.integer({ min: 0, max: 9999 }),
-  critRate: fc.float({ min: 0, max: 1, noNaN: true }),
-  critDamage: fc.float({ min: 1, max: 5, noNaN: true }),
+  spd: fc.integer({ min: 1, max: 9999 }),
+  critChance: fc.integer({ min: 0, max: 100 }),
+  critDamage: fc.integer({ min: 100, max: 500 }),
+  armorPen: fc.integer({ min: 0, max: 100 }),
+  lifesteal: fc.integer({ min: 0, max: 100 }),
 });
 
 const combatantArb: fc.Arbitrary<Combatant> = fc
@@ -83,6 +86,95 @@ describe("CombatSystem", () => {
     );
   });
 
+  /**
+   * **Feature: tier-stat-system, Property 4: Lifesteal Healing**
+   *
+   * For any final damage D and lifesteal value L, the heal amount SHALL equal
+   * floor(D × (L/100)), capped at maxHp.
+   *
+   * **Validates: Requirements 2.4, 5.1, 5.2, 5.3**
+   */
+  it("Property 4: Lifesteal heals attacker by damage × (lifesteal/100), capped at maxHp", () => {
+    // Create combatant with specific lifesteal value for testing
+    const combatantWithLifestealArb = fc
+      .record({
+        id: fc.uuid(),
+        name: fc.string({ minLength: 1, maxLength: 50 }),
+        imageUrl: fc.constant(null),
+        baseStats: fc.record({
+          atk: fc.integer({ min: 1, max: 500 }),
+          def: fc.integer({ min: 0, max: 500 }),
+          spd: fc.integer({ min: 1, max: 500 }),
+          critChance: fc.constant(0), // Disable crit for predictable damage
+          critDamage: fc.constant(150),
+          armorPen: fc.constant(0), // Disable armor pen for predictable damage
+          lifesteal: fc.integer({ min: 0, max: 100 }),
+        }),
+        currentHp: fc.integer({ min: 1, max: 1000 }),
+        maxHp: fc.integer({ min: 1, max: 1000 }),
+        buffs: fc.constant([]),
+        isDefeated: fc.constant(false),
+      })
+      .map((c) => ({
+        ...c,
+        // Ensure currentHp <= maxHp
+        currentHp: Math.min(c.currentHp, c.maxHp),
+      }));
+
+    const defenderArb = fc
+      .record({
+        id: fc.uuid(),
+        name: fc.string({ minLength: 1, maxLength: 50 }),
+        imageUrl: fc.constant(null),
+        baseStats: fc.record({
+          atk: fc.integer({ min: 1, max: 500 }),
+          def: fc.constant(0), // Zero defense for predictable damage
+          spd: fc.integer({ min: 1, max: 500 }),
+          critChance: fc.constant(0),
+          critDamage: fc.constant(150),
+          armorPen: fc.constant(0),
+          lifesteal: fc.constant(0),
+        }),
+        currentHp: fc.integer({ min: 1, max: 9999 }),
+        maxHp: fc.integer({ min: 1, max: 9999 }),
+        buffs: fc.constant([]),
+        isDefeated: fc.constant(false),
+      })
+      .map((c) => ({
+        ...c,
+        currentHp: Math.min(c.currentHp, c.maxHp),
+      }));
+
+    fc.assert(
+      fc.property(
+        combatantWithLifestealArb,
+        defenderArb,
+        (attacker, defender) => {
+          const result = combatSystem.calculateAttack(attacker, defender);
+
+          // Calculate expected lifesteal heal: floor(damage × (lifesteal/100))
+          const expectedRawHeal =
+            result.damage * (attacker.baseStats.lifesteal / 100);
+          const expectedHeal = Math.floor(expectedRawHeal);
+
+          // Verify lifestealHeal is calculated correctly
+          expect(result.lifestealHeal).toBe(expectedHeal);
+
+          // Verify attacker's new HP is capped at maxHp (Requirement 5.3)
+          const expectedAttackerHp = Math.min(
+            attacker.maxHp,
+            attacker.currentHp + expectedHeal
+          );
+          expect(result.attackerNewHp).toBe(expectedAttackerHp);
+
+          // Verify attacker HP never exceeds maxHp
+          expect(result.attackerNewHp).toBeLessThanOrEqual(attacker.maxHp);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
   // ============================================================================
   // UNIT TESTS
   // ============================================================================
@@ -92,7 +184,15 @@ describe("CombatSystem", () => {
       id: "test-1",
       name: "Test Fighter",
       imageUrl: null,
-      baseStats: { atk: 100, def: 50, critRate: 0.1, critDamage: 1.5 },
+      baseStats: {
+        atk: 100,
+        def: 50,
+        spd: 100,
+        critChance: 5,
+        critDamage: 150,
+        armorPen: 0,
+        lifesteal: 0,
+      },
       currentHp: 100,
       maxHp: 100,
       buffs: [],
@@ -130,7 +230,15 @@ describe("CombatSystem", () => {
       id: "attacker-1",
       name: "Attacker",
       imageUrl: null,
-      baseStats: { atk: 50, def: 30, critRate: 0.1, critDamage: 1.5 },
+      baseStats: {
+        atk: 50,
+        def: 30,
+        spd: 100,
+        critChance: 5,
+        critDamage: 150,
+        armorPen: 0,
+        lifesteal: 0,
+      },
       currentHp: 100,
       maxHp: 100,
       buffs: [],
@@ -141,7 +249,15 @@ describe("CombatSystem", () => {
       id: "defender-1",
       name: "Defender",
       imageUrl: null,
-      baseStats: { atk: 40, def: 40, critRate: 0.1, critDamage: 1.5 },
+      baseStats: {
+        atk: 40,
+        def: 40,
+        spd: 100,
+        critChance: 5,
+        critDamage: 150,
+        armorPen: 0,
+        lifesteal: 0,
+      },
       currentHp: 100,
       maxHp: 100,
       buffs: [],

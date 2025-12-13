@@ -8,10 +8,16 @@ import type { Combatant, CombatantStats, BattleState } from "../core/types";
 // ============================================================================
 
 const combatantStatsArb: fc.Arbitrary<CombatantStats> = fc.record({
+  // Core Stats (Tier 1)
   atk: fc.integer({ min: 1, max: 9999 }),
   def: fc.integer({ min: 0, max: 9999 }),
-  critRate: fc.float({ min: 0, max: 1, noNaN: true }),
-  critDamage: fc.float({ min: 1, max: 5, noNaN: true }),
+  spd: fc.integer({ min: 1, max: 500 }),
+
+  // Combat Stats (Tier 2)
+  critChance: fc.integer({ min: 0, max: 100 }),
+  critDamage: fc.integer({ min: 100, max: 300 }),
+  armorPen: fc.integer({ min: 0, max: 100 }),
+  lifesteal: fc.integer({ min: 0, max: 100 }),
 });
 
 const combatantArb: fc.Arbitrary<Combatant> = fc
@@ -140,7 +146,15 @@ describe("VictorySystem", () => {
             id: "challenger-id",
             name: "Challenger",
             imageUrl: null,
-            baseStats: { atk: 100, def: 50, critRate: 0.1, critDamage: 1.5 },
+            baseStats: {
+              atk: 100,
+              def: 50,
+              spd: 100,
+              critChance: 10,
+              critDamage: 150,
+              armorPen: 0,
+              lifesteal: 0,
+            },
             currentHp: challengerHp,
             maxHp: 100,
             buffs: [],
@@ -181,7 +195,15 @@ describe("VictorySystem", () => {
             id: "opponent-id",
             name: "Opponent",
             imageUrl: null,
-            baseStats: { atk: 100, def: 50, critRate: 0.1, critDamage: 1.5 },
+            baseStats: {
+              atk: 100,
+              def: 50,
+              spd: 100,
+              critChance: 10,
+              critDamage: 150,
+              armorPen: 0,
+              lifesteal: 0,
+            },
             currentHp: opponentHp,
             maxHp: 100,
             buffs: [],
@@ -236,7 +258,15 @@ describe("VictorySystem", () => {
       id: "test-1",
       name: "Test Fighter",
       imageUrl: null,
-      baseStats: { atk: 100, def: 50, critRate: 0.1, critDamage: 1.5 },
+      baseStats: {
+        atk: 100,
+        def: 50,
+        spd: 100,
+        critChance: 10,
+        critDamage: 150,
+        armorPen: 0,
+        lifesteal: 0,
+      },
       currentHp: 100,
       maxHp: 100,
       buffs: [],
@@ -268,7 +298,15 @@ describe("VictorySystem", () => {
       id: "challenger-1",
       name: "Hero",
       imageUrl: null,
-      baseStats: { atk: 100, def: 50, critRate: 0.1, critDamage: 1.5 },
+      baseStats: {
+        atk: 100,
+        def: 50,
+        spd: 100,
+        critChance: 10,
+        critDamage: 150,
+        armorPen: 0,
+        lifesteal: 0,
+      },
       currentHp: 100,
       maxHp: 100,
       buffs: [],
@@ -279,7 +317,15 @@ describe("VictorySystem", () => {
       id: "opponent-1",
       name: "Monster",
       imageUrl: null,
-      baseStats: { atk: 80, def: 40, critRate: 0.1, critDamage: 1.5 },
+      baseStats: {
+        atk: 80,
+        def: 40,
+        spd: 100,
+        critChance: 10,
+        critDamage: 150,
+        armorPen: 0,
+        lifesteal: 0,
+      },
       currentHp: 100,
       maxHp: 100,
       buffs: [],

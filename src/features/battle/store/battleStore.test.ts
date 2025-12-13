@@ -11,12 +11,25 @@ import type { Card } from "../../cards/types";
 
 /**
  * Arbitrary generator for Card (from cards feature)
+ * Updated for Tier-Based Stat System with all new stats
  */
 const cardArb = fc.record({
   id: fc.uuid(),
   name: fc.string({ minLength: 1, maxLength: 50 }),
+
+  // Core Stats (Tier 1)
+  hp: fc.integer({ min: 1, max: 10000 }),
   atk: fc.integer({ min: 1, max: 1000 }),
-  hp: fc.integer({ min: 1, max: 1000 }),
+  def: fc.integer({ min: 0, max: 500 }),
+  spd: fc.integer({ min: 1, max: 500 }),
+
+  // Combat Stats (Tier 2)
+  critChance: fc.integer({ min: 0, max: 100 }),
+  critDamage: fc.integer({ min: 100, max: 300 }),
+  armorPen: fc.integer({ min: 0, max: 100 }),
+  lifesteal: fc.integer({ min: 0, max: 100 }),
+
+  // Metadata
   imagePath: fc.option(fc.string(), { nil: null }),
   imageUrl: fc.option(fc.webUrl(), { nil: null }),
   createdAt: fc.integer({ min: 0 }),

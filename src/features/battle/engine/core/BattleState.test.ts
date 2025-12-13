@@ -27,10 +27,16 @@ import type {
 // ============================================================================
 
 const combatantStatsArb: fc.Arbitrary<CombatantStats> = fc.record({
+  // Core Stats (Tier 1)
   atk: fc.integer({ min: 1, max: 9999 }),
   def: fc.integer({ min: 0, max: 9999 }),
-  critRate: fc.float({ min: 0, max: 1, noNaN: true }),
-  critDamage: fc.float({ min: 1, max: 5, noNaN: true }),
+  spd: fc.integer({ min: 1, max: 500 }),
+
+  // Combat Stats (Tier 2)
+  critChance: fc.integer({ min: 0, max: 100 }),
+  critDamage: fc.integer({ min: 100, max: 300 }),
+  armorPen: fc.integer({ min: 0, max: 100 }),
+  lifesteal: fc.integer({ min: 0, max: 100 }),
 });
 
 const combatantArb: fc.Arbitrary<Combatant> = fc.record({
@@ -250,10 +256,16 @@ describe("BattleState", () => {
         hp: 100,
       });
 
-      expect(combatant.baseStats.atk).toBe(10);
-      expect(combatant.baseStats.def).toBe(0);
-      expect(combatant.baseStats.critRate).toBe(0);
-      expect(combatant.baseStats.critDamage).toBe(1.5);
+      // Core Stats (Tier 1)
+      expect(combatant.baseStats.atk).toBe(100);
+      expect(combatant.baseStats.def).toBe(50);
+      expect(combatant.baseStats.spd).toBe(100);
+
+      // Combat Stats (Tier 2)
+      expect(combatant.baseStats.critChance).toBe(5);
+      expect(combatant.baseStats.critDamage).toBe(150);
+      expect(combatant.baseStats.armorPen).toBe(0);
+      expect(combatant.baseStats.lifesteal).toBe(0);
     });
 
     it("uses provided stats when given", () => {
@@ -263,14 +275,23 @@ describe("BattleState", () => {
         hp: 100,
         atk: 50,
         def: 20,
-        critRate: 0.1,
-        critDamage: 2.0,
+        spd: 150,
+        critChance: 10,
+        critDamage: 200,
+        armorPen: 15,
+        lifesteal: 5,
       });
 
+      // Core Stats (Tier 1)
       expect(combatant.baseStats.atk).toBe(50);
       expect(combatant.baseStats.def).toBe(20);
-      expect(combatant.baseStats.critRate).toBe(0.1);
-      expect(combatant.baseStats.critDamage).toBe(2.0);
+      expect(combatant.baseStats.spd).toBe(150);
+
+      // Combat Stats (Tier 2)
+      expect(combatant.baseStats.critChance).toBe(10);
+      expect(combatant.baseStats.critDamage).toBe(200);
+      expect(combatant.baseStats.armorPen).toBe(15);
+      expect(combatant.baseStats.lifesteal).toBe(5);
     });
   });
 

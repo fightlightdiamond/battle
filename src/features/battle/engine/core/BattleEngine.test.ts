@@ -9,10 +9,16 @@ import type { Combatant, CombatantStats, GameEvent } from "./types";
 // ============================================================================
 
 const combatantStatsArb: fc.Arbitrary<CombatantStats> = fc.record({
+  // Core Stats (Tier 1)
   atk: fc.integer({ min: 1, max: 100 }),
   def: fc.integer({ min: 0, max: 50 }),
-  critRate: fc.float({ min: 0, max: 1, noNaN: true }),
-  critDamage: fc.float({ min: 1, max: 3, noNaN: true }),
+  spd: fc.integer({ min: 1, max: 500 }),
+
+  // Combat Stats (Tier 2)
+  critChance: fc.integer({ min: 0, max: 100 }),
+  critDamage: fc.integer({ min: 100, max: 300 }),
+  armorPen: fc.integer({ min: 0, max: 100 }),
+  lifesteal: fc.integer({ min: 0, max: 100 }),
 });
 
 const combatantArb: fc.Arbitrary<Combatant> = fc

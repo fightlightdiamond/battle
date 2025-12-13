@@ -26,8 +26,16 @@ export function CardEditPage() {
       id,
       input: {
         name: data.name,
-        atk: data.atk,
+        // Core Stats (Tier 1)
         hp: data.hp,
+        atk: data.atk,
+        def: data.def,
+        spd: data.spd,
+        // Combat Stats (Tier 2)
+        critChance: data.critChance,
+        critDamage: data.critDamage,
+        armorPen: data.armorPen,
+        lifesteal: data.lifesteal,
         image: data.image,
       },
     });

@@ -19,21 +19,29 @@ import {
 
 /**
  * Get default stats from config
+ * Updated for Tier-Based Stat System
  */
 function getDefaultStats(
   config: DefaultStatsConfig = DEFAULT_STATS_CONFIG
 ): CombatantStats {
   return {
+    // Core Stats (Tier 1)
     atk: config.atk,
     def: config.def,
-    critRate: config.critRate,
+    spd: config.spd,
+
+    // Combat Stats (Tier 2)
+    critChance: config.critChance,
     critDamage: config.critDamage,
+    armorPen: config.armorPen,
+    lifesteal: config.lifesteal,
   };
 }
 
 /**
  * Creates a Combatant from minimal input data.
  * Useful for creating combatants from card data.
+ * Updated for Tier-Based Stat System
  *
  * @param input - Partial combatant data
  * @returns A fully initialized Combatant
@@ -44,19 +52,29 @@ export function createCombatant(
     name: string;
     imageUrl?: string | null;
     hp: number;
+    // Core Stats (Tier 1)
     atk?: number;
     def?: number;
-    critRate?: number;
+    spd?: number;
+    // Combat Stats (Tier 2)
+    critChance?: number;
     critDamage?: number;
+    armorPen?: number;
+    lifesteal?: number;
   },
   statsConfig?: DefaultStatsConfig
 ): Combatant {
   const defaults = getDefaultStats(statsConfig);
   const baseStats: CombatantStats = {
+    // Core Stats (Tier 1)
     atk: input.atk ?? defaults.atk,
     def: input.def ?? defaults.def,
-    critRate: input.critRate ?? defaults.critRate,
+    spd: input.spd ?? defaults.spd,
+    // Combat Stats (Tier 2)
+    critChance: input.critChance ?? defaults.critChance,
     critDamage: input.critDamage ?? defaults.critDamage,
+    armorPen: input.armorPen ?? defaults.armorPen,
+    lifesteal: input.lifesteal ?? defaults.lifesteal,
   };
 
   return {

@@ -18,3 +18,7 @@ export {
 
 // Schemas and constants
 export * from "./schemas";
+
+// Stat constants
+export { DEFAULT_STATS, STAT_RANGES } from "./constants";
+export type { StatName } from "./constants";

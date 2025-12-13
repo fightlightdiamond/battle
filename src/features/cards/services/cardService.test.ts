@@ -1,8 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import * as fc from "fast-check";
 import "fake-indexeddb/auto";
-import { CardService } from "./cardService";
+import { CardService, applyDefaultStats } from "./cardService";
 import { deleteDB } from "./db";
 import type { CardFormInput } from "../types";
+import { DEFAULT_STATS } from "../types/constants";
 
 // Mock OPFS since it's not available in Node.js
 vi.mock("./imageStorage", () => ({
@@ -425,5 +427,184 @@ describe("CardService - IndexedDB Integration", () => {
       const retrieved = await CardService.getById("upsert-duplicate-123");
       expect(retrieved?.name).toBe("Second Version");
     });
+  });
+});
+
+/**
+ * **Feature: tier-stat-system, Property 10: Migration Preserves Existing Data**
+ * **Validates: Requirements 10.1, 10.2, 10.3**
+ *
+ * For any Card loaded from database without new stat fields, the Card SHALL have
+ * default values for missing fields while preserving existing HP and ATK.
+ */
+describe("Property 10: Migration Preserves Existing Data", () => {
+  // Custom UUID v4 generator
+  const uuidV4Arb = fc.stringMatching(
+    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+  );
+
+  it("preserves existing HP and ATK values during migration (Requirement 10.3)", () => {
+    fc.assert(
+      fc.property(
+        fc.record({
+          id: uuidV4Arb,
+          name: fc
+            .string({ minLength: 1, maxLength: 100 })
+            .filter((s) => s.trim().length > 0),
+          hp: fc.integer({ min: 1, max: 10000 }),
+          atk: fc.integer({ min: 0, max: 10000 }),
+          imagePath: fc.constantFrom(null, "test-image.png"),
+          createdAt: fc.integer({ min: 0 }),
+          updatedAt: fc.integer({ min: 0 }),
+        }),
+        (legacyCard) => {
+          const migratedCard = applyDefaultStats(legacyCard);
+
+          // HP and ATK must be preserved exactly
+          expect(migratedCard.hp).toBe(legacyCard.hp);
+          expect(migratedCard.atk).toBe(legacyCard.atk);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it("applies default values for missing stat fields (Requirement 10.1)", () => {
+    fc.assert(
+      fc.property(
+        fc.record({
+          id: uuidV4Arb,
+          name: fc
+            .string({ minLength: 1, maxLength: 100 })
+            .filter((s) => s.trim().length > 0),
+          hp: fc.integer({ min: 1, max: 10000 }),
+          atk: fc.integer({ min: 0, max: 10000 }),
+          imagePath: fc.constantFrom(null, "test-image.png"),
+          createdAt: fc.integer({ min: 0 }),
+          updatedAt: fc.integer({ min: 0 }),
+        }),
+        (legacyCard) => {
+          // Legacy card without new stat fields
+          const migratedCard = applyDefaultStats(legacyCard);
+
+          // New stat fields should have default values
+          expect(migratedCard.def).toBe(DEFAULT_STATS.def);
+          expect(migratedCard.spd).toBe(DEFAULT_STATS.spd);
+          expect(migratedCard.critChance).toBe(DEFAULT_STATS.critChance);
+          expect(migratedCard.critDamage).toBe(DEFAULT_STATS.critDamage);
+          expect(migratedCard.armorPen).toBe(DEFAULT_STATS.armorPen);
+          expect(migratedCard.lifesteal).toBe(DEFAULT_STATS.lifesteal);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it("preserves existing new stat values if already present", () => {
+    fc.assert(
+      fc.property(
+        fc.record({
+          id: uuidV4Arb,
+          name: fc
+            .string({ minLength: 1, maxLength: 100 })
+            .filter((s) => s.trim().length > 0),
+          hp: fc.integer({ min: 1, max: 10000 }),
+          atk: fc.integer({ min: 0, max: 10000 }),
+          def: fc.integer({ min: 0, max: 10000 }),
+          spd: fc.integer({ min: 1, max: 10000 }),
+          critChance: fc.double({ min: 0, max: 100, noNaN: true }),
+          critDamage: fc.double({ min: 100, max: 500, noNaN: true }),
+          armorPen: fc.double({ min: 0, max: 100, noNaN: true }),
+          lifesteal: fc.double({ min: 0, max: 100, noNaN: true }),
+          imagePath: fc.constantFrom(null, "test-image.png"),
+          createdAt: fc.integer({ min: 0 }),
+          updatedAt: fc.integer({ min: 0 }),
+        }),
+        (fullCard) => {
+          const migratedCard = applyDefaultStats(fullCard);
+
+          // All values should be preserved when already present
+          expect(migratedCard.hp).toBe(fullCard.hp);
+          expect(migratedCard.atk).toBe(fullCard.atk);
+          expect(migratedCard.def).toBe(fullCard.def);
+          expect(migratedCard.spd).toBe(fullCard.spd);
+          expect(migratedCard.critChance).toBe(fullCard.critChance);
+          expect(migratedCard.critDamage).toBe(fullCard.critDamage);
+          expect(migratedCard.armorPen).toBe(fullCard.armorPen);
+          expect(migratedCard.lifesteal).toBe(fullCard.lifesteal);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it("preserves metadata fields during migration", () => {
+    fc.assert(
+      fc.property(
+        fc.record({
+          id: uuidV4Arb,
+          name: fc
+            .string({ minLength: 1, maxLength: 100 })
+            .filter((s) => s.trim().length > 0),
+          hp: fc.integer({ min: 1, max: 10000 }),
+          atk: fc.integer({ min: 0, max: 10000 }),
+          imagePath: fc.constantFrom(
+            null,
+            "test-image.png",
+            "another-image.jpg"
+          ),
+          createdAt: fc.integer({ min: 0 }),
+          updatedAt: fc.integer({ min: 0 }),
+        }),
+        (legacyCard) => {
+          const migratedCard = applyDefaultStats(legacyCard);
+
+          // Metadata must be preserved
+          expect(migratedCard.id).toBe(legacyCard.id);
+          expect(migratedCard.name).toBe(legacyCard.name);
+          expect(migratedCard.imagePath).toBe(legacyCard.imagePath);
+          expect(migratedCard.createdAt).toBe(legacyCard.createdAt);
+          expect(migratedCard.updatedAt).toBe(legacyCard.updatedAt);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it("handles partial migration (some new fields present, some missing)", () => {
+    fc.assert(
+      fc.property(
+        fc.record({
+          id: uuidV4Arb,
+          name: fc
+            .string({ minLength: 1, maxLength: 100 })
+            .filter((s) => s.trim().length > 0),
+          hp: fc.integer({ min: 1, max: 10000 }),
+          atk: fc.integer({ min: 0, max: 10000 }),
+          // Only some new fields present
+          def: fc.integer({ min: 0, max: 10000 }),
+          // spd, critChance, critDamage, armorPen, lifesteal are missing
+          imagePath: fc.constantFrom(null, "test-image.png"),
+          createdAt: fc.integer({ min: 0 }),
+          updatedAt: fc.integer({ min: 0 }),
+        }),
+        (partialCard) => {
+          const migratedCard = applyDefaultStats(partialCard);
+
+          // Existing values preserved
+          expect(migratedCard.hp).toBe(partialCard.hp);
+          expect(migratedCard.atk).toBe(partialCard.atk);
+          expect(migratedCard.def).toBe(partialCard.def);
+
+          // Missing values get defaults
+          expect(migratedCard.spd).toBe(DEFAULT_STATS.spd);
+          expect(migratedCard.critChance).toBe(DEFAULT_STATS.critChance);
+          expect(migratedCard.critDamage).toBe(DEFAULT_STATS.critDamage);
+          expect(migratedCard.armorPen).toBe(DEFAULT_STATS.armorPen);
+          expect(migratedCard.lifesteal).toBe(DEFAULT_STATS.lifesteal);
+        }
+      ),
+      { numRuns: 100 }
+    );
   });
 });

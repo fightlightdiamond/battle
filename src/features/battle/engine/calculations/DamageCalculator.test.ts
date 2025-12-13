@@ -28,13 +28,134 @@ const damageCalculationInputArb: fc.Arbitrary<DamageCalculationInput> =
 
 describe("DamageCalculator", () => {
   /**
-   * **Feature: battle-engine-refactor, Property 3: Attack Damage Equals ATK**
+   * **Feature: tier-stat-system, Property 1: Defense Reduction Formula**
+   *
+   * For any attacker ATK value A and defender DEF value D,
+   * the damage after defense reduction SHALL equal A × (1 - D/(D + 100)).
+   *
+   * **Validates: Requirements 1.4, 4.3**
+   */
+  it("Property 1: defense reduction formula", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 1, max: 9999 }), // ATK
+        fc.integer({ min: 0, max: 9999 }), // DEF
+        (atk, def) => {
+          // Calculate expected damage using the formula
+          const defReduction = def / (def + 100);
+          const expectedDamage = Math.max(
+            1,
+            Math.floor(atk * (1 - defReduction))
+          );
+
+          // Use calculateWithDef with 0 armor pen to test pure defense formula
+          const actualDamage = damageCalculator.calculateWithDef(atk, def, 0);
+
+          expect(actualDamage).toBe(expectedDamage);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * **Feature: tier-stat-system, Property 2: Armor Penetration Reduces Effective Defense**
+   *
+   * For any defender DEF value D and attacker armorPen value P,
+   * the effective defense SHALL equal D × (1 - P/100).
+   *
+   * **Validates: Requirements 2.3, 4.2**
+   */
+  it("Property 2: armor penetration reduces effective defense", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 0, max: 9999 }), // DEF
+        fc.integer({ min: 0, max: 100 }), // armorPen (0-100%)
+        (def, armorPen) => {
+          const effectiveDef = damageCalculator.calculateEffectiveDef(
+            def,
+            armorPen
+          );
+          const expected = def * (1 - armorPen / 100);
+
+          expect(effectiveDef).toBeCloseTo(expected, 5);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * **Feature: tier-stat-system, Property 3: Critical Damage Multiplier**
+   *
+   * For any base damage B and critDamage value C,
+   * when a critical hit occurs, the damage SHALL equal B × (C/100).
+   *
+   * **Validates: Requirements 2.2, 4.4**
+   */
+  it("Property 3: critical damage multiplier applies correctly", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 1, max: 9999 }), // base damage
+        fc.integer({ min: 100, max: 500 }), // critDamage (100+ means 1x to 5x)
+        (baseDamage, critDamage) => {
+          const criticalDamage = damageCalculator.applyCritical(
+            baseDamage,
+            critDamage
+          );
+          const expected = Math.floor(baseDamage * (critDamage / 100));
+
+          expect(criticalDamage).toBe(expected);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * **Feature: tier-stat-system, Property 6: Minimum Damage Guarantee**
+   *
+   * For any attack, the final damage SHALL be at least 1.
+   *
+   * **Validates: Requirements 4.5**
+   */
+  it("Property 6: minimum damage guarantee", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 0, max: 9999 }), // ATK (including 0)
+        fc.integer({ min: 0, max: 99999 }), // DEF (very high to test minimum)
+        fc.integer({ min: 0, max: 100 }), // armorPen
+        (atk, def, armorPen) => {
+          // Test with defense calculation
+          const damageWithDef = damageCalculator.calculateWithDef(
+            atk,
+            def,
+            armorPen
+          );
+          expect(damageWithDef).toBeGreaterThanOrEqual(1);
+
+          // Test with simple calculation
+          const input: DamageCalculationInput = {
+            attackerAtk: atk,
+            defenderDef: def,
+            armorPen,
+          };
+          const damageSimple = damageCalculator.calculate(input);
+          expect(damageSimple).toBeGreaterThanOrEqual(1);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * **Feature: battle-engine-refactor, Property: Attack Damage Equals ATK**
    *
    * For any attack where attacker has ATK value A, the damage dealt SHALL equal A.
    *
    * **Validates: Requirements 2.3**
    */
-  it("Property 3: basic damage equals ATK value", () => {
+  it("basic damage equals ATK value (simple mode)", () => {
     fc.assert(
       fc.property(
         fc.integer({ min: 1, max: 9999 }),
@@ -124,13 +245,15 @@ describe("DamageCalculator", () => {
   });
 
   describe("applyCritical()", () => {
-    it("multiplies damage by crit multiplier", () => {
-      expect(damageCalculator.applyCritical(100, 1.5)).toBe(150);
-      expect(damageCalculator.applyCritical(100, 2.0)).toBe(200);
+    it("multiplies damage by crit multiplier (critDamage as percentage)", () => {
+      // critDamage is now 100+ (150 = 1.5x, 200 = 2.0x)
+      expect(damageCalculator.applyCritical(100, 150)).toBe(150);
+      expect(damageCalculator.applyCritical(100, 200)).toBe(200);
     });
 
     it("floors the result", () => {
-      expect(damageCalculator.applyCritical(100, 1.33)).toBe(133);
+      // 100 * (133/100) = 133
+      expect(damageCalculator.applyCritical(100, 133)).toBe(133);
     });
   });
 

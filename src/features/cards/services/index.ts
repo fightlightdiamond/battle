@@ -2,6 +2,7 @@ export {
   CardService,
   revokeCardImageUrl,
   revokeCardImageUrls,
+  applyDefaultStats,
 } from "./cardService";
 export { getDB, closeDB, deleteDB } from "./db";
 export type { CardGameDB } from "./db";

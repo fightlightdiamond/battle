@@ -15,15 +15,28 @@ import { BATTLE_RESULTS } from "../types";
 
 /**
  * Arbitrary generator for BattleCard
+ * Updated for Tier-Based Stat System with all new stats
  */
 const battleCardArb = fc
   .record({
     id: fc.uuid(),
     name: fc.string({ minLength: 1, maxLength: 50 }),
-    atk: fc.integer({ min: 1, max: 1000 }),
-    maxHp: fc.integer({ min: 1, max: 1000 }),
-    currentHp: fc.integer({ min: 1, max: 1000 }),
     imageUrl: fc.option(fc.webUrl(), { nil: null }),
+
+    // HP tracking
+    maxHp: fc.integer({ min: 1, max: 10000 }),
+    currentHp: fc.integer({ min: 1, max: 10000 }),
+
+    // Core Stats (Tier 1)
+    atk: fc.integer({ min: 1, max: 1000 }),
+    def: fc.integer({ min: 0, max: 500 }),
+    spd: fc.integer({ min: 1, max: 500 }),
+
+    // Combat Stats (Tier 2)
+    critChance: fc.integer({ min: 0, max: 100 }),
+    critDamage: fc.integer({ min: 100, max: 300 }),
+    armorPen: fc.integer({ min: 0, max: 100 }),
+    lifesteal: fc.integer({ min: 0, max: 100 }),
   })
   .map((card) => ({
     ...card,

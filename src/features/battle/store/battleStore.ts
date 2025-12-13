@@ -53,15 +53,29 @@ export type BattleStoreState = BattleState & BattleActions;
 
 /**
  * Convert a Card to a BattleCard
+ * Maps all Card stats to BattleCard for combat
+ * Requirements: 1.1, 7.1-7.6
  */
 function cardToBattleCard(card: Card): Readonly<BattleCard> {
   return {
     id: card.id,
     name: card.name,
-    atk: card.atk,
+    imageUrl: card.imageUrl,
+
+    // HP tracking
     maxHp: card.hp,
     currentHp: card.hp,
-    imageUrl: card.imageUrl,
+
+    // Core Stats (Tier 1)
+    atk: card.atk,
+    def: card.def,
+    spd: card.spd,
+
+    // Combat Stats (Tier 2)
+    critChance: card.critChance,
+    critDamage: card.critDamage,
+    armorPen: card.armorPen,
+    lifesteal: card.lifesteal,
   };
 }
 

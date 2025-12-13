@@ -10,8 +10,11 @@ import type { BattleState, Combatant, CombatantStats } from "../core/types";
 const combatantStatsArb: fc.Arbitrary<CombatantStats> = fc.record({
   atk: fc.integer({ min: 1, max: 9999 }),
   def: fc.integer({ min: 0, max: 9999 }),
-  critRate: fc.float({ min: 0, max: 1, noNaN: true }),
-  critDamage: fc.float({ min: 1, max: 5, noNaN: true }),
+  spd: fc.integer({ min: 1, max: 9999 }),
+  critChance: fc.integer({ min: 0, max: 100 }),
+  critDamage: fc.integer({ min: 100, max: 500 }),
+  armorPen: fc.integer({ min: 0, max: 100 }),
+  lifesteal: fc.integer({ min: 0, max: 100 }),
 });
 
 const combatantArb: fc.Arbitrary<Combatant> = fc
@@ -137,6 +140,82 @@ describe("TurnSystem", () => {
     );
   });
 
+  /**
+   * **Feature: tier-stat-system, Property 5: Speed Determines First Attacker**
+   *
+   * For any two combatants where challenger.spd > opponent.spd,
+   * the challenger SHALL be the first attacker.
+   *
+   * **Validates: Requirements 3.2**
+   */
+  it("Property 5: Speed determines first attacker - higher speed attacks first", () => {
+    fc.assert(
+      fc.property(
+        combatantArb,
+        combatantArb,
+        fc.integer({ min: 1, max: 1000 }),
+        (baseChallengerCombatant, baseOpponentCombatant, speedDiff) => {
+          // Create challenger with higher speed
+          const challenger: Combatant = {
+            ...baseChallengerCombatant,
+            baseStats: {
+              ...baseChallengerCombatant.baseStats,
+              spd: baseOpponentCombatant.baseStats.spd + speedDiff,
+            },
+          };
+          const opponent = baseOpponentCombatant;
+
+          const firstAttacker = turnSystem.determineFirstAttacker(
+            challenger,
+            opponent
+          );
+
+          // Challenger has higher speed, so challenger should attack first
+          expect(firstAttacker).toBe("challenger");
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * **Feature: tier-stat-system, Property 5: Speed Determines First Attacker**
+   *
+   * For any two combatants where opponent.spd > challenger.spd,
+   * the opponent SHALL be the first attacker.
+   *
+   * **Validates: Requirements 3.2**
+   */
+  it("Property 5: Speed determines first attacker - opponent with higher speed attacks first", () => {
+    fc.assert(
+      fc.property(
+        combatantArb,
+        combatantArb,
+        fc.integer({ min: 1, max: 1000 }),
+        (baseChallengerCombatant, baseOpponentCombatant, speedDiff) => {
+          // Create opponent with higher speed
+          const challenger = baseChallengerCombatant;
+          const opponent: Combatant = {
+            ...baseOpponentCombatant,
+            baseStats: {
+              ...baseOpponentCombatant.baseStats,
+              spd: baseChallengerCombatant.baseStats.spd + speedDiff,
+            },
+          };
+
+          const firstAttacker = turnSystem.determineFirstAttacker(
+            challenger,
+            opponent
+          );
+
+          // Opponent has higher speed, so opponent should attack first
+          expect(firstAttacker).toBe("opponent");
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
   // ============================================================================
   // UNIT TESTS
   // ============================================================================
@@ -156,7 +235,15 @@ describe("TurnSystem", () => {
       id: "test-1",
       name: "Test Fighter",
       imageUrl: null,
-      baseStats: { atk: 100, def: 50, critRate: 0.1, critDamage: 1.5 },
+      baseStats: {
+        atk: 100,
+        def: 50,
+        spd: 100,
+        critChance: 10,
+        critDamage: 150,
+        armorPen: 0,
+        lifesteal: 0,
+      },
       currentHp: 100,
       maxHp: 100,
       buffs: [],
