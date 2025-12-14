@@ -9,7 +9,7 @@
 
 import { useCallback, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Swords, ArrowLeft, Loader2 } from "lucide-react";
+import { Swords, ArrowLeft, Loader2, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardSelector } from "../components/CardSelector";
 import { useBattleStore, selectCanStartBattle } from "../store/battleStore";
@@ -89,6 +89,12 @@ export function BattleSetupPage() {
             </p>
           </div>
         </div>
+        <Button asChild variant="outline">
+          <Link to="/history">
+            <History className="h-4 w-4 mr-2" />
+            History
+          </Link>
+        </Button>
       </div>
 
       {/* Card Selection Area */}

@@ -1,12 +1,12 @@
 /**
  * BattleArenaPage - Combat UI for the Card Battle System
- * Requirements: 2.1, 7.1, 7.4, 8.4
+ * Requirements: 2.1, 7.1, 7.4, 8.4, 6.6
  * - Layout: Card1 (left) vs Card2 (right)
  * - Entrance animation on load
  * - BattleControls at bottom
  * - BattleLog panel (collapsible sidebar)
  * - VictoryOverlay when battle ends
- * - Auto-battle timer logic with 1.5s delay
+ * - Auto-battle: compute-then-replay mode (Requirement 6.6)
  */
 
 import { useEffect, useState, useCallback, useRef } from "react";
@@ -18,9 +18,8 @@ import {
   BattleCard,
   BattleControls,
   BattleLog,
-  DamageNumber,
-  HealNumber,
   VictoryOverlay,
+  BattleReplayPlayer,
 } from "../components";
 import {
   useBattleStore,
@@ -31,7 +30,14 @@ import {
   selectOpponentInDanger,
 } from "../store/battleStore";
 import { BATTLE_PHASES } from "../types/battle";
-import type { AttackResult, CardPosition } from "../types";
+import type {
+  AttackResult,
+  CardPosition,
+  BattleCard as BattleCardType,
+} from "../types";
+import type { BattleRecord } from "../types/battleHistoryTypes";
+import { BattleEngine } from "../engine/core/BattleEngine";
+import type { Combatant, CombatantStats } from "../engine/core/types";
 
 /** Auto-battle delay in milliseconds (Requirement 7.1) */
 const AUTO_BATTLE_DELAY = 1500;
@@ -50,6 +56,8 @@ interface AnimationState {
     healAmount: number;
     position: CardPosition;
   } | null;
+  /** Key to force re-mount damage/heal animations */
+  animationKey: number;
 }
 
 const initialAnimationState: AnimationState = {
@@ -57,7 +65,35 @@ const initialAnimationState: AnimationState = {
   receivingDamagePosition: null,
   damageNumber: null,
   healNumber: null,
+  animationKey: 0,
 };
+
+/**
+ * Convert BattleCard to Combatant for BattleEngine
+ * Requirements: 6.6
+ */
+function battleCardToCombatant(card: BattleCardType): Combatant {
+  const baseStats: CombatantStats = {
+    atk: card.atk,
+    def: card.def,
+    spd: card.spd,
+    critChance: card.critChance,
+    critDamage: card.critDamage,
+    armorPen: card.armorPen,
+    lifesteal: card.lifesteal,
+  };
+
+  return {
+    id: card.id,
+    name: card.name,
+    imageUrl: card.imageUrl,
+    baseStats,
+    currentHp: card.currentHp,
+    maxHp: card.maxHp,
+    buffs: [],
+    isDefeated: false,
+  };
+}
 
 export function BattleArenaPage() {
   const navigate = useNavigate();
@@ -77,7 +113,6 @@ export function BattleArenaPage() {
 
   // Battle store actions
   const executeAttack = useBattleStore((state) => state.executeAttack);
-  const toggleAutoBattle = useBattleStore((state) => state.toggleAutoBattle);
   const resetBattle = useBattleStore((state) => state.resetBattle);
 
   // Local UI state
@@ -87,10 +122,99 @@ export function BattleArenaPage() {
     initialAnimationState
   );
 
+  // Auto-battle replay state (Requirement 6.6)
+  const [isReplayMode, setIsReplayMode] = useState(false);
+  const [replayBattleRecord, setReplayBattleRecord] =
+    useState<BattleRecord | null>(null);
+  const [isComputingBattle, setIsComputingBattle] = useState(false);
+
   // Ref for auto-battle interval
   const autoBattleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null
   );
+
+  /**
+   * Compute entire battle without animation and return BattleRecord
+   * Requirements: 6.6 - Compute all turns first, save BattleRecord, then replay
+   */
+  const computeEntireBattle =
+    useCallback(async (): Promise<BattleRecord | null> => {
+      if (!challenger || !opponent) return null;
+
+      // Create a new BattleEngine instance for computation
+      const engine = new BattleEngine();
+
+      // Convert BattleCards to Combatants
+      const challengerCombatant = battleCardToCombatant(challenger);
+      const opponentCombatant = battleCardToCombatant(opponent);
+
+      // Initialize and start battle
+      engine.initBattle(challengerCombatant, opponentCombatant);
+      engine.startBattle();
+
+      // Execute all attacks until battle ends (max 1000 turns for safety)
+      let turnCount = 0;
+      const maxTurns = 1000;
+
+      while (engine.getState()?.phase === "fighting" && turnCount < maxTurns) {
+        engine.executeAttack();
+        turnCount++;
+      }
+
+      // Get the battle record
+      const battleRecord = engine.getLastBattleRecord();
+
+      // Clean up
+      engine.clearSubscriptions();
+
+      return battleRecord;
+    }, [challenger, opponent]);
+
+  /**
+   * Handle auto-battle toggle with compute-then-replay mode
+   * Requirements: 6.6
+   */
+  const handleToggleAutoBattle = useCallback(async () => {
+    const currentPhase = useBattleStore.getState().phase;
+
+    if (currentPhase !== BATTLE_PHASES.FIGHTING) return;
+
+    // If already in replay mode, exit replay mode
+    if (isReplayMode) {
+      setIsReplayMode(false);
+      setReplayBattleRecord(null);
+      return;
+    }
+
+    // Start compute-then-replay mode
+    setIsComputingBattle(true);
+
+    try {
+      const battleRecord = await computeEntireBattle();
+
+      if (battleRecord) {
+        // Enter replay mode with the computed battle record
+        setReplayBattleRecord(battleRecord);
+        setIsReplayMode(true);
+      }
+    } catch (error) {
+      console.error("Failed to compute battle:", error);
+    } finally {
+      setIsComputingBattle(false);
+    }
+  }, [computeEntireBattle, isReplayMode]);
+
+  /**
+   * Handle replay completion - sync store state with replay result
+   * Requirements: 6.6
+   */
+  const handleReplayComplete = useCallback(() => {
+    if (!replayBattleRecord) return;
+
+    // Reset battle store and navigate to history detail
+    resetBattle();
+    navigate(`/history/${replayBattleRecord.id}`);
+  }, [replayBattleRecord, resetBattle, navigate]);
 
   /**
    * Handle attack action with animations
@@ -109,12 +233,13 @@ export function BattleArenaPage() {
       attacker === "challenger" ? "right" : "left";
 
     // Start attack animation
-    setAnimationState({
+    setAnimationState((prev) => ({
       attackingPosition: attackerPosition,
       receivingDamagePosition: null,
       damageNumber: null,
       healNumber: null,
-    });
+      animationKey: prev.animationKey,
+    }));
 
     // Execute attack after brief delay for attack animation
     setTimeout(() => {
@@ -125,7 +250,7 @@ export function BattleArenaPage() {
         // Also show heal number on attacker if lifesteal triggered (Requirements 3.3)
         const lifestealHeal = result.lifestealHeal ?? 0;
 
-        setAnimationState({
+        setAnimationState((prev) => ({
           attackingPosition: null,
           receivingDamagePosition: defenderPosition,
           damageNumber: {
@@ -141,14 +266,21 @@ export function BattleArenaPage() {
                   position: attackerPosition,
                 }
               : null,
-        });
+          animationKey: prev.animationKey + 1,
+        }));
 
         // Clear damage and heal animations after they complete
         setTimeout(() => {
-          setAnimationState(initialAnimationState);
+          setAnimationState((prev) => ({
+            ...initialAnimationState,
+            animationKey: prev.animationKey,
+          }));
         }, 800);
       } else {
-        setAnimationState(initialAnimationState);
+        setAnimationState((prev) => ({
+          ...initialAnimationState,
+          animationKey: prev.animationKey,
+        }));
       }
     }, 200);
   }, [executeAttack]);
@@ -200,6 +332,7 @@ export function BattleArenaPage() {
    * Auto-battle timer logic (Requirements 7.1, 7.4)
    * - Execute turns automatically with 1.5s delay
    * - Clear interval on pause or battle end
+   * - Disabled when in replay mode (Requirement 6.6)
    */
   useEffect(() => {
     // Clear any existing interval
@@ -207,6 +340,9 @@ export function BattleArenaPage() {
       clearInterval(autoBattleIntervalRef.current);
       autoBattleIntervalRef.current = null;
     }
+
+    // Don't run auto-battle when in replay mode
+    if (isReplayMode) return;
 
     // Start auto-battle if enabled and battle is in progress
     if (isAutoBattle && phase === BATTLE_PHASES.FIGHTING) {
@@ -222,17 +358,62 @@ export function BattleArenaPage() {
         autoBattleIntervalRef.current = null;
       }
     };
-  }, [isAutoBattle, phase, handleAttack]);
+  }, [isAutoBattle, phase, handleAttack, isReplayMode]);
 
   // Don't render if no cards (will redirect)
   if (!challenger || !opponent) {
     return null;
   }
 
+  // Render replay mode (Requirement 6.6)
+  if (isReplayMode && replayBattleRecord) {
+    return (
+      <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
+        {/* Battle Arena Background */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-black opacity-50" />
+
+        {/* Main Content */}
+        <div className="relative z-10 container mx-auto px-4 py-8 h-screen flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <Button
+              variant="ghost"
+              onClick={handleNewBattle}
+              className="text-white hover:bg-white/10"
+            >
+              <ChevronLeft className="h-5 w-5 mr-1" />
+              Exit Battle
+            </Button>
+            <h1 className="text-2xl font-bold text-white">Battle Replay</h1>
+            <div className="w-24" /> {/* Spacer for alignment */}
+          </div>
+
+          {/* Replay Player */}
+          <div className="flex-1 flex items-center justify-center">
+            <BattleReplayPlayer
+              battleRecord={replayBattleRecord}
+              onComplete={handleReplayComplete}
+              className="w-full max-w-4xl"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
       {/* Battle Arena Background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-black opacity-50" />
+
+      {/* Computing Battle Overlay (Requirement 6.6) */}
+      {isComputingBattle && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="text-white text-xl font-bold animate-pulse">
+            Computing battle...
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="relative z-10 container mx-auto px-4 py-8 h-screen flex flex-col">
@@ -274,10 +455,10 @@ export function BattleArenaPage() {
               entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-90"
             )}
           >
-            {/* Challenger Card (Left) */}
+            {/* Challenger Card (Left) - with integrated damage/heal display */}
             <div
               className={cn(
-                "relative transform transition-all duration-600",
+                "transform transition-all duration-600",
                 entranceComplete
                   ? "translate-x-0 opacity-100"
                   : "-translate-x-20 opacity-0"
@@ -294,26 +475,23 @@ export function BattleArenaPage() {
                 isDanger={challengerInDanger}
                 isWinner={isBattleFinished && winner?.id === challenger.id}
                 isLoser={isBattleFinished && loser?.id === challenger.id}
+                damageDisplay={
+                  animationState.damageNumber?.position === "left"
+                    ? {
+                        damage: animationState.damageNumber.damage,
+                        isCritical: animationState.damageNumber.isCritical,
+                      }
+                    : null
+                }
+                healDisplay={
+                  animationState.healNumber?.position === "left"
+                    ? { healAmount: animationState.healNumber.healAmount }
+                    : null
+                }
+                animationKey={animationState.animationKey}
+                onDamageAnimationEnd={handleDamageAnimationEnd}
+                onHealAnimationEnd={handleHealAnimationEnd}
               />
-
-              {/* Damage Number for Challenger */}
-              {animationState.damageNumber?.position === "left" && (
-                <DamageNumber
-                  damage={animationState.damageNumber.damage}
-                  isCritical={animationState.damageNumber.isCritical}
-                  position="left"
-                  onAnimationEnd={handleDamageAnimationEnd}
-                />
-              )}
-
-              {/* Heal Number for Challenger (lifesteal) - Requirements 3.3 */}
-              {animationState.healNumber?.position === "left" && (
-                <HealNumber
-                  healAmount={animationState.healNumber.healAmount}
-                  position="left"
-                  onAnimationEnd={handleHealAnimationEnd}
-                />
-              )}
             </div>
 
             {/* VS Indicator */}
@@ -339,10 +517,10 @@ export function BattleArenaPage() {
               )}
             </div>
 
-            {/* Opponent Card (Right) */}
+            {/* Opponent Card (Right) - with integrated damage/heal display */}
             <div
               className={cn(
-                "relative transform transition-all duration-600",
+                "transform transition-all duration-600",
                 entranceComplete
                   ? "translate-x-0 opacity-100"
                   : "translate-x-20 opacity-0"
@@ -359,26 +537,23 @@ export function BattleArenaPage() {
                 isDanger={opponentInDanger}
                 isWinner={isBattleFinished && winner?.id === opponent.id}
                 isLoser={isBattleFinished && loser?.id === opponent.id}
+                damageDisplay={
+                  animationState.damageNumber?.position === "right"
+                    ? {
+                        damage: animationState.damageNumber.damage,
+                        isCritical: animationState.damageNumber.isCritical,
+                      }
+                    : null
+                }
+                healDisplay={
+                  animationState.healNumber?.position === "right"
+                    ? { healAmount: animationState.healNumber.healAmount }
+                    : null
+                }
+                animationKey={animationState.animationKey}
+                onDamageAnimationEnd={handleDamageAnimationEnd}
+                onHealAnimationEnd={handleHealAnimationEnd}
               />
-
-              {/* Damage Number for Opponent */}
-              {animationState.damageNumber?.position === "right" && (
-                <DamageNumber
-                  damage={animationState.damageNumber.damage}
-                  isCritical={animationState.damageNumber.isCritical}
-                  position="right"
-                  onAnimationEnd={handleDamageAnimationEnd}
-                />
-              )}
-
-              {/* Heal Number for Opponent (lifesteal) - Requirements 3.3 */}
-              {animationState.healNumber?.position === "right" && (
-                <HealNumber
-                  healAmount={animationState.healNumber.healAmount}
-                  position="right"
-                  onAnimationEnd={handleHealAnimationEnd}
-                />
-              )}
             </div>
           </div>
         </div>
@@ -395,9 +570,9 @@ export function BattleArenaPage() {
         >
           <BattleControls
             phase={phase}
-            isAutoBattle={isAutoBattle}
+            isAutoBattle={isAutoBattle || isReplayMode}
             onAttack={handleAttack}
-            onToggleAuto={toggleAutoBattle}
+            onToggleAuto={handleToggleAutoBattle}
             onNewBattle={handleNewBattle}
           />
         </div>

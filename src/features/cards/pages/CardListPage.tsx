@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { Plus, RefreshCw, Swords } from "lucide-react";
+import { Plus, RefreshCw, Swords, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   SearchBar,
@@ -50,6 +50,12 @@ export function CardListPage() {
             )}
           </div>
           <div className="flex gap-2">
+            <Button asChild variant="outline">
+              <Link to="/history">
+                <History className="h-4 w-4" />
+                History
+              </Link>
+            </Button>
             <Button asChild variant="secondary">
               <Link to="/battle/setup">
                 <Swords className="h-4 w-4" />

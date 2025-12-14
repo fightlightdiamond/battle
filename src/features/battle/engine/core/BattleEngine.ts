@@ -33,6 +33,12 @@ import {
   type CombatLoggerInstance,
 } from "../utils/CombatLogger";
 import { Serializer } from "../utils/Serializer";
+import {
+  createBattleRecorder,
+  type BattleRecorderInstance,
+} from "../../services/battleRecorder";
+import { battleHistoryService } from "../../services/battleHistoryService";
+import type { BattleRecord } from "../../types/battleHistoryTypes";
 
 /**
  * BattleEngine - Main orchestrator for the AFK Battle Engine
@@ -41,6 +47,7 @@ import { Serializer } from "../utils/Serializer";
  * a unified API for battle management.
  *
  * Requirements: 1.1, 2.1, 2.3, 2.4, 2.5
+ * Battle History Requirements: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4
  */
 export class BattleEngine {
   private state: BattleState | null = null;
@@ -49,6 +56,8 @@ export class BattleEngine {
   private turn: TurnSystem;
   private victory: VictorySystem;
   private logger: CombatLoggerInstance;
+  private recorder: BattleRecorderInstance;
+  private lastBattleRecord: BattleRecord | null = null;
   readonly config: BattleEngineConfig;
 
   constructor(config: BattleEngineConfig = DEFAULT_BATTLE_CONFIG) {
@@ -58,6 +67,7 @@ export class BattleEngine {
     this.turn = createTurnSystem();
     this.victory = createVictorySystem();
     this.logger = createCombatLogger(config.combat);
+    this.recorder = createBattleRecorder();
   }
 
   /**
@@ -86,8 +96,10 @@ export class BattleEngine {
 
   /**
    * Start the battle, transitioning from "ready" to "fighting" phase.
+   * Starts recording battle history.
    *
    * Requirements: 2.1
+   * Battle History Requirements: 1.1, 1.2
    *
    * @returns The updated BattleState, or null if not in ready phase
    */
@@ -97,6 +109,9 @@ export class BattleEngine {
     }
 
     this.state = setPhase(this.state, BATTLE_PHASES.FIGHTING);
+
+    // Start recording battle history (Requirements: 1.1, 1.2)
+    this.recorder.startRecording(this.state.challenger, this.state.opponent);
 
     this.emit({
       type: GAME_EVENTS.BATTLE_START,
@@ -114,12 +129,14 @@ export class BattleEngine {
   /**
    * Execute an attack from the current attacker to the defender.
    * Returns null if battle is not in "fighting" phase.
+   * Records turn data for battle history.
    *
    * Property 8: Battle End Disables Attacks
    * For any battle in 'finished' phase, executeAttack() SHALL return null
    * and state SHALL remain unchanged.
    *
    * Requirements: 2.3, 2.4, 2.5
+   * Battle History Requirements: 2.1, 2.2, 2.3, 2.4
    *
    * @returns AttackResult if attack executed, null if battle not in fighting phase
    */
@@ -135,14 +152,37 @@ export class BattleEngine {
     const attacker = this.state[attackerRole];
     const defender = this.state[defenderRole];
 
+    // Capture HP before attack for recording (Requirements: 2.3, 2.4)
+    const defenderHpBefore = defender.currentHp;
+    const attackerHpBefore = attacker.currentHp;
+
     // Calculate attack result using CombatSystem
     const attackResult = this.combat.calculateAttack(attacker, defender);
+
+    // Record turn for battle history (Requirements: 2.1, 2.2, 2.3, 2.4)
+    if (this.recorder.isRecording()) {
+      this.recorder.recordTurn(
+        this.state.turn,
+        attacker,
+        defender,
+        attackResult,
+        defenderHpBefore,
+        attackerHpBefore
+      );
+    }
 
     // Update state with new defender HP
     this.state = updateCombatant(this.state, defenderRole, {
       currentHp: attackResult.defenderNewHp,
       isDefeated: attackResult.isKnockout,
     });
+
+    // Update state with attacker's new HP (for lifesteal)
+    if (attackResult.lifestealHeal > 0) {
+      this.state = updateCombatant(this.state, attackerRole, {
+        currentHp: attackResult.attackerNewHp,
+      });
+    }
 
     // Log the attack
     const logEntry = this.logger.logAttack(
@@ -180,6 +220,9 @@ export class BattleEngine {
 
   /**
    * Handle victory condition - set result and transition to finished phase.
+   * Finishes recording and saves battle history.
+   *
+   * Battle History Requirements: 1.1, 1.2, 1.3
    */
   private handleVictory(result: BattleResult): void {
     if (!this.state) return;
@@ -190,6 +233,25 @@ export class BattleEngine {
 
     // Set result and phase
     this.state = setResult(this.state, result);
+
+    // Finish recording and save battle history (Requirements: 1.1, 1.2, 1.3)
+    if (this.recorder.isRecording()) {
+      const winnerId =
+        result.winner === COMBATANT_ROLES.CHALLENGER
+          ? this.state.challenger.id
+          : this.state.opponent.id;
+
+      const battleRecord = this.recorder.finishRecording(
+        winnerId,
+        result.winnerName
+      );
+
+      // Store the last battle record for retrieval
+      this.lastBattleRecord = battleRecord;
+
+      // Save to server asynchronously (fire and forget, errors logged)
+      this.saveBattleRecord(battleRecord);
+    }
 
     // Emit events
     this.emit({
@@ -211,13 +273,43 @@ export class BattleEngine {
   }
 
   /**
+   * Save battle record to server asynchronously.
+   * Errors are logged but don't interrupt the battle flow.
+   *
+   * Requirements: 1.3
+   */
+  private async saveBattleRecord(record: BattleRecord): Promise<void> {
+    try {
+      await battleHistoryService.saveBattle(record);
+    } catch (error) {
+      console.error("Failed to save battle record:", error);
+    }
+  }
+
+  /**
+   * Get the last completed battle record.
+   * Useful for replay functionality.
+   *
+   * @returns The last BattleRecord or null if no battle completed
+   */
+  getLastBattleRecord(): BattleRecord | null {
+    return this.lastBattleRecord;
+  }
+
+  /**
    * Reset the battle to initial state with the same combatants.
+   * Also resets the battle recorder.
    *
    * @returns The reset BattleState, or null if no battle was initialized
    */
   resetBattle(): BattleState | null {
     if (!this.state) {
       return null;
+    }
+
+    // Reset the recorder if it was recording
+    if (this.recorder.isRecording()) {
+      this.recorder.reset();
     }
 
     // Reset combatants to full HP

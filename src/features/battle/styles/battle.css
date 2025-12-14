@@ -132,8 +132,40 @@
   }
 }
 
+/* Centered damage animation - float up and fade out */
+@keyframes damage-centered {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+}
+
+/* Centered heal animation - float up and fade out */
+@keyframes heal-centered {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+}
+
 .animate-damage-fly-up {
   animation: damage-fly-up 800ms ease-out forwards;
+}
+
+.animate-damage-centered {
+  animation: damage-centered 800ms ease-out forwards;
+}
+
+.animate-heal-centered {
+  animation: heal-centered 800ms ease-out forwards;
 }
 
 .animate-critical-pulse {
@@ -418,4 +450,43 @@
 
 .victory-new-battle-btn--hidden {
   @apply opacity-0 translate-y-4;
+}
+
+/* ============================================
+   BATTLE REPLAY PLAYER STYLES
+   ============================================ */
+
+/* Replay progress bar hover effect */
+.replay-progress-marker:hover {
+  @apply bg-primary/50;
+}
+
+/* Replay card container */
+.replay-card-container {
+  @apply relative transition-all duration-300;
+}
+
+/* Replay turn indicator animation */
+@keyframes turn-indicator-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-turn-indicator {
+  animation: turn-indicator-pulse 1s ease-in-out infinite;
+}
+
+/* Speed button active state */
+.speed-button-active {
+  @apply bg-primary text-primary-foreground;
+}
+
+/* Replay controls container */
+.replay-controls {
+  @apply bg-card/80 backdrop-blur-sm rounded-lg p-4 shadow-lg;
 }

@@ -153,16 +153,15 @@ describe("CombatVisualConfig", () => {
       );
     });
 
-    it("normal damage type returns white color style", () => {
+    it("normal damage type returns red color style", () => {
       const style = getDamageTypeStyle("normal");
-      expect(style.color).toBe("#ffffff");
+      expect(style.color).toBe("#ef4444"); // red-500
       expect(style.prefix).toBe("-");
     });
 
-    it("crit damage type returns amber color style with CRIT label", () => {
+    it("crit damage type returns darker red color style", () => {
       const style = getDamageTypeStyle("crit");
-      expect(style.color).toBe("#f59e0b"); // amber-500
-      expect(style.label).toBe("CRIT!");
+      expect(style.color).toBe("#dc2626"); // red-600
       expect(style.prefix).toBe("-");
     });
 

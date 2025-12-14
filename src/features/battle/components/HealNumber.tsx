@@ -2,87 +2,49 @@
  * HealNumber Component - Floating heal number animation for lifesteal display
  * Requirements: 3.3
  *
- * Config-driven styling using Combat Visual Config.
- * Displays heal amount with "+" prefix and green color from config.
+ * Uses Framer Motion for smooth animations.
  */
 
-import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 import type { CardPosition } from "../types";
-import {
-  getDamageTypeStyle,
-  getAnimationConfig,
-} from "../engine/core/combatVisualConfig";
+import { getDamageTypeStyle } from "../engine/core/combatVisualConfig";
 
-/**
- * Props for HealNumber component
- */
 export interface HealNumberProps {
   healAmount: number;
   position: CardPosition;
-  onAnimationEnd: () => void;
+  onAnimationEnd?: () => void;
+  centered?: boolean;
 }
 
-/**
- * HealNumber Component
- *
- * Displays heal value with config-driven styling and animation.
- * - Uses getDamageTypeStyle("heal") for colors, fonts, and prefix
- * - Uses getAnimationConfig() for animation duration and easing
- * - Same animation behavior as DamageNumber
- *
- * Requirements: 3.3
- */
-export function HealNumber({
-  healAmount,
-  position,
-  onAnimationEnd,
-}: HealNumberProps) {
-  const [isVisible, setIsVisible] = useState(true);
-
-  // Get animation config from central config
-  const animationConfig = getAnimationConfig();
-
-  // Get heal style from config
+export function HealNumber({ healAmount, onAnimationEnd }: HealNumberProps) {
   const style = getDamageTypeStyle("heal");
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-      onAnimationEnd();
-    }, animationConfig.duration);
-
-    return () => clearTimeout(timer);
-  }, [onAnimationEnd, animationConfig.duration]);
-
-  if (!isVisible) {
-    return null;
-  }
+  const textStroke =
+    "2px #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000";
 
   return (
-    <div
-      className={cn(
-        "heal-number",
-        `animate-damage-fly-${animationConfig.direction}`
-      )}
+    <motion.div
+      initial={{ opacity: 1, y: 0, scale: 1 }}
+      animate={{ opacity: 0, y: -50, scale: 1.2 }}
+      transition={{ duration: 1.8, ease: "easeOut" }}
+      onAnimationComplete={onAnimationEnd}
+      style={{ pointerEvents: "none" }}
       data-testid="heal-number"
-      style={{
-        animationDuration: `${animationConfig.duration}ms`,
-        animationTimingFunction: animationConfig.easing,
-      }}
     >
       <span
-        className="heal-text"
         style={{
           color: style.color,
-          fontSize: style.fontSize,
-          fontWeight: style.fontWeight,
+          fontSize: "1.25rem",
+          fontWeight: 800,
+          textShadow: textStroke,
+          WebkitTextStroke: "1px black",
+          display: "block",
         }}
       >
         {style.prefix}
         {healAmount}
       </span>
-    </div>
+    </motion.div>
   );
 }
 

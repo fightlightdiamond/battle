@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 import type { BattleCard as BattleCardType, CardPosition } from "../types";
 import { CARD_POSITIONS } from "../types";
 import { HPBar } from "./HPBar";
+import { DamageNumber } from "./DamageNumber";
+import { HealNumber } from "./HealNumber";
 
 export interface BattleCardProps {
   card: BattleCardType;
@@ -16,6 +18,21 @@ export interface BattleCardProps {
   isDanger?: boolean; // HP < 25%
   isWinner?: boolean;
   isLoser?: boolean;
+  /** Damage to display on this card (when receiving damage) */
+  damageDisplay?: {
+    damage: number;
+    isCritical: boolean;
+  } | null;
+  /** Heal to display on this card (lifesteal) */
+  healDisplay?: {
+    healAmount: number;
+  } | null;
+  /** Key to force re-mount damage/heal animations */
+  animationKey?: number;
+  /** Callback when damage animation ends */
+  onDamageAnimationEnd?: () => void;
+  /** Callback when heal animation ends */
+  onHealAnimationEnd?: () => void;
 }
 
 /**
@@ -23,6 +40,8 @@ export interface BattleCardProps {
  * Displays card image, name, ATK stat with HPBar and various visual states
  * including attack animation, damage received animation, danger indicator,
  * and winner/loser visual states.
+ *
+ * Now includes integrated damage/heal number display centered on the card.
  */
 export function BattleCard({
   card,
@@ -32,6 +51,11 @@ export function BattleCard({
   isDanger = false,
   isWinner = false,
   isLoser = false,
+  damageDisplay = null,
+  healDisplay = null,
+  animationKey = 0,
+  onDamageAnimationEnd,
+  onHealAnimationEnd,
 }: BattleCardProps) {
   // Determine animation classes based on state
   const getAnimationClasses = () => {
@@ -100,7 +124,7 @@ export function BattleCard({
         </div>
       )}
 
-      {/* Card Image */}
+      {/* Card Image Container - relative for damage/heal positioning */}
       <div
         className={cn(
           "relative w-48 h-48 rounded-lg overflow-hidden bg-muted mb-3",
@@ -142,6 +166,33 @@ export function BattleCard({
           <div className="absolute inset-0 bg-red-500/40 animate-ping" />
         )}
       </div>
+
+      {/* Damage Number - Positioned above card image, outside overflow-hidden container */}
+      {damageDisplay && (
+        <div className="absolute top-4 left-4 right-4 h-48 flex items-center justify-center pointer-events-none z-50">
+          <DamageNumber
+            key={`damage-${animationKey}`}
+            damage={damageDisplay.damage}
+            isCritical={damageDisplay.isCritical}
+            position={position}
+            onAnimationEnd={onDamageAnimationEnd}
+            centered
+          />
+        </div>
+      )}
+
+      {/* Heal Number - Positioned above card image, outside overflow-hidden container */}
+      {healDisplay && (
+        <div className="absolute top-4 left-4 right-4 h-48 flex items-center justify-center pointer-events-none z-50">
+          <HealNumber
+            key={`heal-${animationKey}`}
+            healAmount={healDisplay.healAmount}
+            position={position}
+            onAnimationEnd={onHealAnimationEnd}
+            centered
+          />
+        </div>
+      )}
 
       {/* Card Name */}
       <h3

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { FloatingMenu } from "./components/FloatingMenu";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,7 +18,10 @@ interface AppProps {
 function App({ children }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-background">{children}</div>
+      <div className="min-h-screen bg-background">
+        {children}
+        <FloatingMenu />
+      </div>
     </QueryClientProvider>
   );
 }

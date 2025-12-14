@@ -8,7 +8,13 @@ import {
   CardCreatePage,
   CardEditPage,
 } from "./features/cards/pages";
-import { BattleSetupPage, BattleArenaPage } from "./features/battle/pages";
+import {
+  BattleSetupPage,
+  BattleArenaPage,
+  BattleHistoryListPage,
+  BattleHistoryDetailPage,
+  BattleReplayPage,
+} from "./features/battle/pages";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -21,6 +27,9 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/cards/:id/edit" element={<CardEditPage />} />
           <Route path="/battle/setup" element={<BattleSetupPage />} />
           <Route path="/battle/arena" element={<BattleArenaPage />} />
+          <Route path="/history" element={<BattleHistoryListPage />} />
+          <Route path="/history/:id" element={<BattleHistoryDetailPage />} />
+          <Route path="/history/:id/replay" element={<BattleReplayPage />} />
         </Routes>
       </App>
     </BrowserRouter>

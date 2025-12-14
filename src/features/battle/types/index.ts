@@ -21,3 +21,14 @@ export {
   CARD_POSITIONS,
   COMBAT_CONSTANTS,
 } from "./battle";
+
+// Battle History type exports
+export type {
+  CombatantSnapshot,
+  DamageBreakdown,
+  LifestealDetail,
+  DefenderHpState,
+  TurnRecord,
+  HpTimelineEntry,
+  BattleRecord,
+} from "./battleHistoryTypes";

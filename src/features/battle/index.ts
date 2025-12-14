@@ -31,6 +31,9 @@ export * from "./services";
 // Store
 export * from "./store";
 
+// Hooks
+export * from "./hooks";
+
 // Components - BattleCard component takes precedence
 export * from "./components";
 

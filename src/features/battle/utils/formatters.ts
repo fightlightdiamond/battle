@@ -57,10 +57,48 @@ export function formatVictoryLog(winnerName: string): string {
 }
 
 /**
+ * Format a timestamp to a readable date/time string
+ * Requirements: 3.2
+ *
+ * @param timestamp - Unix timestamp in milliseconds
+ * @returns Formatted date/time string
+ */
+export function formatBattleDate(timestamp: number): string {
+  const date = new Date(timestamp);
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+/**
+ * Format battle duration in milliseconds to a readable string
+ * Requirements: 3.2
+ *
+ * @param durationMs - Duration in milliseconds
+ * @returns Formatted duration string (e.g., "1m 23s" or "45s")
+ */
+export function formatBattleDuration(durationMs: number): string {
+  const totalSeconds = Math.floor(durationMs / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  if (minutes > 0) {
+    return `${minutes}m ${seconds}s`;
+  }
+  return `${seconds}s`;
+}
+
+/**
  * Formatters object with all formatting functions
  */
 export const formatters = {
   formatHpDisplay,
   formatBattleLogEntry,
   formatVictoryLog,
+  formatBattleDate,
+  formatBattleDuration,
 };

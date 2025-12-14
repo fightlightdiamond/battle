@@ -66,16 +66,15 @@ export interface CombatVisualConfig {
 export const COMBAT_VISUAL_CONFIG: CombatVisualConfig = {
   damageStyles: {
     normal: {
-      color: "#ffffff",
+      color: "#ef4444", // red-500 - damage is red
       fontSize: "1.5rem",
       fontWeight: "600",
       prefix: "-",
     },
     crit: {
-      color: "#f59e0b", // amber-500
+      color: "#dc2626", // red-600 - crit damage is darker red
       fontSize: "2rem",
       fontWeight: "700",
-      label: "CRIT!",
       prefix: "-",
     },
     heal: {
