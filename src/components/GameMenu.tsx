@@ -7,7 +7,15 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Sparkles, Library, Swords, History, Plus, X } from "lucide-react";
+import {
+  Sparkles,
+  Library,
+  Swords,
+  History,
+  Plus,
+  X,
+  Coins,
+} from "lucide-react";
 
 interface MenuItem {
   path: string;
@@ -30,6 +38,18 @@ const menuItems: MenuItem[] = [
     color: "from-red-500 to-red-600",
   },
   {
+    path: "/bet-battle",
+    label: "Bet Battle",
+    icon: <Coins className="h-5 w-5" />,
+    color: "from-yellow-500 to-amber-600",
+  },
+  {
+    path: "/bet-history",
+    label: "Bet History",
+    icon: <Coins className="h-5 w-5" />,
+    color: "from-amber-500 to-orange-600",
+  },
+  {
     path: "/history",
     label: "History",
     icon: <History className="h-5 w-5" />,
@@ -48,11 +68,12 @@ export function GameMenu() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Don't show during battle arena or replay
+  // Don't show during battle arena, bet battle arena, or replay
   const isInBattleArena = location.pathname === "/battle/arena";
+  const isInBetBattleArena = location.pathname === "/bet-battle/arena";
   const isInReplay = location.pathname.includes("/replay");
 
-  if (isInBattleArena || isInReplay) {
+  if (isInBattleArena || isInBetBattleArena || isInReplay) {
     return null;
   }
 
@@ -98,9 +119,14 @@ export function GameMenu() {
                 location.pathname === item.path ||
                 (item.path === "/cards" &&
                   location.pathname.startsWith("/cards") &&
-                  item.path !== "/cards/new") ||
+                  !location.pathname.includes("/new")) ||
                 (item.path === "/battle/setup" &&
                   location.pathname.startsWith("/battle")) ||
+                (item.path === "/bet-battle" &&
+                  location.pathname.startsWith("/bet-battle") &&
+                  !location.pathname.startsWith("/bet-history")) ||
+                (item.path === "/bet-history" &&
+                  location.pathname.startsWith("/bet-history")) ||
                 (item.path === "/history" &&
                   location.pathname.startsWith("/history"));
 

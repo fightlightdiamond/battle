@@ -15,6 +15,11 @@ import {
   BattleHistoryDetailPage,
   BattleReplayPage,
 } from "./features/battle/pages";
+import {
+  BetBattleSetupPage,
+  BetBattleArenaPage,
+  BetHistoryPage,
+} from "./features/betting/pages";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -30,6 +35,9 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/history" element={<BattleHistoryListPage />} />
           <Route path="/history/:id" element={<BattleHistoryDetailPage />} />
           <Route path="/history/:id/replay" element={<BattleReplayPage />} />
+          <Route path="/bet-battle" element={<BetBattleSetupPage />} />
+          <Route path="/bet-battle/arena" element={<BetBattleArenaPage />} />
+          <Route path="/bet-history" element={<BetHistoryPage />} />
         </Routes>
       </App>
     </BrowserRouter>

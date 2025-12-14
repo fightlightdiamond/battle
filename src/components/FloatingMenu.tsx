@@ -1,13 +1,23 @@
 /**
  * FloatingMenu Component - Radial floating action button for game navigation
  * Hover/click to expand menu items in a circular pattern
+ * Requirements: 6.1 - Show gold balance globally
  */
 
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Sparkles, Library, Swords, History, Plus, X } from "lucide-react";
+import {
+  Sparkles,
+  Library,
+  Swords,
+  History,
+  Plus,
+  X,
+  Coins,
+} from "lucide-react";
+import { GoldBalanceDisplay } from "@/features/betting/components/GoldBalanceDisplay";
 
 interface MenuItem {
   path: string;
@@ -30,6 +40,18 @@ const menuItems: MenuItem[] = [
     color: "from-red-500 to-red-600",
   },
   {
+    path: "/bet-battle",
+    label: "Bet Battle",
+    icon: <Coins className="h-5 w-5" />,
+    color: "from-yellow-500 to-amber-600",
+  },
+  {
+    path: "/bet-history",
+    label: "Bet History",
+    icon: <Coins className="h-5 w-5" />,
+    color: "from-amber-500 to-orange-600",
+  },
+  {
     path: "/history",
     label: "History",
     icon: <History className="h-5 w-5" />,
@@ -50,9 +72,10 @@ export function FloatingMenu() {
 
   // Hide during battle arena and replay
   const isInBattleArena = location.pathname === "/battle/arena";
+  const isInBetBattleArena = location.pathname === "/bet-battle/arena";
   const isInReplay = location.pathname.includes("/replay");
 
-  if (isInBattleArena || isInReplay) {
+  if (isInBattleArena || isInBetBattleArena || isInReplay) {
     return null;
   }
 
@@ -79,6 +102,11 @@ export function FloatingMenu() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
+      {/* Gold Balance Display - Requirements: 6.1 */}
+      <div className="fixed top-4 right-4 z-40">
+        <GoldBalanceDisplay size="md" />
+      </div>
+
       {/* Menu Items */}
       <AnimatePresence>
         {isOpen && (
@@ -102,6 +130,11 @@ export function FloatingMenu() {
                   !location.pathname.includes("/new")) ||
                 (item.path === "/battle/setup" &&
                   location.pathname.startsWith("/battle")) ||
+                (item.path === "/bet-battle" &&
+                  location.pathname.startsWith("/bet-battle") &&
+                  !location.pathname.startsWith("/bet-history")) ||
+                (item.path === "/bet-history" &&
+                  location.pathname.startsWith("/bet-history")) ||
                 (item.path === "/history" &&
                   location.pathname.startsWith("/history"));
 
