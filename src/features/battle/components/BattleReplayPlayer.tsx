@@ -18,6 +18,8 @@ import type { CardPosition, BattleCard as BattleCardType } from "../types";
 import { useReplayState } from "../hooks/useReplayState";
 import { ReplayControls } from "./ReplayControls";
 import { BattleCard } from "./BattleCard";
+import { cardApi } from "@/features/cards/api/cardApi";
+import { getImageUrl } from "@/features/cards/services";
 
 /**
  * Props for BattleReplayPlayer component
@@ -36,12 +38,13 @@ export interface BattleReplayPlayerProps {
  */
 function combatantToBattleCard(
   combatant: BattleRecord["challenger"],
-  currentHp: number
+  currentHp: number,
+  imageUrl?: string | null
 ): BattleCardType {
   return {
     id: combatant.id,
     name: combatant.name,
-    imageUrl: combatant.imageUrl,
+    imageUrl: imageUrl ?? combatant.imageUrl,
     maxHp: combatant.maxHp,
     currentHp: currentHp,
     atk: combatant.atk,
@@ -77,35 +80,92 @@ export function BattleReplayPlayer({
   // Track which turn's damage is currently being shown
   const [displayedTurn, setDisplayedTurn] = useState(0);
 
+  // Fetch card images from OPFS storage (blob URLs expire after page refresh)
+  const [challengerImageUrl, setChallengerImageUrl] = useState<
+    string | null | undefined
+  >(battleRecord.challenger.imageUrl);
+  const [opponentImageUrl, setOpponentImageUrl] = useState<
+    string | null | undefined
+  >(battleRecord.opponent.imageUrl);
+
+  // Fetch fresh image URLs from card data
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchImages = async () => {
+      try {
+        // Fetch challenger card image
+        const challengerCard = await cardApi.getById(
+          battleRecord.challenger.id
+        );
+        if (!cancelled && challengerCard?.imagePath) {
+          const url = await getImageUrl(challengerCard.imagePath);
+          if (!cancelled && url) setChallengerImageUrl(url);
+        }
+
+        // Fetch opponent card image
+        const opponentCard = await cardApi.getById(battleRecord.opponent.id);
+        if (!cancelled && opponentCard?.imagePath) {
+          const url = await getImageUrl(opponentCard.imagePath);
+          if (!cancelled && url) setOpponentImageUrl(url);
+        }
+      } catch (error) {
+        console.error("Failed to fetch card images:", error);
+      }
+    };
+
+    fetchImages();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [battleRecord.challenger.id, battleRecord.opponent.id]);
+
   // Show damage when turn changes
   const showDamage =
     currentTurnRecord !== null &&
     state.currentTurn > 0 &&
     displayedTurn === state.currentTurn;
 
-  // When turn changes, start showing damage
+  // When turn changes, start showing damage after a microtask to avoid sync setState
   useEffect(() => {
     if (currentTurnRecord && state.currentTurn > 0) {
-      setDisplayedTurn(state.currentTurn);
+      // Use setTimeout(0) to defer setState to next tick, avoiding sync setState in effect
+      const setTurnTimer = setTimeout(() => {
+        setDisplayedTurn(state.currentTurn);
+      }, 0);
 
       // Auto-hide after animation (longer duration for better visibility)
-      const timer = setTimeout(() => {
+      const hideTimer = setTimeout(() => {
         setDisplayedTurn(0);
       }, 2000);
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(setTurnTimer);
+        clearTimeout(hideTimer);
+      };
     }
   }, [state.currentTurn, currentTurnRecord]);
 
-  // Convert combatants to BattleCard format with current HP
+  // Convert combatants to BattleCard format with current HP and fresh image URLs
   const challengerCard = useMemo(
-    () => combatantToBattleCard(battleRecord.challenger, state.challengerHp),
-    [battleRecord.challenger, state.challengerHp]
+    () =>
+      combatantToBattleCard(
+        battleRecord.challenger,
+        state.challengerHp,
+        challengerImageUrl
+      ),
+    [battleRecord.challenger, state.challengerHp, challengerImageUrl]
   );
 
   const opponentCard = useMemo(
-    () => combatantToBattleCard(battleRecord.opponent, state.opponentHp),
-    [battleRecord.opponent, state.opponentHp]
+    () =>
+      combatantToBattleCard(
+        battleRecord.opponent,
+        state.opponentHp,
+        opponentImageUrl
+      ),
+    [battleRecord.opponent, state.opponentHp, opponentImageUrl]
   );
 
   // Determine danger states (HP < 25%)

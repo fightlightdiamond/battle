@@ -15,11 +15,16 @@ import {
   BattleHistoryDetailPage,
   BattleReplayPage,
 } from "./features/battle/pages";
+// BetBattleSetupPage, BetBattleArenaPage, BetHistoryPage are deprecated
+// Redirects are used instead - see routes below
 import {
-  BetBattleSetupPage,
-  BetBattleArenaPage,
-  BetHistoryPage,
-} from "./features/betting/pages";
+  MatchupListPage,
+  MatchupDetailPage,
+  MatchupCreatePage,
+  MatchupBetHistoryPage,
+  MatchupAdminListPage,
+  MatchupAdminPage,
+} from "./features/matchup/pages";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -35,9 +40,29 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/history" element={<BattleHistoryListPage />} />
           <Route path="/history/:id" element={<BattleHistoryDetailPage />} />
           <Route path="/history/:id/replay" element={<BattleReplayPage />} />
-          <Route path="/bet-battle" element={<BetBattleSetupPage />} />
-          <Route path="/bet-battle/arena" element={<BetBattleArenaPage />} />
-          <Route path="/bet-history" element={<BetHistoryPage />} />
+          {/* Admin creates matchups at /matchups/create, redirect old route */}
+          <Route
+            path="/bet-battle"
+            element={<Navigate to="/matchups/create" replace />}
+          />
+          {/* Keep arena for legacy support but redirect to matchups */}
+          <Route
+            path="/bet-battle/arena"
+            element={<Navigate to="/matchups" replace />}
+          />
+          {/* Old bet history - redirect to new matchup bets */}
+          <Route
+            path="/bet-history"
+            element={<Navigate to="/matchup-bets" replace />}
+          />
+          {/* Player routes */}
+          <Route path="/matchups" element={<MatchupListPage />} />
+          <Route path="/matchups/:id" element={<MatchupDetailPage />} />
+          <Route path="/matchup-bets" element={<MatchupBetHistoryPage />} />
+          {/* Admin routes */}
+          <Route path="/admin/matchups" element={<MatchupAdminListPage />} />
+          <Route path="/admin/matchups/:id" element={<MatchupAdminPage />} />
+          <Route path="/matchups/create" element={<MatchupCreatePage />} />
         </Routes>
       </App>
     </BrowserRouter>

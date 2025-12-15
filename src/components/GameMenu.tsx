@@ -15,6 +15,8 @@ import {
   Plus,
   X,
   Coins,
+  Trophy,
+  ScrollText,
 } from "lucide-react";
 
 interface MenuItem {
@@ -36,6 +38,18 @@ const menuItems: MenuItem[] = [
     label: "Battle",
     icon: <Swords className="h-5 w-5" />,
     color: "from-red-500 to-red-600",
+  },
+  {
+    path: "/matchups",
+    label: "Matchups",
+    icon: <Trophy className="h-5 w-5" />,
+    color: "from-emerald-500 to-teal-600",
+  },
+  {
+    path: "/matchup-bets",
+    label: "Matchup Bets",
+    icon: <ScrollText className="h-5 w-5" />,
+    color: "from-cyan-500 to-sky-600",
   },
   {
     path: "/bet-battle",
@@ -122,6 +136,10 @@ export function GameMenu() {
                   !location.pathname.includes("/new")) ||
                 (item.path === "/battle/setup" &&
                   location.pathname.startsWith("/battle")) ||
+                (item.path === "/matchups" &&
+                  location.pathname.startsWith("/matchups")) ||
+                (item.path === "/matchup-bets" &&
+                  location.pathname.startsWith("/matchup-bets")) ||
                 (item.path === "/bet-battle" &&
                   location.pathname.startsWith("/bet-battle") &&
                   !location.pathname.startsWith("/bet-history")) ||

@@ -1,26 +1,40 @@
 /**
- * BattleSetupPage - Match setup page for selecting two cards to battle
+ * BattleSetupPage - Match setup page for selecting two cards
+ * Supports two modes:
+ * - "battle": Practice battle - starts battle immediately
+ * - "matchup": Create matchup - creates matchup for betting
+ *
  * Requirements: 1.1, 1.2, 1.3, 1.5
  * - Two CardSelector areas for card1 and card2
  * - Display selected cards side by side
- * - Start Battle button (enabled when both cards selected)
- * - Navigation to BattleArenaPage
+ * - Action button (Start Battle or Create Matchup)
+ * - Navigation based on mode
  */
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Swords, ArrowLeft, Loader2, History } from "lucide-react";
+import { Swords, ArrowLeft, Loader2, History, Trophy } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CardSelector } from "../components/CardSelector";
 import { useBattleStore, selectCanStartBattle } from "../store/battleStore";
 import { useCards } from "../../cards/hooks/useCards";
+import { matchupService } from "../../matchup/services/matchupService";
 import type { Card } from "../../cards/types";
 
+export type BattleSetupMode = "battle" | "matchup";
+
+interface BattleSetupPageProps {
+  mode?: BattleSetupMode;
+}
+
 /**
- * BattleSetupPage component for selecting cards and starting a battle
+ * BattleSetupPage component for selecting cards
+ * @param mode - "battle" for practice battle, "matchup" for creating matchup
  */
-export function BattleSetupPage() {
+export function BattleSetupPage({ mode = "battle" }: BattleSetupPageProps) {
   const navigate = useNavigate();
+  const [isCreatingMatchup, setIsCreatingMatchup] = useState(false);
 
   // Battle store state and actions
   const challenger = useBattleStore((state) => state.challenger);
@@ -63,38 +77,107 @@ export function BattleSetupPage() {
     [selectOpponent]
   );
 
-  // Handle start battle
+  // Handle start battle (practice mode)
   const handleStartBattle = useCallback(() => {
     startBattle();
     navigate("/battle/arena");
   }, [startBattle, navigate]);
+
+  // Handle create matchup (matchup mode)
+  const handleCreateMatchup = useCallback(async () => {
+    if (!challenger || !opponent) {
+      toast.error("Please select both cards");
+      return;
+    }
+
+    setIsCreatingMatchup(true);
+
+    try {
+      const matchup = await matchupService.createMatchup({
+        card1Id: challenger.id,
+        card1Name: challenger.name,
+        card2Id: opponent.id,
+        card2Name: opponent.name,
+      });
+
+      toast.success("Matchup created!", {
+        description: `${challenger.name} vs ${opponent.name}`,
+      });
+
+      // Navigate to admin matchup page
+      navigate(`/admin/matchups/${matchup.id}`);
+    } catch (err) {
+      toast.error("Failed to create matchup", {
+        description: err instanceof Error ? err.message : "Unknown error",
+      });
+    } finally {
+      setIsCreatingMatchup(false);
+    }
+  }, [challenger, opponent, navigate]);
+
+  // Handle action button click based on mode
+  const handleAction =
+    mode === "battle" ? handleStartBattle : handleCreateMatchup;
+  const isActionDisabled = !canStartBattle || isCreatingMatchup;
+
+  // Mode-specific config
+  const config = {
+    battle: {
+      title: "Battle Setup",
+      subtitle: "Select two cards to battle against each other",
+      backLink: "/cards",
+      actionLabel: "Start Battle",
+      actionIcon: <Swords className="h-5 w-5" />,
+      loadingLabel: "Loading Cards...",
+      headerIcon: <Swords className="h-8 w-8 text-primary" />,
+      showHistory: true,
+    },
+    matchup: {
+      title: "Create Matchup",
+      subtitle: "Select two cards for players to bet on",
+      backLink: "/admin/matchups",
+      actionLabel: isCreatingMatchup ? "Creating..." : "Create Matchup",
+      actionIcon: isCreatingMatchup ? (
+        <Loader2 className="h-5 w-5 animate-spin" />
+      ) : (
+        <Trophy className="h-5 w-5" />
+      ),
+      loadingLabel: "Loading Cards...",
+      headerIcon: <Trophy className="h-8 w-8 text-primary" />,
+      showHistory: false,
+    },
+  };
+
+  const currentConfig = config[mode];
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
-          <Link to="/cards">
+          <Link to={currentConfig.backLink}>
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
-              <Swords className="h-8 w-8 text-primary" />
-              Battle Setup
+              {currentConfig.headerIcon}
+              {currentConfig.title}
             </h1>
             <p className="text-muted-foreground mt-1">
-              Select two cards to battle against each other
+              {currentConfig.subtitle}
             </p>
           </div>
         </div>
-        <Button asChild variant="outline">
-          <Link to="/history">
-            <History className="h-4 w-4 mr-2" />
-            History
-          </Link>
-        </Button>
+        {currentConfig.showHistory && (
+          <Button asChild variant="outline">
+            <Link to="/history">
+              <History className="h-4 w-4 mr-2" />
+              History
+            </Link>
+          </Button>
+        )}
       </div>
 
       {/* Card Selection Area */}
@@ -107,7 +190,7 @@ export function BattleSetupPage() {
             otherSelectedCardId={opponent?.id ?? null}
             onSelect={handleSelectChallenger}
             isLoading={isLoading}
-            label="Challenger"
+            label={mode === "battle" ? "Challenger" : "Card 1"}
             position="left"
           />
         </div>
@@ -127,7 +210,7 @@ export function BattleSetupPage() {
             otherSelectedCardId={challenger?.id ?? null}
             onSelect={handleSelectOpponent}
             isLoading={isLoading}
-            label="Opponent"
+            label={mode === "battle" ? "Opponent" : "Card 2"}
             position="right"
           />
         </div>
@@ -140,23 +223,23 @@ export function BattleSetupPage() {
         </div>
       </div>
 
-      {/* Start Battle Button */}
+      {/* Action Button */}
       <div className="flex justify-center mt-8">
         <Button
           size="lg"
-          onClick={handleStartBattle}
-          disabled={!canStartBattle}
+          onClick={handleAction}
+          disabled={isActionDisabled}
           className="px-12 py-6 text-lg font-semibold gap-2"
         >
           {isLoading ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin" />
-              Loading Cards...
+              {currentConfig.loadingLabel}
             </>
           ) : (
             <>
-              <Swords className="h-5 w-5" />
-              Start Battle
+              {currentConfig.actionIcon}
+              {currentConfig.actionLabel}
             </>
           )}
         </Button>
@@ -166,10 +249,18 @@ export function BattleSetupPage() {
       {!canStartBattle && !isLoading && (
         <p className="text-center text-muted-foreground mt-4">
           {!challenger && !opponent
-            ? "Select a challenger and an opponent to start the battle"
+            ? `Select ${
+                mode === "battle"
+                  ? "a challenger and an opponent"
+                  : "both cards"
+              } to continue`
             : !challenger
-            ? "Select a challenger to continue"
-            : "Select an opponent to continue"}
+            ? `Select ${
+                mode === "battle" ? "a challenger" : "Card 1"
+              } to continue`
+            : `Select ${
+                mode === "battle" ? "an opponent" : "Card 2"
+              } to continue`}
         </p>
       )}
     </div>
