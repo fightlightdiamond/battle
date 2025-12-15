@@ -9,7 +9,6 @@
 
 import { useParams, Link } from "react-router-dom";
 import {
-  ArrowLeft,
   Trophy,
   Clock,
   Hash,
@@ -22,6 +21,7 @@ import {
   Play,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layouts";
 import {
   Card,
   CardContent,
@@ -263,91 +263,82 @@ export function BattleHistoryDetailPage() {
   const { data: battle, isLoading, isError, error } = useBattleDetail(id);
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex flex-col gap-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/history">
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-            </Button>
-            <h1 className="text-3xl font-bold">Battle Detail</h1>
+    <AppLayout
+      variant="menu"
+      width="full"
+      title="Battle Detail"
+      backTo="/history"
+      headerRight={
+        battle ? (
+          <Button asChild size="lg" className="gap-2">
+            <Link to={`/history/${id}/replay`}>
+              <Play className="h-5 w-5" />
+              Watch Replay
+            </Link>
+          </Button>
+        ) : undefined
+      }
+    >
+      {/* Content */}
+      {isLoading && <LoadingState />}
+
+      {isError && (
+        <ErrorState
+          message={
+            error instanceof Error ? error.message : "Failed to load battle"
+          }
+        />
+      )}
+
+      {!isLoading && !isError && !battle && <NotFoundState />}
+
+      {!isLoading && !isError && battle && (
+        <div className="flex flex-col gap-6">
+          {/* Battle Result Summary - Requirements: 4.4 */}
+          <BattleResultSummary
+            winnerName={battle.winnerName}
+            totalTurns={battle.totalTurns}
+            durationMs={battle.battleDurationMs}
+            startedAt={battle.startedAt}
+          />
+
+          {/* Combatant Cards - Requirements: 4.1 */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <CombatantCard
+              combatant={battle.challenger}
+              isWinner={battle.winnerId === battle.challenger.id}
+              position="challenger"
+            />
+            <CombatantCard
+              combatant={battle.opponent}
+              isWinner={battle.winnerId === battle.opponent.id}
+              position="opponent"
+            />
           </div>
 
-          {/* Watch Replay Button - Requirements: 6.1 */}
-          {battle && (
-            <Button asChild size="lg" className="gap-2">
-              <Link to={`/history/${id}/replay`}>
-                <Play className="h-5 w-5" />
-                Watch Replay
-              </Link>
-            </Button>
-          )}
+          <Separator />
+
+          {/* Turn Timeline - Requirements: 4.2, 4.3, 4.5 */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Swords className="h-5 w-5" />
+                Turn-by-Turn Timeline
+              </CardTitle>
+              <CardDescription>
+                Detailed breakdown of each turn in the battle
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <TurnTimeline
+                turns={battle.turns}
+                challengerId={battle.challenger.id}
+                opponentId={battle.opponent.id}
+              />
+            </CardContent>
+          </Card>
         </div>
-
-        {/* Content */}
-        {isLoading && <LoadingState />}
-
-        {isError && (
-          <ErrorState
-            message={
-              error instanceof Error ? error.message : "Failed to load battle"
-            }
-          />
-        )}
-
-        {!isLoading && !isError && !battle && <NotFoundState />}
-
-        {!isLoading && !isError && battle && (
-          <>
-            {/* Battle Result Summary - Requirements: 4.4 */}
-            <BattleResultSummary
-              winnerName={battle.winnerName}
-              totalTurns={battle.totalTurns}
-              durationMs={battle.battleDurationMs}
-              startedAt={battle.startedAt}
-            />
-
-            {/* Combatant Cards - Requirements: 4.1 */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <CombatantCard
-                combatant={battle.challenger}
-                isWinner={battle.winnerId === battle.challenger.id}
-                position="challenger"
-              />
-              <CombatantCard
-                combatant={battle.opponent}
-                isWinner={battle.winnerId === battle.opponent.id}
-                position="opponent"
-              />
-            </div>
-
-            <Separator />
-
-            {/* Turn Timeline - Requirements: 4.2, 4.3, 4.5 */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Swords className="h-5 w-5" />
-                  Turn-by-Turn Timeline
-                </CardTitle>
-                <CardDescription>
-                  Detailed breakdown of each turn in the battle
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <TurnTimeline
-                  turns={battle.turns}
-                  challengerId={battle.challenger.id}
-                  opponentId={battle.opponent.id}
-                />
-              </CardContent>
-            </Card>
-          </>
-        )}
-      </div>
-    </div>
+      )}
+    </AppLayout>
   );
 }

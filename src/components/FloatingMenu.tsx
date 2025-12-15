@@ -1,7 +1,8 @@
 /**
  * FloatingMenu Component - Floating action button with vertical menu
  * Click to expand menu items in a vertical list above the FAB
- * Requirements: 6.1 - Show gold balance globally
+ * Icon-only buttons with tooltips for cleaner UI
+ * Requirements: 2.1, 2.2, 2.5, 3.1, 3.4
  */
 
 import { useState } from "react";
@@ -19,7 +20,11 @@ import {
   Trophy,
   ScrollText,
 } from "lucide-react";
-import { GoldBalanceDisplay } from "@/features/betting/components/GoldBalanceDisplay";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface MenuItem {
   path: string;
@@ -118,11 +123,6 @@ export function FloatingMenu() {
 
   return (
     <>
-      {/* Gold Balance Display - Fixed top right - Requirements: 6.1 */}
-      <div className="fixed top-4 right-4 z-40">
-        <GoldBalanceDisplay size="md" />
-      </div>
-
       {/* FAB Container - Fixed bottom left (right is reserved for scroll-to-top) */}
       <div className="fixed bottom-6 left-6 z-50">
         {/* Menu Items - Vertical list above FAB */}
@@ -139,7 +139,7 @@ export function FloatingMenu() {
                 onClick={() => setIsOpen(false)}
               />
 
-              {/* Menu Items Container */}
+              {/* Menu Items Container - Icon-only with tooltips */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -151,31 +151,40 @@ export function FloatingMenu() {
                   const isActive = isActiveItem(item);
 
                   return (
-                    <motion.button
-                      key={item.path}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 25,
-                        delay: index * 0.03,
-                      }}
-                      onClick={() => handleItemClick(item.path)}
-                      className={cn(
-                        "flex items-center gap-2 px-4 py-2.5 rounded-full",
-                        "bg-gradient-to-r text-white shadow-lg",
-                        "hover:scale-105 hover:shadow-xl transition-all",
-                        "whitespace-nowrap",
-                        item.color,
-                        isActive && "ring-2 ring-white/80 shadow-xl"
-                      )}
-                      title={item.label}
-                    >
-                      {item.icon}
-                      <span className="text-sm font-medium">{item.label}</span>
-                    </motion.button>
+                    <Tooltip key={item.path} delayDuration={150}>
+                      <TooltipTrigger asChild>
+                        <motion.button
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 25,
+                            delay: index * 0.03,
+                          }}
+                          onClick={() => handleItemClick(item.path)}
+                          className={cn(
+                            // Icon-only button: 44px size (within 40-48px range per Requirements 2.5)
+                            "flex items-center justify-center w-11 h-11 rounded-full",
+                            "bg-gradient-to-r text-white shadow-lg",
+                            "hover:scale-105 hover:shadow-xl transition-all",
+                            item.color,
+                            isActive && "ring-2 ring-white/80 shadow-xl"
+                          )}
+                          aria-label={item.label}
+                          data-testid={`menu-item-${item.path.replace(
+                            /\//g,
+                            "-"
+                          )}`}
+                        >
+                          {item.icon}
+                        </motion.button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" sideOffset={8}>
+                        {item.label}
+                      </TooltipContent>
+                    </Tooltip>
                   );
                 })}
               </motion.div>

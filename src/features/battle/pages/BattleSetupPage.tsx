@@ -13,9 +13,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Swords, ArrowLeft, Loader2, History, Trophy } from "lucide-react";
+import { Swords, Loader2, History, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layouts";
 import { CardSelector } from "../components/CardSelector";
 import { useBattleStore, selectCanStartBattle } from "../store/battleStore";
 import { useCards } from "../../cards/hooks/useCards";
@@ -151,118 +152,113 @@ export function BattleSetupPage({ mode = "battle" }: BattleSetupPageProps) {
   const currentConfig = config[mode];
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4">
-          <Link to={currentConfig.backLink}>
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              {currentConfig.headerIcon}
-              {currentConfig.title}
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              {currentConfig.subtitle}
-            </p>
-          </div>
-        </div>
-        {currentConfig.showHistory && (
+    <AppLayout
+      variant="menu"
+      width="full"
+      title={currentConfig.title}
+      backTo={currentConfig.backLink}
+      backLabel="Back"
+      headerRight={
+        currentConfig.showHistory ? (
           <Button asChild variant="outline">
             <Link to="/history">
               <History className="h-4 w-4 mr-2" />
               History
             </Link>
           </Button>
-        )}
-      </div>
+        ) : undefined
+      }
+    >
+      <div className="flex-1 flex flex-col">
+        {/* Subtitle */}
+        <p className="text-muted-foreground text-center mb-6">
+          {currentConfig.subtitle}
+        </p>
 
-      {/* Card Selection Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        {/* Challenger (Card 1) Selection */}
-        <div className="space-y-4">
-          <CardSelector
-            cards={cards}
-            selectedCardId={challenger?.id ?? null}
-            otherSelectedCardId={opponent?.id ?? null}
-            onSelect={handleSelectChallenger}
-            isLoading={isLoading}
-            label={mode === "battle" ? "Challenger" : "Card 1"}
-            position="left"
-          />
-        </div>
+        {/* Card Selection Area */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 relative flex-1">
+          {/* Challenger (Card 1) Selection */}
+          <div className="space-y-4">
+            <CardSelector
+              cards={cards}
+              selectedCardId={challenger?.id ?? null}
+              otherSelectedCardId={opponent?.id ?? null}
+              onSelect={handleSelectChallenger}
+              isLoading={isLoading}
+              label={mode === "battle" ? "Challenger" : "Card 1"}
+              position="left"
+            />
+          </div>
 
-        {/* VS Divider - visible on large screens */}
-        <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-          <div className="bg-primary text-primary-foreground rounded-full p-4 shadow-lg">
-            <span className="text-xl font-bold">VS</span>
+          {/* VS Divider - visible on large screens */}
+          <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+            <div className="bg-primary text-primary-foreground rounded-full p-4 shadow-lg">
+              <span className="text-xl font-bold">VS</span>
+            </div>
+          </div>
+
+          {/* Opponent (Card 2) Selection */}
+          <div className="space-y-4">
+            <CardSelector
+              cards={cards}
+              selectedCardId={opponent?.id ?? null}
+              otherSelectedCardId={challenger?.id ?? null}
+              onSelect={handleSelectOpponent}
+              isLoading={isLoading}
+              label={mode === "battle" ? "Opponent" : "Card 2"}
+              position="right"
+            />
           </div>
         </div>
 
-        {/* Opponent (Card 2) Selection */}
-        <div className="space-y-4">
-          <CardSelector
-            cards={cards}
-            selectedCardId={opponent?.id ?? null}
-            otherSelectedCardId={challenger?.id ?? null}
-            onSelect={handleSelectOpponent}
-            isLoading={isLoading}
-            label={mode === "battle" ? "Opponent" : "Card 2"}
-            position="right"
-          />
+        {/* VS Divider - visible on small screens */}
+        <div className="flex lg:hidden justify-center my-4">
+          <div className="bg-primary text-primary-foreground rounded-full px-6 py-2 shadow-lg">
+            <span className="text-lg font-bold">VS</span>
+          </div>
         </div>
-      </div>
 
-      {/* VS Divider - visible on small screens */}
-      <div className="flex lg:hidden justify-center my-4">
-        <div className="bg-primary text-primary-foreground rounded-full px-6 py-2 shadow-lg">
-          <span className="text-lg font-bold">VS</span>
+        {/* Action Button */}
+        <div className="flex justify-center mt-auto pb-8">
+          <Button
+            size="lg"
+            onClick={handleAction}
+            disabled={isActionDisabled}
+            className="px-12 py-6 text-lg font-semibold gap-2"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                {currentConfig.loadingLabel}
+              </>
+            ) : (
+              <>
+                {currentConfig.actionIcon}
+                {currentConfig.actionLabel}
+              </>
+            )}
+          </Button>
         </div>
-      </div>
 
-      {/* Action Button */}
-      <div className="flex justify-center mt-8">
-        <Button
-          size="lg"
-          onClick={handleAction}
-          disabled={isActionDisabled}
-          className="px-12 py-6 text-lg font-semibold gap-2"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="h-5 w-5 animate-spin" />
-              {currentConfig.loadingLabel}
-            </>
-          ) : (
-            <>
-              {currentConfig.actionIcon}
-              {currentConfig.actionLabel}
-            </>
-          )}
-        </Button>
+        {/* Helper text */}
+        {!canStartBattle && !isLoading && (
+          <p className="text-center text-muted-foreground pb-4">
+            {!challenger && !opponent
+              ? `Select ${
+                  mode === "battle"
+                    ? "a challenger and an opponent"
+                    : "both cards"
+                } to continue`
+              : !challenger
+              ? `Select ${
+                  mode === "battle" ? "a challenger" : "Card 1"
+                } to continue`
+              : `Select ${
+                  mode === "battle" ? "an opponent" : "Card 2"
+                } to continue`}
+          </p>
+        )}
       </div>
-
-      {/* Helper text */}
-      {!canStartBattle && !isLoading && (
-        <p className="text-center text-muted-foreground mt-4">
-          {!challenger && !opponent
-            ? `Select ${
-                mode === "battle"
-                  ? "a challenger and an opponent"
-                  : "both cards"
-              } to continue`
-            : !challenger
-            ? `Select ${
-                mode === "battle" ? "a challenger" : "Card 1"
-              } to continue`
-            : `Select ${
-                mode === "battle" ? "an opponent" : "Card 2"
-              } to continue`}
-        </p>
-      )}
-    </div>
+    </AppLayout>
   );
 }

@@ -8,12 +8,12 @@
  */
 
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Swords, Info } from "lucide-react";
+import { Loader2, Swords, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layouts";
 import { Card, CardContent } from "@/components/ui/card";
 import { useBattleDetail } from "../hooks/useBattleDetail";
 import { BattleReplayPlayer } from "../components/BattleReplayPlayer";
-import { formatBattleDate } from "../utils/formatters";
 
 /**
  * Loading state component
@@ -80,62 +80,47 @@ export function BattleReplayPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
-      <div className="container mx-auto py-6 px-4">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild>
-              <Link to={`/history/${id}`}>
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold">Battle Replay</h1>
-              {battle && (
-                <p className="text-sm text-muted-foreground">
-                  {battle.challenger.name} vs {battle.opponent.name} •{" "}
-                  {formatBattleDate(battle.startedAt)}
-                </p>
-              )}
-            </div>
-          </div>
+    <AppLayout
+      variant="game"
+      width="full"
+      title="Battle Replay"
+      backTo={`/history/${id}`}
+      backLabel="Details"
+      headerRight={
+        battle ? (
+          <Button variant="outline" asChild>
+            <Link to={`/history/${id}`}>
+              <Info className="h-4 w-4 mr-2" />
+              View Details
+            </Link>
+          </Button>
+        ) : undefined
+      }
+    >
+      {/* Content */}
+      {isLoading && <LoadingState />}
 
-          {battle && (
-            <Button variant="outline" asChild>
-              <Link to={`/history/${id}`}>
-                <Info className="h-4 w-4 mr-2" />
-                View Details
-              </Link>
-            </Button>
-          )}
-        </div>
+      {isError && (
+        <ErrorState
+          message={
+            error instanceof Error ? error.message : "Failed to load battle"
+          }
+        />
+      )}
 
-        {/* Content */}
-        {isLoading && <LoadingState />}
+      {!isLoading && !isError && !battle && <NotFoundState />}
 
-        {isError && (
-          <ErrorState
-            message={
-              error instanceof Error ? error.message : "Failed to load battle"
-            }
-          />
-        )}
-
-        {!isLoading && !isError && !battle && <NotFoundState />}
-
-        {!isLoading && !isError && battle && (
-          <Card className="border-2">
-            <CardContent className="p-6 md:p-8">
-              <BattleReplayPlayer
-                battleRecord={battle}
-                onComplete={handleReplayComplete}
-              />
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    </div>
+      {!isLoading && !isError && battle && (
+        <Card className="border-2">
+          <CardContent className="p-6 md:p-8">
+            <BattleReplayPlayer
+              battleRecord={battle}
+              onComplete={handleReplayComplete}
+            />
+          </CardContent>
+        </Card>
+      )}
+    </AppLayout>
   );
 }
 

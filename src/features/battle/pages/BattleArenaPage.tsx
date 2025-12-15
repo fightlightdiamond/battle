@@ -1,12 +1,13 @@
 /**
  * BattleArenaPage - Combat UI for the Card Battle System
- * Requirements: 2.1, 7.1, 7.4, 8.4, 6.6
+ * Requirements: 2.1, 7.1, 7.4, 8.4, 6.6, 1.1, 1.4, 3.1, 3.2
  * - Layout: Card1 (left) vs Card2 (right)
  * - Entrance animation on load
  * - BattleControls at bottom
  * - BattleLog panel (collapsible sidebar)
  * - VictoryOverlay when battle ends
  * - Auto-battle: compute-then-replay mode (Requirement 6.6)
+ * - Uses GameLayout for consistent header styling (Requirements 1.1, 1.4, 3.1, 3.2)
  */
 
 import { useEffect, useState, useCallback, useRef } from "react";
@@ -14,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ScrollText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layouts";
 import {
   BattleCard,
   BattleControls,
@@ -365,47 +367,54 @@ export function BattleArenaPage() {
     return null;
   }
 
+  /** Battle log toggle button for headerRight prop */
+  const battleLogToggle = (
+    <Button
+      variant="ghost"
+      onClick={() => setIsLogOpen(!isLogOpen)}
+      className="text-white hover:bg-white/10"
+    >
+      <ScrollText className="h-5 w-5 mr-1" />
+      {isLogOpen ? "Hide Log" : "Show Log"}
+      {isLogOpen ? (
+        <ChevronRight className="h-4 w-4 ml-1" />
+      ) : (
+        <ChevronLeft className="h-4 w-4 ml-1" />
+      )}
+    </Button>
+  );
+
   // Render replay mode (Requirement 6.6)
   if (isReplayMode && replayBattleRecord) {
     return (
-      <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
-        {/* Battle Arena Background */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-black opacity-50" />
-
-        {/* Main Content */}
-        <div className="relative z-10 container mx-auto px-4 py-8 h-screen flex flex-col">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <Button
-              variant="ghost"
-              onClick={handleNewBattle}
-              className="text-white hover:bg-white/10"
-            >
-              <ChevronLeft className="h-5 w-5 mr-1" />
-              Exit Battle
-            </Button>
-            <h1 className="text-2xl font-bold text-white">Battle Replay</h1>
-            <div className="w-24" /> {/* Spacer for alignment */}
-          </div>
-
-          {/* Replay Player */}
-          <div className="flex-1 flex items-center justify-center">
-            <BattleReplayPlayer
-              battleRecord={replayBattleRecord}
-              onComplete={handleReplayComplete}
-              className="w-full max-w-4xl"
-            />
-          </div>
+      <AppLayout
+        variant="game"
+        width="full"
+        title="Battle Replay"
+        backTo="/battle/setup"
+        backLabel="Exit Battle"
+      >
+        {/* Replay Player */}
+        <div className="flex-1 flex items-center justify-center">
+          <BattleReplayPlayer
+            battleRecord={replayBattleRecord}
+            onComplete={handleReplayComplete}
+            className="w-full max-w-4xl"
+          />
         </div>
-      </div>
+      </AppLayout>
     );
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
-      {/* Battle Arena Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-black opacity-50" />
-
+    <AppLayout
+      variant="game"
+      width="full"
+      title="Battle Arena"
+      backTo="/battle/setup"
+      backLabel="Exit Battle"
+      headerRight={battleLogToggle}
+    >
       {/* Computing Battle Overlay (Requirement 6.6) */}
       {isComputingBattle && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -415,167 +424,133 @@ export function BattleArenaPage() {
         </div>
       )}
 
-      {/* Main Content */}
-      <div className="relative z-10 container mx-auto px-4 py-8 h-screen flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <Button
-            variant="ghost"
-            onClick={handleNewBattle}
-            className="text-white hover:bg-white/10"
-          >
-            <ChevronLeft className="h-5 w-5 mr-1" />
-            Exit Battle
-          </Button>
-
-          <h1 className="text-2xl font-bold text-white">Battle Arena</h1>
-
-          {/* Toggle Battle Log Button */}
-          <Button
-            variant="ghost"
-            onClick={() => setIsLogOpen(!isLogOpen)}
-            className="text-white hover:bg-white/10"
-          >
-            <ScrollText className="h-5 w-5 mr-1" />
-            {isLogOpen ? "Hide Log" : "Show Log"}
-            {isLogOpen ? (
-              <ChevronRight className="h-4 w-4 ml-1" />
-            ) : (
-              <ChevronLeft className="h-4 w-4 ml-1" />
-            )}
-          </Button>
-        </div>
-
-        {/* Battle Area */}
-        <div className="flex-1 flex items-center justify-center">
-          <div
-            className={cn(
-              "flex items-center justify-center gap-8 md:gap-16 lg:gap-24",
-              "transition-all duration-700",
-              entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-90"
-            )}
-          >
-            {/* Challenger Card (Left) - with integrated damage/heal display */}
-            <div
-              className={cn(
-                "transform transition-all duration-600",
-                entranceComplete
-                  ? "translate-x-0 opacity-100"
-                  : "-translate-x-20 opacity-0"
-              )}
-              style={{ transitionDelay: "100ms" }}
-            >
-              <BattleCard
-                card={challenger}
-                position="left"
-                isAttacking={animationState.attackingPosition === "left"}
-                isReceivingDamage={
-                  animationState.receivingDamagePosition === "left"
-                }
-                isDanger={challengerInDanger}
-                isWinner={isBattleFinished && winner?.id === challenger.id}
-                isLoser={isBattleFinished && loser?.id === challenger.id}
-                damageDisplay={
-                  animationState.damageNumber?.position === "left"
-                    ? {
-                        damage: animationState.damageNumber.damage,
-                        isCritical: animationState.damageNumber.isCritical,
-                      }
-                    : null
-                }
-                healDisplay={
-                  animationState.healNumber?.position === "left"
-                    ? { healAmount: animationState.healNumber.healAmount }
-                    : null
-                }
-                animationKey={animationState.animationKey}
-                onDamageAnimationEnd={handleDamageAnimationEnd}
-                onHealAnimationEnd={handleHealAnimationEnd}
-              />
-            </div>
-
-            {/* VS Indicator */}
-            <div
-              className={cn(
-                "flex flex-col items-center transition-all duration-500",
-                entranceComplete
-                  ? "opacity-100 scale-100"
-                  : "opacity-0 scale-50"
-              )}
-              style={{ transitionDelay: "300ms" }}
-            >
-              <div className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-yellow-400 to-orange-500 drop-shadow-lg">
-                VS
-              </div>
-              {/* Turn Indicator */}
-              {phase === BATTLE_PHASES.FIGHTING && (
-                <div className="mt-4 text-sm text-white/70">
-                  {currentAttacker === "challenger"
-                    ? `${challenger.name}'s turn`
-                    : `${opponent.name}'s turn`}
-                </div>
-              )}
-            </div>
-
-            {/* Opponent Card (Right) - with integrated damage/heal display */}
-            <div
-              className={cn(
-                "transform transition-all duration-600",
-                entranceComplete
-                  ? "translate-x-0 opacity-100"
-                  : "translate-x-20 opacity-0"
-              )}
-              style={{ transitionDelay: "200ms" }}
-            >
-              <BattleCard
-                card={opponent}
-                position="right"
-                isAttacking={animationState.attackingPosition === "right"}
-                isReceivingDamage={
-                  animationState.receivingDamagePosition === "right"
-                }
-                isDanger={opponentInDanger}
-                isWinner={isBattleFinished && winner?.id === opponent.id}
-                isLoser={isBattleFinished && loser?.id === opponent.id}
-                damageDisplay={
-                  animationState.damageNumber?.position === "right"
-                    ? {
-                        damage: animationState.damageNumber.damage,
-                        isCritical: animationState.damageNumber.isCritical,
-                      }
-                    : null
-                }
-                healDisplay={
-                  animationState.healNumber?.position === "right"
-                    ? { healAmount: animationState.healNumber.healAmount }
-                    : null
-                }
-                animationKey={animationState.animationKey}
-                onDamageAnimationEnd={handleDamageAnimationEnd}
-                onHealAnimationEnd={handleHealAnimationEnd}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Battle Controls */}
+      {/* Battle Area */}
+      <div className="flex-1 flex items-center justify-center">
         <div
           className={cn(
-            "flex justify-center mb-8 transition-all duration-500",
-            entranceComplete
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-10"
+            "flex items-center justify-center gap-8 md:gap-16 lg:gap-24",
+            "transition-all duration-700",
+            entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-90"
           )}
-          style={{ transitionDelay: "400ms" }}
         >
-          <BattleControls
-            phase={phase}
-            isAutoBattle={isAutoBattle || isReplayMode}
-            onAttack={handleAttack}
-            onToggleAuto={handleToggleAutoBattle}
-            onNewBattle={handleNewBattle}
-          />
+          {/* Challenger Card (Left) - with integrated damage/heal display */}
+          <div
+            className={cn(
+              "transform transition-all duration-600",
+              entranceComplete
+                ? "translate-x-0 opacity-100"
+                : "-translate-x-20 opacity-0"
+            )}
+            style={{ transitionDelay: "100ms" }}
+          >
+            <BattleCard
+              card={challenger}
+              position="left"
+              isAttacking={animationState.attackingPosition === "left"}
+              isReceivingDamage={
+                animationState.receivingDamagePosition === "left"
+              }
+              isDanger={challengerInDanger}
+              isWinner={isBattleFinished && winner?.id === challenger.id}
+              isLoser={isBattleFinished && loser?.id === challenger.id}
+              damageDisplay={
+                animationState.damageNumber?.position === "left"
+                  ? {
+                      damage: animationState.damageNumber.damage,
+                      isCritical: animationState.damageNumber.isCritical,
+                    }
+                  : null
+              }
+              healDisplay={
+                animationState.healNumber?.position === "left"
+                  ? { healAmount: animationState.healNumber.healAmount }
+                  : null
+              }
+              animationKey={animationState.animationKey}
+              onDamageAnimationEnd={handleDamageAnimationEnd}
+              onHealAnimationEnd={handleHealAnimationEnd}
+            />
+          </div>
+
+          {/* VS Indicator */}
+          <div
+            className={cn(
+              "flex flex-col items-center transition-all duration-500",
+              entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-50"
+            )}
+            style={{ transitionDelay: "300ms" }}
+          >
+            <div className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-yellow-400 to-orange-500 drop-shadow-lg">
+              VS
+            </div>
+            {/* Turn Indicator */}
+            {phase === BATTLE_PHASES.FIGHTING && (
+              <div className="mt-4 text-sm text-white/70">
+                {currentAttacker === "challenger"
+                  ? `${challenger.name}'s turn`
+                  : `${opponent.name}'s turn`}
+              </div>
+            )}
+          </div>
+
+          {/* Opponent Card (Right) - with integrated damage/heal display */}
+          <div
+            className={cn(
+              "transform transition-all duration-600",
+              entranceComplete
+                ? "translate-x-0 opacity-100"
+                : "translate-x-20 opacity-0"
+            )}
+            style={{ transitionDelay: "200ms" }}
+          >
+            <BattleCard
+              card={opponent}
+              position="right"
+              isAttacking={animationState.attackingPosition === "right"}
+              isReceivingDamage={
+                animationState.receivingDamagePosition === "right"
+              }
+              isDanger={opponentInDanger}
+              isWinner={isBattleFinished && winner?.id === opponent.id}
+              isLoser={isBattleFinished && loser?.id === opponent.id}
+              damageDisplay={
+                animationState.damageNumber?.position === "right"
+                  ? {
+                      damage: animationState.damageNumber.damage,
+                      isCritical: animationState.damageNumber.isCritical,
+                    }
+                  : null
+              }
+              healDisplay={
+                animationState.healNumber?.position === "right"
+                  ? { healAmount: animationState.healNumber.healAmount }
+                  : null
+              }
+              animationKey={animationState.animationKey}
+              onDamageAnimationEnd={handleDamageAnimationEnd}
+              onHealAnimationEnd={handleHealAnimationEnd}
+            />
+          </div>
         </div>
+      </div>
+
+      {/* Battle Controls */}
+      <div
+        className={cn(
+          "flex justify-center mb-8 transition-all duration-500",
+          entranceComplete
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-10"
+        )}
+        style={{ transitionDelay: "400ms" }}
+      >
+        <BattleControls
+          phase={phase}
+          isAutoBattle={isAutoBattle || isReplayMode}
+          onAttack={handleAttack}
+          onToggleAuto={handleToggleAutoBattle}
+          onNewBattle={handleNewBattle}
+        />
       </div>
 
       {/* Collapsible Battle Log Sidebar */}
@@ -611,7 +586,7 @@ export function BattleArenaPage() {
           onNewBattle={handleNewBattle}
         />
       )}
-    </div>
+    </AppLayout>
   );
 }
 

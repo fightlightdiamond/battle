@@ -10,7 +10,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
-  ArrowLeft,
   Loader2,
   RefreshCw,
   AlertCircle,
@@ -22,6 +21,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layouts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MatchupCard, type CardInfo } from "../components/MatchupCard";
 import { matchupService } from "../services/matchupService";
@@ -266,187 +266,176 @@ export function MatchupAdminPage() {
   const activeBets = allBets.filter((b) => b.status === "active");
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/admin/matchups">
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-            </Button>
-            <div>
-              <h1 className="text-3xl font-bold">Admin: Manage Matchup</h1>
-              <p className="text-sm text-muted-foreground">
-                Start battle or cancel matchup
+    <AppLayout
+      variant="menu"
+      width="narrow"
+      title="Admin: Manage Matchup"
+      subtitle="Start battle or cancel matchup"
+      backTo="/admin/matchups"
+      headerRight={
+        <Button variant="outline" onClick={fetchData} disabled={isLoading}>
+          <RefreshCw
+            className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+          />
+          Refresh
+        </Button>
+      }
+    >
+      {/* Content */}
+      {isLoading && <LoadingState />}
+
+      {error && <ErrorState message={error} onRetry={fetchData} />}
+
+      {!isLoading && !error && !matchup && <NotFoundState />}
+
+      {!isLoading && !error && matchup && (
+        <div className="flex flex-col gap-6">
+          {/* Matchup Card - with card images and stats */}
+          <MatchupCard
+            matchup={matchup}
+            card1Info={card1Info}
+            card2Info={card2Info}
+            card1TotalBets={card1Total}
+            card2TotalBets={card2Total}
+          />
+
+          {/* Bet Statistics */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Bet Statistics
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30">
+                  <p className="text-sm text-muted-foreground">
+                    {matchup.card1Name}
+                  </p>
+                  <p className="text-xl font-bold text-blue-600">
+                    {card1Total.toLocaleString()} G
+                  </p>
+                </div>
+                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30">
+                  <p className="text-sm text-muted-foreground">
+                    {matchup.card2Name}
+                  </p>
+                  <p className="text-xl font-bold text-red-600">
+                    {card2Total.toLocaleString()} G
+                  </p>
+                </div>
+              </div>
+              <p className="text-sm text-center text-muted-foreground">
+                Total: {activeBets.length} active bet(s) •{" "}
+                {(card1Total + card2Total).toLocaleString()} G in pool
               </p>
-            </div>
-          </div>
-          <Button variant="outline" onClick={fetchData} disabled={isLoading}>
-            <RefreshCw
-              className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
-            />
-            Refresh
-          </Button>
-        </div>
+            </CardContent>
+          </Card>
 
-        {/* Content */}
-        {isLoading && <LoadingState />}
-
-        {error && <ErrorState message={error} onRetry={fetchData} />}
-
-        {!isLoading && !error && !matchup && <NotFoundState />}
-
-        {!isLoading && !error && matchup && (
-          <>
-            {/* Matchup Card - with card images and stats */}
-            <MatchupCard
-              matchup={matchup}
-              card1Info={card1Info}
-              card2Info={card2Info}
-              card1TotalBets={card1Total}
-              card2TotalBets={card2Total}
-            />
-
-            {/* Bet Statistics */}
-            <Card>
+          {/* Admin Controls for pending matchups */}
+          {matchup.status === "pending" && (
+            <Card className="border-2 border-yellow-500/50 bg-yellow-50/50 dark:bg-yellow-950/20">
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  Bet Statistics
+                <CardTitle className="text-lg flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
+                  <Trophy className="h-5 w-5" />
+                  Admin Actions
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30">
-                    <p className="text-sm text-muted-foreground">
-                      {matchup.card1Name}
-                    </p>
-                    <p className="text-xl font-bold text-blue-600">
-                      {card1Total.toLocaleString()} G
-                    </p>
-                  </div>
-                  <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30">
-                    <p className="text-sm text-muted-foreground">
-                      {matchup.card2Name}
-                    </p>
-                    <p className="text-xl font-bold text-red-600">
-                      {card2Total.toLocaleString()} G
-                    </p>
-                  </div>
+              <CardContent className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button
+                    onClick={handleStartBattle}
+                    disabled={isExecutingBattle || isCancelling}
+                    className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                    size="lg"
+                  >
+                    {isExecutingBattle ? (
+                      <>
+                        <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                        Executing Battle...
+                      </>
+                    ) : (
+                      <>
+                        <Swords className="h-5 w-5 mr-2" />
+                        Start Battle
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={handleCancelMatchup}
+                    disabled={isExecutingBattle || isCancelling}
+                    className="flex-1"
+                    size="lg"
+                  >
+                    {isCancelling ? (
+                      <>
+                        <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                        Cancelling...
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="h-5 w-5 mr-2" />
+                        Cancel Matchup
+                      </>
+                    )}
+                  </Button>
                 </div>
-                <p className="text-sm text-center text-muted-foreground">
-                  Total: {activeBets.length} active bet(s) •{" "}
-                  {(card1Total + card2Total).toLocaleString()} G in pool
+                <p className="text-xs text-muted-foreground text-center">
+                  Starting the battle will execute the fight and automatically
+                  resolve all bets.
+                  <br />
+                  Cancelling will refund all active bets to players.
                 </p>
               </CardContent>
             </Card>
+          )}
 
-            {/* Admin Controls for pending matchups */}
-            {matchup.status === "pending" && (
-              <Card className="border-2 border-yellow-500/50 bg-yellow-50/50 dark:bg-yellow-950/20">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
-                    <Trophy className="h-5 w-5" />
-                    Admin Actions
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Button
-                      onClick={handleStartBattle}
-                      disabled={isExecutingBattle || isCancelling}
-                      className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-                      size="lg"
-                    >
-                      {isExecutingBattle ? (
-                        <>
-                          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                          Executing Battle...
-                        </>
-                      ) : (
-                        <>
-                          <Swords className="h-5 w-5 mr-2" />
-                          Start Battle
-                        </>
-                      )}
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      onClick={handleCancelMatchup}
-                      disabled={isExecutingBattle || isCancelling}
-                      className="flex-1"
-                      size="lg"
-                    >
-                      {isCancelling ? (
-                        <>
-                          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                          Cancelling...
-                        </>
-                      ) : (
-                        <>
-                          <XCircle className="h-5 w-5 mr-2" />
-                          Cancel Matchup
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                  <p className="text-xs text-muted-foreground text-center">
-                    Starting the battle will execute the fight and automatically
-                    resolve all bets.
-                    <br />
-                    Cancelling will refund all active bets to players.
-                  </p>
-                </CardContent>
-              </Card>
-            )}
+          {/* Battle Replay Link for completed matchups */}
+          {matchup.status === "completed" && matchup.battleHistoryId && (
+            <div className="flex justify-center">
+              <Button asChild size="lg">
+                <Link to={`/history/${matchup.battleHistoryId}/replay`}>
+                  <Play className="h-5 w-5 mr-2" />
+                  Watch Battle Replay
+                </Link>
+              </Button>
+            </div>
+          )}
 
-            {/* Battle Replay Link for completed matchups */}
-            {matchup.status === "completed" && matchup.battleHistoryId && (
-              <div className="flex justify-center">
-                <Button asChild size="lg">
-                  <Link to={`/history/${matchup.battleHistoryId}/replay`}>
-                    <Play className="h-5 w-5 mr-2" />
-                    Watch Battle Replay
-                  </Link>
-                </Button>
-              </div>
-            )}
+          {/* Winner announcement for completed matchups */}
+          {matchup.status === "completed" && matchup.winnerName && (
+            <Card className="border-2 border-green-500/50 bg-green-50/50 dark:bg-green-950/20">
+              <CardContent className="py-6 text-center">
+                <Trophy className="h-10 w-10 mx-auto text-yellow-500 mb-3" />
+                <p className="text-xl font-bold text-green-700 dark:text-green-400">
+                  Winner: {matchup.winnerName}
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  All bets have been resolved
+                </p>
+              </CardContent>
+            </Card>
+          )}
 
-            {/* Winner announcement for completed matchups */}
-            {matchup.status === "completed" && matchup.winnerName && (
-              <Card className="border-2 border-green-500/50 bg-green-50/50 dark:bg-green-950/20">
-                <CardContent className="py-6 text-center">
-                  <Trophy className="h-10 w-10 mx-auto text-yellow-500 mb-3" />
-                  <p className="text-xl font-bold text-green-700 dark:text-green-400">
-                    Winner: {matchup.winnerName}
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    All bets have been resolved
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Cancelled matchup notice */}
-            {matchup.status === "cancelled" && (
-              <Card className="border-2 border-red-500/50 bg-red-50/50 dark:bg-red-950/20">
-                <CardContent className="py-6 text-center">
-                  <XCircle className="h-10 w-10 mx-auto text-red-500 mb-3" />
-                  <p className="text-xl font-bold text-red-700 dark:text-red-400">
-                    Matchup Cancelled
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    All bets have been refunded to players
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+          {/* Cancelled matchup notice */}
+          {matchup.status === "cancelled" && (
+            <Card className="border-2 border-red-500/50 bg-red-50/50 dark:bg-red-950/20">
+              <CardContent className="py-6 text-center">
+                <XCircle className="h-10 w-10 mx-auto text-red-500 mb-3" />
+                <p className="text-xl font-bold text-red-700 dark:text-red-400">
+                  Matchup Cancelled
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  All bets have been refunded to players
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+    </AppLayout>
   );
 }
 

@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AppLayout } from "@/components/layouts";
 import { CardForm } from "../components";
 import { useCard, useUpdateCard } from "../hooks";
 import type { CardFormSchemaType } from "../types/schemas";
@@ -44,26 +45,30 @@ export function CardEditPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8 px-4 max-w-2xl">
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-4">
-            <Skeleton className="h-9 w-9" />
-            <Skeleton className="h-9 w-48" />
-          </div>
-          <div className="space-y-6">
-            <Skeleton className="h-64 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-          </div>
+      <AppLayout
+        variant="menu"
+        width="narrow"
+        title="Edit Card"
+        backTo="/cards"
+      >
+        <div className="space-y-6">
+          <Skeleton className="h-64 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
         </div>
-      </div>
+      </AppLayout>
     );
   }
 
   if (error || !card) {
     return (
-      <div className="container mx-auto py-8 px-4 max-w-2xl">
+      <AppLayout
+        variant="menu"
+        width="narrow"
+        title="Edit Card"
+        backTo="/cards"
+      >
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <h2 className="text-2xl font-bold mb-2">Card Not Found</h2>
           <p className="text-muted-foreground mb-4">
@@ -74,33 +79,18 @@ export function CardEditPage() {
             Back to Cards
           </Button>
         </div>
-      </div>
+      </AppLayout>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-2xl">
-      <div className="flex flex-col gap-6">
-        {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/cards")}
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <h1 className="text-3xl font-bold">Edit Card</h1>
-        </div>
-
-        {/* Form */}
-        <CardForm
-          mode="edit"
-          initialData={card}
-          onSubmit={handleSubmit}
-          isSubmitting={updateCard.isPending}
-        />
-      </div>
-    </div>
+    <AppLayout variant="menu" width="narrow" title="Edit Card" backTo="/cards">
+      <CardForm
+        mode="edit"
+        initialData={card}
+        onSubmit={handleSubmit}
+        isSubmitting={updateCard.isPending}
+      />
+    </AppLayout>
   );
 }

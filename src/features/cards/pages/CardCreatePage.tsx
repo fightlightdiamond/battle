@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layouts";
 import { CardForm } from "../components";
 import { useCreateCard } from "../hooks";
 import type { CardFormSchemaType } from "../types/schemas";
@@ -34,27 +33,17 @@ export function CardCreatePage() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-2xl">
-      <div className="flex flex-col gap-6">
-        {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/cards")}
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <h1 className="text-3xl font-bold">Create New Card</h1>
-        </div>
-
-        {/* Form */}
-        <CardForm
-          mode="create"
-          onSubmit={handleSubmit}
-          isSubmitting={createCard.isPending}
-        />
-      </div>
-    </div>
+    <AppLayout
+      variant="menu"
+      width="narrow"
+      title="Create New Card"
+      backTo="/cards"
+    >
+      <CardForm
+        mode="create"
+        onSubmit={handleSubmit}
+        isSubmitting={createCard.isPending}
+      />
+    </AppLayout>
   );
 }

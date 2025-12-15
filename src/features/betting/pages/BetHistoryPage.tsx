@@ -7,8 +7,9 @@
  */
 
 import { useSearchParams, Link } from "react-router-dom";
-import { ArrowLeft, Coins, Loader2 } from "lucide-react";
+import { Coins, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layouts";
 import {
   Pagination,
   PaginationContent,
@@ -208,64 +209,57 @@ export function BetHistoryPage() {
   const totalPages = data ? Math.ceil(data.total / data.limit) : 0;
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex flex-col gap-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/cards">
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-            </Button>
-            <h1 className="text-3xl font-bold">Bet History</h1>
-          </div>
-          <Button asChild>
-            <Link to="/bet-battle">
-              <Coins className="h-4 w-4 mr-2" />
-              Place Bet
-            </Link>
-          </Button>
-        </div>
+    <AppLayout
+      variant="menu"
+      width="full"
+      title="Bet History"
+      backTo="/cards"
+      headerRight={
+        <Button asChild>
+          <Link to="/bet-battle">
+            <Coins className="h-4 w-4 mr-2" />
+            Place Bet
+          </Link>
+        </Button>
+      }
+    >
+      {/* Content */}
+      {isLoading && <LoadingState />}
 
-        {/* Content */}
-        {isLoading && <LoadingState />}
+      {isError && (
+        <ErrorState
+          message={
+            error instanceof Error
+              ? error.message
+              : "Failed to load bet history"
+          }
+        />
+      )}
 
-        {isError && (
-          <ErrorState
-            message={
-              error instanceof Error
-                ? error.message
-                : "Failed to load bet history"
-            }
-          />
-        )}
+      {!isLoading && !isError && data && (
+        <>
+          {data.data.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <>
+              {/* Bet List */}
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {data.data.map((bet) => (
+                  <BetHistoryItem key={bet.id} bet={bet} />
+                ))}
+              </div>
 
-        {!isLoading && !isError && data && (
-          <>
-            {data.data.length === 0 ? (
-              <EmptyState />
-            ) : (
-              <>
-                {/* Bet List */}
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {data.data.map((bet) => (
-                    <BetHistoryItem key={bet.id} bet={bet} />
-                  ))}
-                </div>
-
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <BetHistoryPagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                  />
-                )}
-              </>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <BetHistoryPagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                />
+              )}
+            </>
+          )}
+        </>
+      )}
+    </AppLayout>
   );
 }

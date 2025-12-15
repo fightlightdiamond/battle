@@ -8,8 +8,9 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Coins, RefreshCw } from "lucide-react";
+import { Loader2, Coins, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layouts";
 import { MatchupBetHistoryItem } from "../components/MatchupBetHistoryItem";
 import type { MatchupInfo } from "../components/MatchupBetHistoryItem";
 import { matchupBetService } from "../services/matchupBetService";
@@ -136,64 +137,57 @@ export function MatchupBetHistoryPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex flex-col gap-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/matchups">
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-            </Button>
-            <h1 className="text-3xl font-bold">Matchup Bet History</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={fetchData} disabled={isLoading}>
-              <RefreshCw
-                className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
-              />
-              Refresh
-            </Button>
-            <Button asChild>
-              <Link to="/matchups">
-                <Coins className="h-4 w-4 mr-2" />
-                Place Bet
-              </Link>
-            </Button>
-          </div>
+    <AppLayout
+      variant="menu"
+      width="full"
+      title="Matchup Bet History"
+      backTo="/matchups"
+      headerRight={
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={fetchData} disabled={isLoading}>
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+            />
+            Refresh
+          </Button>
+          <Button asChild>
+            <Link to="/matchups">
+              <Coins className="h-4 w-4 mr-2" />
+              Place Bet
+            </Link>
+          </Button>
         </div>
+      }
+    >
+      {/* Content */}
+      {isLoading && <LoadingState />}
 
-        {/* Content */}
-        {isLoading && <LoadingState />}
+      {error && <ErrorState message={error} onRetry={fetchData} />}
 
-        {error && <ErrorState message={error} onRetry={fetchData} />}
-
-        {!isLoading && !error && (
-          <>
-            {bets.length === 0 ? (
-              <EmptyState />
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {bets.map((bet) => (
-                  <Link
-                    key={bet.id}
-                    to={`/matchups/${bet.matchupId}`}
-                    className="block"
-                  >
-                    <MatchupBetHistoryItem
-                      bet={bet}
-                      matchupInfo={getMatchupInfo(bet.matchupId)}
-                      onClick={() => {}}
-                    />
-                  </Link>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+      {!isLoading && !error && (
+        <>
+          {bets.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {bets.map((bet) => (
+                <Link
+                  key={bet.id}
+                  to={`/matchups/${bet.matchupId}`}
+                  className="block"
+                >
+                  <MatchupBetHistoryItem
+                    bet={bet}
+                    matchupInfo={getMatchupInfo(bet.matchupId)}
+                    onClick={() => {}}
+                  />
+                </Link>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </AppLayout>
   );
 }
 

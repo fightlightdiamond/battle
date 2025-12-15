@@ -9,8 +9,9 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Swords, RefreshCw } from "lucide-react";
+import { Loader2, Swords, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layouts";
 import { MatchupCard } from "../components/MatchupCard";
 import { matchupService } from "../services/matchupService";
 import { matchupBetService } from "../services/matchupBetService";
@@ -132,66 +133,59 @@ export function MatchupListPage() {
   }, []);
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex flex-col gap-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/cards">
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-            </Button>
-            <h1 className="text-3xl font-bold">Matchups</h1>
-          </div>
-          <Button variant="outline" onClick={fetchData} disabled={isLoading}>
-            <RefreshCw
-              className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
-            />
-            Refresh
-          </Button>
-        </div>
+    <AppLayout
+      variant="menu"
+      width="full"
+      title="Matchups"
+      backTo="/cards"
+      headerRight={
+        <Button variant="outline" onClick={fetchData} disabled={isLoading}>
+          <RefreshCw
+            className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+          />
+          Refresh
+        </Button>
+      }
+    >
+      {/* Content */}
+      {isLoading && <LoadingState />}
 
-        {/* Content */}
-        {isLoading && <LoadingState />}
+      {error && <ErrorState message={error} onRetry={fetchData} />}
 
-        {error && <ErrorState message={error} onRetry={fetchData} />}
+      {!isLoading && !error && (
+        <>
+          {matchups.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {matchups.map((matchup) => {
+                const { card1Total, card2Total } = calculateTotalBets(
+                  matchup.id,
+                  allBets,
+                  matchup.card1Id,
+                  matchup.card2Id
+                );
 
-        {!isLoading && !error && (
-          <>
-            {matchups.length === 0 ? (
-              <EmptyState />
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {matchups.map((matchup) => {
-                  const { card1Total, card2Total } = calculateTotalBets(
-                    matchup.id,
-                    allBets,
-                    matchup.card1Id,
-                    matchup.card2Id
-                  );
-
-                  return (
-                    <Link
-                      key={matchup.id}
-                      to={`/matchups/${matchup.id}`}
-                      className="block"
-                    >
-                      <MatchupCard
-                        matchup={matchup}
-                        card1TotalBets={card1Total}
-                        card2TotalBets={card2Total}
-                        onClick={() => {}}
-                      />
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+                return (
+                  <Link
+                    key={matchup.id}
+                    to={`/matchups/${matchup.id}`}
+                    className="block"
+                  >
+                    <MatchupCard
+                      matchup={matchup}
+                      card1TotalBets={card1Total}
+                      card2TotalBets={card2Total}
+                      onClick={() => {}}
+                    />
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </>
+      )}
+    </AppLayout>
   );
 }
 

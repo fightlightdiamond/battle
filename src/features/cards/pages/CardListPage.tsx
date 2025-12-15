@@ -1,6 +1,7 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { Plus, RefreshCw, Swords, History } from "lucide-react";
+import { Plus, Swords, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layouts";
 import {
   SearchBar,
   SortControls,
@@ -39,38 +40,35 @@ export function CardListPage() {
   const { data, isLoading } = useCards(params);
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <AppLayout
+      variant="menu"
+      width="full"
+      title="Card Collection"
+      subtitle={isSyncing ? "Syncing..." : undefined}
+      headerRight={
+        <>
+          <Button asChild variant="outline">
+            <Link to="/history">
+              <History className="h-4 w-4 mr-2" />
+              History
+            </Link>
+          </Button>
+          <Button asChild variant="secondary">
+            <Link to="/battle/setup">
+              <Swords className="h-4 w-4 mr-2" />
+              Battle
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link to="/cards/new">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Card
+            </Link>
+          </Button>
+        </>
+      }
+    >
       <div className="flex flex-col gap-6">
-        {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-bold">Card Collection</h1>
-            {isSyncing && (
-              <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
-            )}
-          </div>
-          <div className="flex gap-2">
-            <Button asChild variant="outline">
-              <Link to="/history">
-                <History className="h-4 w-4" />
-                History
-              </Link>
-            </Button>
-            <Button asChild variant="secondary">
-              <Link to="/battle/setup">
-                <Swords className="h-4 w-4" />
-                Battle
-              </Link>
-            </Button>
-            <Button asChild>
-              <Link to="/cards/new">
-                <Plus className="h-4 w-4" />
-                Add Card
-              </Link>
-            </Button>
-          </div>
-        </div>
-
         {/* Filters */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="w-full sm:max-w-xs">
@@ -97,6 +95,6 @@ export function CardListPage() {
         {/* Delete Confirmation Dialog */}
         <DeleteConfirmDialog />
       </div>
-    </div>
+    </AppLayout>
   );
 }

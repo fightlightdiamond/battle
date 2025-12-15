@@ -13,7 +13,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
-  ArrowLeft,
   Loader2,
   RefreshCw,
   Play,
@@ -22,6 +21,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layouts";
 import { Card, CardContent } from "@/components/ui/card";
 import { MatchupCard, type CardInfo } from "../components/MatchupCard";
 import { BetForm } from "../components/BetForm";
@@ -223,103 +223,96 @@ export function MatchupDetailPage() {
     : { card1Total: 0, card2Total: 0 };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex flex-col gap-6 max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/matchups">
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-            </Button>
-            <h1 className="text-3xl font-bold">Matchup Details</h1>
-          </div>
-          <Button variant="outline" onClick={fetchData} disabled={isLoading}>
-            <RefreshCw
-              className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
-            />
-            Refresh
-          </Button>
+    <AppLayout
+      variant="menu"
+      width="narrow"
+      title="Matchup Details"
+      backTo="/matchups"
+      headerRight={
+        <Button variant="outline" onClick={fetchData} disabled={isLoading}>
+          <RefreshCw
+            className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+          />
+          Refresh
+        </Button>
+      }
+    >
+      {/* Content */}
+      {isLoading && <LoadingState />}
+
+      {error && <ErrorState message={error} onRetry={fetchData} />}
+
+      {!isLoading && !error && !matchup && <NotFoundState />}
+
+      {!isLoading && !error && matchup && (
+        <div className="flex flex-col gap-6">
+          {/* Matchup Card - Requirements: 2.2 */}
+          <MatchupCard
+            matchup={matchup}
+            card1Info={card1Info}
+            card2Info={card2Info}
+            card1TotalBets={card1Total}
+            card2TotalBets={card2Total}
+          />
+
+          {/* Battle Replay Link for completed matchups - Requirements: 8.2 */}
+          {matchup.status === "completed" && matchup.battleHistoryId && (
+            <div className="flex justify-center">
+              <Button asChild>
+                <Link to={`/history/${matchup.battleHistoryId}/replay`}>
+                  <Play className="h-4 w-4 mr-2" />
+                  Watch Battle Replay
+                </Link>
+              </Button>
+            </div>
+          )}
+
+          {/* Winner announcement for completed matchups */}
+          {matchup.status === "completed" && matchup.winnerName && (
+            <Card className="border-2 border-green-500/50 bg-green-50/50 dark:bg-green-950/20">
+              <CardContent className="py-4 text-center">
+                <Trophy className="h-8 w-8 mx-auto text-yellow-500 mb-2" />
+                <p className="text-lg font-bold text-green-700 dark:text-green-400">
+                  Winner: {matchup.winnerName}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Cancelled matchup notice */}
+          {matchup.status === "cancelled" && (
+            <Card className="border-2 border-red-500/50 bg-red-50/50 dark:bg-red-950/20">
+              <CardContent className="py-4 text-center">
+                <XCircle className="h-8 w-8 mx-auto text-red-500 mb-2" />
+                <p className="text-lg font-bold text-red-700 dark:text-red-400">
+                  Matchup Cancelled
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  All bets have been refunded.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Bet Form - Requirements: 3.1, 4.1, 4.3 */}
+          <BetForm
+            matchup={matchup}
+            card1={{
+              id: matchup.card1Id,
+              name: matchup.card1Name,
+            }}
+            card2={{
+              id: matchup.card2Id,
+              name: matchup.card2Name,
+            }}
+            currentBet={currentBet}
+            onBetPlaced={handleBetPlaced}
+            onBetUpdated={handleBetUpdated}
+            onBetCancelled={handleBetCancelled}
+          />
         </div>
-
-        {/* Content */}
-        {isLoading && <LoadingState />}
-
-        {error && <ErrorState message={error} onRetry={fetchData} />}
-
-        {!isLoading && !error && !matchup && <NotFoundState />}
-
-        {!isLoading && !error && matchup && (
-          <>
-            {/* Matchup Card - Requirements: 2.2 */}
-            <MatchupCard
-              matchup={matchup}
-              card1Info={card1Info}
-              card2Info={card2Info}
-              card1TotalBets={card1Total}
-              card2TotalBets={card2Total}
-            />
-
-            {/* Battle Replay Link for completed matchups - Requirements: 8.2 */}
-            {matchup.status === "completed" && matchup.battleHistoryId && (
-              <div className="flex justify-center">
-                <Button asChild>
-                  <Link to={`/history/${matchup.battleHistoryId}/replay`}>
-                    <Play className="h-4 w-4 mr-2" />
-                    Watch Battle Replay
-                  </Link>
-                </Button>
-              </div>
-            )}
-
-            {/* Winner announcement for completed matchups */}
-            {matchup.status === "completed" && matchup.winnerName && (
-              <Card className="border-2 border-green-500/50 bg-green-50/50 dark:bg-green-950/20">
-                <CardContent className="py-4 text-center">
-                  <Trophy className="h-8 w-8 mx-auto text-yellow-500 mb-2" />
-                  <p className="text-lg font-bold text-green-700 dark:text-green-400">
-                    Winner: {matchup.winnerName}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Cancelled matchup notice */}
-            {matchup.status === "cancelled" && (
-              <Card className="border-2 border-red-500/50 bg-red-50/50 dark:bg-red-950/20">
-                <CardContent className="py-4 text-center">
-                  <XCircle className="h-8 w-8 mx-auto text-red-500 mb-2" />
-                  <p className="text-lg font-bold text-red-700 dark:text-red-400">
-                    Matchup Cancelled
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    All bets have been refunded.
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Bet Form - Requirements: 3.1, 4.1, 4.3 */}
-            <BetForm
-              matchup={matchup}
-              card1={{
-                id: matchup.card1Id,
-                name: matchup.card1Name,
-              }}
-              card2={{
-                id: matchup.card2Id,
-                name: matchup.card2Name,
-              }}
-              currentBet={currentBet}
-              onBetPlaced={handleBetPlaced}
-              onBetUpdated={handleBetUpdated}
-              onBetCancelled={handleBetCancelled}
-            />
-          </>
-        )}
-      </div>
-    </div>
+      )}
+    </AppLayout>
   );
 }
 

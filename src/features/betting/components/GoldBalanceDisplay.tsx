@@ -22,7 +22,7 @@ export interface GoldBalanceDisplayProps {
 /**
  * Format gold amount with thousands separator
  */
-function formatGold(amount: number): string {
+export function formatGold(amount: number): string {
   return amount.toLocaleString();
 }
 
