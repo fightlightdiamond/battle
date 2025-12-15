@@ -1,6 +1,7 @@
 // Betting components barrel export
 
-export { GoldBalanceDisplay, formatGold } from "./GoldBalanceDisplay";
+export { GoldBalanceDisplay } from "./GoldBalanceDisplay";
+export { formatGold } from "../utils/formatGold";
 export type { GoldBalanceDisplayProps } from "./GoldBalanceDisplay";
 
 export { BettingPanel } from "./BettingPanel";

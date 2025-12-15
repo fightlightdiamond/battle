@@ -9,6 +9,7 @@
 import { Coins } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useBettingStore, selectGoldBalance } from "../store/bettingStore";
+import { formatGold } from "../utils/formatGold";
 
 export interface GoldBalanceDisplayProps {
   /** Additional CSS classes */
@@ -17,13 +18,6 @@ export interface GoldBalanceDisplayProps {
   size?: "sm" | "md" | "lg";
   /** Show label text */
   showLabel?: boolean;
-}
-
-/**
- * Format gold amount with thousands separator
- */
-export function formatGold(amount: number): string {
-  return amount.toLocaleString();
 }
 
 /**
@@ -62,20 +56,31 @@ export function GoldBalanceDisplay({
     <div
       className={cn(
         "flex items-center rounded-full",
-        "bg-gradient-to-r from-yellow-500/20 to-amber-500/20",
-        "border border-yellow-500/30",
+        "bg-slate-900/80",
+        "border-2 border-yellow-500/50",
         classes.container,
         className
       )}
       data-testid="gold-balance-display"
     >
-      <Coins className={cn(classes.icon, "text-yellow-500")} />
+      <Coins
+        className={cn(
+          classes.icon,
+          "text-yellow-400 drop-shadow-[0_0_4px_rgba(250,204,21,0.5)]"
+        )}
+      />
       {showLabel && (
-        <span className={cn(classes.text, "text-yellow-600 font-medium")}>
+        <span className={cn(classes.text, "text-yellow-300 font-medium")}>
           Gold:
         </span>
       )}
-      <span className={cn(classes.text, "font-bold text-yellow-600")}>
+      <span
+        className={cn(
+          classes.text,
+          "font-bold text-white",
+          "drop-shadow-[0_0_2px_rgba(0,0,0,0.8)]"
+        )}
+      >
         {formatGold(goldBalance)}
       </span>
     </div>

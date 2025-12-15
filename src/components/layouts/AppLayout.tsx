@@ -76,11 +76,11 @@ export function AppLayout({
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-black opacity-50 pointer-events-none" />
       )}
 
-      {/* Main container - add top padding for status bar (36px) */}
+      {/* Main container - add top padding for status bar (48px) */}
       <div
         className={cn(
           "relative z-10 flex flex-col min-h-screen",
-          showStatusBar && "pt-9", // 36px padding for status bar
+          showStatusBar && "pt-12", // 48px padding for status bar
           className
         )}
       >

@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
-import { FloatingMenu } from "./components/FloatingMenu";
 import { DailyBonusNotification } from "./features/betting/components/DailyBonusNotification";
 
 const queryClient = new QueryClient({
@@ -26,7 +25,6 @@ function App({ children }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-background">
         {children}
-        <FloatingMenu />
         {/* Daily bonus check on app load - Requirements: 1.1, 1.4 */}
         <DailyBonusNotification autoCheck />
         <Toaster position="top-right" richColors />
