@@ -57,9 +57,9 @@ describe("CombatSystem", () => {
           const expectedHp = Math.max(0, combatant.currentHp - damage);
 
           expect(result.currentHp).toBe(expectedHp);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -80,9 +80,9 @@ describe("CombatSystem", () => {
           } else {
             expect(result.isDefeated).toBe(false);
           }
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -152,10 +152,12 @@ describe("CombatSystem", () => {
         (attacker, defender) => {
           const result = combatSystem.calculateAttack(attacker, defender);
 
-          // Calculate expected lifesteal heal: floor(damage × (lifesteal/100))
-          const expectedRawHeal =
-            result.damage * (attacker.baseStats.lifesteal / 100);
-          const expectedHeal = Math.floor(expectedRawHeal);
+          // Calculate expected lifesteal heal using same formula as implementation:
+          // floor((finalDamage * lifesteal) / 100)
+          // This avoids floating point precision issues with division first
+          const expectedHeal = Math.floor(
+            (result.damage * attacker.baseStats.lifesteal) / 100,
+          );
 
           // Verify lifestealHeal is calculated correctly
           expect(result.lifestealHeal).toBe(expectedHeal);
@@ -163,15 +165,15 @@ describe("CombatSystem", () => {
           // Verify attacker's new HP is capped at maxHp (Requirement 5.3)
           const expectedAttackerHp = Math.min(
             attacker.maxHp,
-            attacker.currentHp + expectedHeal
+            attacker.currentHp + expectedHeal,
           );
           expect(result.attackerNewHp).toBe(expectedAttackerHp);
 
           // Verify attacker HP never exceeds maxHp
           expect(result.attackerNewHp).toBeLessThanOrEqual(attacker.maxHp);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
