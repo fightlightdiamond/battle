@@ -78,7 +78,8 @@ export function CardForm({
 
   const handleImageChange = useCallback(
     (file: File | null) => {
-      form.setValue("image", file, { shouldValidate: true });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      form.setValue("image", file as any, { shouldValidate: true });
 
       if (file) {
         const reader = new FileReader();
@@ -104,7 +105,8 @@ export function CardForm({
   });
 
   const clearImage = useCallback(() => {
-    form.setValue("image", null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    form.setValue("image", null as any);
     setImagePreview(initialData?.imageUrl || null);
   }, [form, initialData?.imageUrl]);
 

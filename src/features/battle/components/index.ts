@@ -35,13 +35,10 @@ export type { BattleReplayPlayerProps } from "./BattleReplayPlayer";
 export { ReplayControls } from "./ReplayControls";
 export type { ReplayControlsProps } from "./ReplayControls";
 
-export {
-  BattleModeSelector,
-  getBattleModeRoute,
-  BATTLE_MODE_ROUTES,
-} from "./BattleModeSelector";
+export { BattleModeSelector } from "./BattleModeSelector";
 export type {
   BattleModeSelectorProps,
   BattleMode,
   BattleModeOption,
 } from "./BattleModeSelector";
+export { getBattleModeRoute, BATTLE_MODE_ROUTES } from "./battleModeConfig";

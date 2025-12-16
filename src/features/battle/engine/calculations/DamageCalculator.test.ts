@@ -4,25 +4,6 @@ import { createDamageCalculator, damageCalculator } from "./DamageCalculator";
 import type { DamageCalculationInput } from "../core/types";
 
 // ============================================================================
-// ARBITRARIES (Generators for property-based testing)
-// ============================================================================
-
-const damageCalculationInputArb: fc.Arbitrary<DamageCalculationInput> =
-  fc.record({
-    attackerAtk: fc.integer({ min: 1, max: 9999 }),
-    defenderDef: fc.integer({ min: 0, max: 9999 }),
-    skillMultiplier: fc.option(fc.float({ min: 0.5, max: 3, noNaN: true }), {
-      nil: undefined,
-    }),
-    critRate: fc.option(fc.float({ min: 0, max: 1, noNaN: true }), {
-      nil: undefined,
-    }),
-    critDamage: fc.option(fc.float({ min: 1, max: 5, noNaN: true }), {
-      nil: undefined,
-    }),
-  });
-
-// ============================================================================
 // PROPERTY-BASED TESTS
 // ============================================================================
 
@@ -45,16 +26,16 @@ describe("DamageCalculator", () => {
           const defReduction = def / (def + 100);
           const expectedDamage = Math.max(
             1,
-            Math.floor(atk * (1 - defReduction))
+            Math.floor(atk * (1 - defReduction)),
           );
 
           // Use calculateWithDef with 0 armor pen to test pure defense formula
           const actualDamage = damageCalculator.calculateWithDef(atk, def, 0);
 
           expect(actualDamage).toBe(expectedDamage);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -74,14 +55,14 @@ describe("DamageCalculator", () => {
         (def, armorPen) => {
           const effectiveDef = damageCalculator.calculateEffectiveDef(
             def,
-            armorPen
+            armorPen,
           );
           const expected = def * (1 - armorPen / 100);
 
           expect(effectiveDef).toBeCloseTo(expected, 5);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -101,14 +82,14 @@ describe("DamageCalculator", () => {
         (baseDamage, critDamage) => {
           const criticalDamage = damageCalculator.applyCritical(
             baseDamage,
-            critDamage
+            critDamage,
           );
           const expected = Math.floor(baseDamage * (critDamage / 100));
 
           expect(criticalDamage).toBe(expected);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -130,7 +111,7 @@ describe("DamageCalculator", () => {
           const damageWithDef = damageCalculator.calculateWithDef(
             atk,
             def,
-            armorPen
+            armorPen,
           );
           expect(damageWithDef).toBeGreaterThanOrEqual(1);
 
@@ -142,9 +123,9 @@ describe("DamageCalculator", () => {
           };
           const damageSimple = damageCalculator.calculate(input);
           expect(damageSimple).toBeGreaterThanOrEqual(1);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -169,9 +150,9 @@ describe("DamageCalculator", () => {
 
           // Basic damage should equal ATK (floored, minimum 1)
           expect(damage).toBe(Math.max(1, Math.floor(atk)));
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -196,9 +177,9 @@ describe("DamageCalculator", () => {
           } else {
             expect(isCritical).toBe(false);
           }
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -245,9 +226,9 @@ describe("DamageCalculator", () => {
           expect(result.baseDamage).toBeGreaterThanOrEqual(1);
           expect(result.critBonus).toBeGreaterThanOrEqual(0);
           expect(result.lifestealAmount).toBeGreaterThanOrEqual(0);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -280,20 +261,18 @@ describe("DamageCalculator", () => {
 
           if (result.isCrit) {
             // When crit occurs, critBonus = finalDamage - baseDamage
-            // This is the core property we're testing
             expect(result.critBonus).toBe(
-              result.finalDamage - result.baseDamage
+              result.finalDamage - result.baseDamage,
             );
-            // critBonus should be non-negative (can be 0 due to floor rounding)
             expect(result.critBonus).toBeGreaterThanOrEqual(0);
           } else {
             // When no crit, critBonus = 0
             expect(result.critBonus).toBe(0);
             expect(result.finalDamage).toBe(result.baseDamage);
           }
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -323,12 +302,12 @@ describe("DamageCalculator", () => {
 
           // Verify lifesteal formula: floor(finalDamage × lifesteal / 100)
           const expectedLifesteal = Math.floor(
-            (result.finalDamage * lifesteal) / 100
+            (result.finalDamage * lifesteal) / 100,
           );
           expect(result.lifestealAmount).toBe(expectedLifesteal);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -367,9 +346,8 @@ describe("DamageCalculator", () => {
     });
 
     it("ensures minimum damage of 1 with high DEF", () => {
-      // Very high DEF should still deal at least 1 damage
       expect(damageCalculator.calculateWithDef(1, 9999)).toBeGreaterThanOrEqual(
-        1
+        1,
       );
     });
   });

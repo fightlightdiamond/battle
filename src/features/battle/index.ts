@@ -31,8 +31,20 @@ export * from "./services";
 // Store
 export * from "./store";
 
-// Hooks
-export * from "./hooks";
+// Hooks - export specific items to avoid conflicts with components
+export {
+  useBattleHistory,
+  useBattleDetail,
+  battleHistoryKeys,
+  useReplayState,
+} from "./hooks";
+export type {
+  BattleHistoryListParams,
+  ReplaySpeed,
+  ReplayState,
+  UseReplayStateReturn,
+} from "./hooks";
+// ReplayControls type is exported from hooks, component ReplayControls from components
 
 // Components - BattleCard component takes precedence
 export * from "./components";

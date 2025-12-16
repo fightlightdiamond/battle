@@ -6,7 +6,6 @@ import {
   getAnimationConfig,
   getMessageTemplates,
   type DamageType,
-  type DamageTypeStyle,
 } from "./combatVisualConfig";
 
 // ============================================================================

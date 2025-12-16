@@ -1,3 +1,26 @@
 // Matchup store barrel export
-export * from "./matchupStore";
-export * from "./matchupBettingStore";
+export {
+  useMatchupStore,
+  selectMatchups,
+  selectCurrentMatchup,
+  selectIsLoading as selectMatchupIsLoading,
+  selectError as selectMatchupError,
+} from "./matchupStore";
+export type { MatchupStoreState } from "./matchupStore";
+
+export {
+  useMatchupBettingStore,
+  selectGoldBalance,
+  selectCurrentBet,
+  selectIsLoading as selectBettingIsLoading,
+  selectError as selectBettingError,
+  selectCanAffordBet,
+  validateBetPlacement,
+  calculateBalanceAfterBet,
+  calculateBalanceAfterUpdate,
+  calculateBalanceAfterCancellation,
+  calculatePayout,
+  validateBetUpdate,
+  validateBetCancellation,
+} from "./matchupBettingStore";
+export type { MatchupBettingState } from "./matchupBettingStore";

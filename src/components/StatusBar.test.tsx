@@ -25,7 +25,7 @@ import { useBettingStore } from "@/features/betting/store/bettingStore";
 const renderStatusBar = (pathname: string) => {
   return render(
     <MemoryRouter initialEntries={[pathname]}>
-      <StatusBar rightContent={<span>Test</span>} />
+      <StatusBar />
     </MemoryRouter>
   );
 };

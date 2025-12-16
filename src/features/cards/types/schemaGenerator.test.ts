@@ -35,7 +35,7 @@ describe("Property 2: Schema-Config Consistency", () => {
     const schema = generateStatSchemaWithDefaults();
 
     // Parse empty object - should get all defaults
-    const result = schema.parse({});
+    const result = schema.parse({}) as Record<string, number>;
 
     for (const stat of STAT_REGISTRY) {
       expect(result[stat.key]).toBe(stat.defaultValue);
@@ -90,7 +90,7 @@ describe("Property 2: Schema-Config Consistency", () => {
         const schema = generateStatSchemaWithDefaults();
 
         // Parse empty object and check this stat's default
-        const result = schema.parse({});
+        const result = schema.parse({}) as Record<string, number>;
         expect(result[stat.key]).toBe(stat.defaultValue);
       }),
       { numRuns: 100 }

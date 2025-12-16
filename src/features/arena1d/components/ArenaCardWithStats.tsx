@@ -29,9 +29,9 @@ export interface ArenaCardWithStatsProps {
   isMoving?: boolean;
   /** Whether card is in combat (adjacent to opponent) */
   isInCombat?: boolean;
-  /** Direction of movement animation */
+  /** Direction of movement animation (reserved for future use) */
   moveDirection?: MoveDirection;
-  /** Whether movement animation just completed */
+  /** Whether movement animation just completed (reserved for future use) */
   moveComplete?: boolean;
   /** Damage to display on this card */
   damageDisplay?: { damage: number; isCritical: boolean } | null;
@@ -68,8 +68,11 @@ export function ArenaCardWithStats({
   side,
   isMoving = false,
   isInCombat = false,
-  moveDirection,
-  moveComplete = false,
+  // moveDirection and moveComplete are kept in props for future use
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  moveDirection: _moveDirection,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  moveComplete: _moveComplete = false,
   damageDisplay = null,
   healDisplay = null,
   animationKey = 0,
@@ -88,7 +91,7 @@ export function ArenaCardWithStats({
       className={cn(
         "relative flex flex-col items-center",
         // Danger state visual - pulsing border
-        isDanger && "animate-pulse"
+        isDanger && "animate-pulse",
       )}
     >
       {/* Card with ArenaCard component */}
@@ -98,8 +101,6 @@ export function ArenaCardWithStats({
           side={side}
           isMoving={isMoving}
           isInCombat={isInCombat}
-          moveDirection={moveDirection}
-          moveComplete={moveComplete}
         />
 
         {/* Danger indicator icon */}
@@ -159,7 +160,7 @@ export function ArenaCardWithStats({
           data-testid="hp-bar-container"
           className={cn(
             "h-1.5 w-full overflow-hidden rounded-full bg-gray-300",
-            isDanger && "ring-1 ring-red-500"
+            isDanger && "ring-1 ring-red-500",
           )}
         >
           <div
@@ -167,7 +168,7 @@ export function ArenaCardWithStats({
             data-percentage={hpPercentage}
             className={cn(
               "h-full rounded-full transition-all duration-300",
-              colorClass
+              colorClass,
             )}
             style={{ width: `${hpPercentage}%` }}
           />
@@ -183,7 +184,7 @@ export function ArenaCardWithStats({
         data-testid="stats-display"
         className={cn(
           "flex gap-1 text-[8px] font-medium mt-0.5",
-          side === SIDE_LEFT ? "text-blue-600" : "text-red-600"
+          side === SIDE_LEFT ? "text-blue-600" : "text-red-600",
         )}
       >
         <span data-testid="atk-stat">ATK:{card.atk}</span>
