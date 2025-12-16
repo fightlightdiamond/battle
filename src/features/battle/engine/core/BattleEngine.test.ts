@@ -4,6 +4,18 @@ import { BattleEngine } from "./BattleEngine";
 import { createCombatant } from "./BattleState";
 import type { Combatant, CombatantStats, GameEvent } from "./types";
 
+// Mock battleHistoryService to prevent actual API calls during tests
+vi.mock("../../services/battleHistoryService", () => ({
+  battleHistoryService: {
+    saveBattle: vi.fn().mockResolvedValue({}),
+    getBattles: vi
+      .fn()
+      .mockResolvedValue({ data: [], total: 0, page: 1, totalPages: 0 }),
+    getBattleById: vi.fn().mockResolvedValue(null),
+    deleteBattle: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
 // ============================================================================
 // ARBITRARIES (Generators for property-based testing)
 // ============================================================================

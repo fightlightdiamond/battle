@@ -48,9 +48,12 @@ describe("StageScaling", () => {
             Math.floor(baseStats.def * expectedMultiplier)
           );
 
-          // critChance and critDamage should remain unchanged (they are percentages/multipliers)
+          // Other stats should remain unchanged (they are percentages/multipliers)
+          expect(scaledStats.spd).toBe(baseStats.spd);
           expect(scaledStats.critChance).toBe(baseStats.critChance);
           expect(scaledStats.critDamage).toBe(baseStats.critDamage);
+          expect(scaledStats.armorPen).toBe(baseStats.armorPen);
+          expect(scaledStats.lifesteal).toBe(baseStats.lifesteal);
         }
       ),
       { numRuns: 100 }
@@ -76,6 +79,7 @@ describe("StageScaling", () => {
 
       expect(scaled.atk).toBe(100);
       expect(scaled.def).toBe(50);
+      expect(scaled.spd).toBe(10);
       expect(scaled.critChance).toBe(10);
       expect(scaled.critDamage).toBe(150);
     });
@@ -132,13 +136,15 @@ describe("StageScaling", () => {
         spd: 10,
         critChance: 25,
         critDamage: 200,
-        armorPen: 0,
-        lifesteal: 0,
+        armorPen: 10,
+        lifesteal: 5,
       };
 
       const scaled = stageScaling.scaleStats(baseStats, 10);
       expect(scaled.critChance).toBe(25);
       expect(scaled.critDamage).toBe(200);
+      expect(scaled.armorPen).toBe(10);
+      expect(scaled.lifesteal).toBe(5);
     });
   });
 

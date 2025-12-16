@@ -29,10 +29,10 @@ export interface ArenaCardWithStatsProps {
   isMoving?: boolean;
   /** Whether card is in combat (adjacent to opponent) */
   isInCombat?: boolean;
-  /** Direction of movement animation */
-  moveDirection?: MoveDirection;
-  /** Whether movement animation just completed */
-  moveComplete?: boolean;
+  /** Direction of movement animation (reserved for future use) */
+  _moveDirection?: MoveDirection;
+  /** Whether movement animation just completed (reserved for future use) */
+  _moveComplete?: boolean;
   /** Damage to display on this card */
   damageDisplay?: { damage: number; isCritical: boolean } | null;
   /** Heal to display on this card (lifesteal) */
