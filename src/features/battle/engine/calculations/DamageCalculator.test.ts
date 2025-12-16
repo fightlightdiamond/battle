@@ -7,7 +7,8 @@ import type { DamageCalculationInput } from "../core/types";
 // ARBITRARIES (Generators for property-based testing)
 // ============================================================================
 
-const damageCalculationInputArb: fc.Arbitrary<DamageCalculationInput> =
+// Reserved for future property-based tests
+const _damageCalculationInputArb: fc.Arbitrary<DamageCalculationInput> =
   fc.record({
     attackerAtk: fc.integer({ min: 1, max: 9999 }),
     defenderDef: fc.integer({ min: 0, max: 9999 }),
@@ -21,6 +22,7 @@ const damageCalculationInputArb: fc.Arbitrary<DamageCalculationInput> =
       nil: undefined,
     }),
   });
+void _damageCalculationInputArb; // Suppress unused warning
 
 // ============================================================================
 // PROPERTY-BASED TESTS

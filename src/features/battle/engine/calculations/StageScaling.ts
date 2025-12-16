@@ -47,8 +47,11 @@ export function createStageScaling(
       return {
         atk: Math.floor(baseStats.atk * multiplier),
         def: Math.floor(baseStats.def * multiplier),
-        critRate: baseStats.critRate, // critRate is a percentage, don't scale
+        spd: baseStats.spd, // spd is not scaled
+        critChance: baseStats.critChance, // critChance is a percentage, don't scale
         critDamage: baseStats.critDamage, // critDamage is a multiplier, don't scale
+        armorPen: baseStats.armorPen, // armorPen is a percentage, don't scale
+        lifesteal: baseStats.lifesteal, // lifesteal is a percentage, don't scale
       };
     },
   };

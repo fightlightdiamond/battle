@@ -23,14 +23,15 @@ import {
 // ============================================================================
 
 /**
- * Generator for MatchupStatus
+ * Generator for MatchupStatus (reserved for future tests)
  */
-const matchupStatusArb: fc.Arbitrary<MatchupStatus> = fc.constantFrom(
+const _matchupStatusArb: fc.Arbitrary<MatchupStatus> = fc.constantFrom(
   "pending",
   "in_progress",
   "completed",
   "cancelled"
 );
+void _matchupStatusArb; // Suppress unused warning
 
 /**
  * Generator for non-pending MatchupStatus
