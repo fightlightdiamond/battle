@@ -16,7 +16,6 @@ import {
   BattleCard,
   BattleControls,
   BattleLog,
-  VictoryOverlay,
   BattleReplayPlayer,
 } from "../../battle/components";
 import {
@@ -123,7 +122,7 @@ export function BetBattleArenaPage() {
   const [isLogOpen, setIsLogOpen] = useState(true);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [animationState, setAnimationState] = useState<AnimationState>(
-    initialAnimationState
+    initialAnimationState,
   );
 
   // Bet result state
@@ -139,7 +138,7 @@ export function BetBattleArenaPage() {
 
   // Ref for auto-battle interval
   const autoBattleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
-    null
+    null,
   );
 
   /**
@@ -163,7 +162,7 @@ export function BetBattleArenaPage() {
           winner.id,
           winner.name,
           battleId,
-          selectedCardName
+          selectedCardName,
         );
 
         if (result) {
@@ -492,7 +491,7 @@ export function BetBattleArenaPage() {
             className={cn(
               "flex items-center justify-center gap-8 md:gap-16 lg:gap-24",
               "transition-all duration-700",
-              entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-90"
+              entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-90",
             )}
           >
             {/* Challenger Card (Left) */}
@@ -501,7 +500,7 @@ export function BetBattleArenaPage() {
                 "transform transition-all duration-600",
                 entranceComplete
                   ? "translate-x-0 opacity-100"
-                  : "-translate-x-20 opacity-0"
+                  : "-translate-x-20 opacity-0",
               )}
               style={{ transitionDelay: "100ms" }}
             >
@@ -540,7 +539,7 @@ export function BetBattleArenaPage() {
                 "flex flex-col items-center transition-all duration-500",
                 entranceComplete
                   ? "opacity-100 scale-100"
-                  : "opacity-0 scale-50"
+                  : "opacity-0 scale-50",
               )}
               style={{ transitionDelay: "300ms" }}
             >
@@ -563,7 +562,7 @@ export function BetBattleArenaPage() {
                 "transform transition-all duration-600",
                 entranceComplete
                   ? "translate-x-0 opacity-100"
-                  : "translate-x-20 opacity-0"
+                  : "translate-x-20 opacity-0",
               )}
               style={{ transitionDelay: "200ms" }}
             >
@@ -604,7 +603,7 @@ export function BetBattleArenaPage() {
             "flex justify-center mb-8 transition-all duration-500",
             entranceComplete
               ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-10"
+              : "opacity-0 translate-y-10",
           )}
           style={{ transitionDelay: "400ms" }}
         >
@@ -623,7 +622,7 @@ export function BetBattleArenaPage() {
         className={cn(
           "fixed top-0 right-0 h-full w-80 bg-card/95 backdrop-blur-sm border-l shadow-xl",
           "transform transition-transform duration-300 z-20",
-          isLogOpen ? "translate-x-0" : "translate-x-full"
+          isLogOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
         <div className="p-4 h-full flex flex-col">
@@ -642,15 +641,6 @@ export function BetBattleArenaPage() {
           </div>
         </div>
       </div>
-
-      {/* Victory Overlay */}
-      {isBattleFinished && winner && loser && !showBetResult && (
-        <VictoryOverlay
-          winner={winner}
-          loser={loser}
-          onNewBattle={handleNewBattle}
-        />
-      )}
 
       {/* Bet Result Overlay - Requirements: 3.4 */}
       <BetResultOverlay

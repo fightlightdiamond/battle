@@ -9,6 +9,7 @@ import { CARD_POSITIONS } from "../types";
 import { HPBar } from "./HPBar";
 import { DamageNumber } from "./DamageNumber";
 import { HealNumber } from "./HealNumber";
+import { VictoryParticles } from "./VictoryParticles";
 
 export interface BattleCardProps {
   card: BattleCardType;
@@ -66,7 +67,7 @@ export function BattleCard({
       classes.push(
         position === CARD_POSITIONS.LEFT
           ? "animate-attack-lunge-right"
-          : "animate-attack-lunge-left"
+          : "animate-attack-lunge-left",
       );
     }
 
@@ -107,20 +108,24 @@ export function BattleCard({
         // Loser state border
         isLoser && "border-gray-400",
         // Animation classes
-        getAnimationClasses()
+        getAnimationClasses(),
       )}
       data-testid={`battle-card-${position}`}
     >
+      {/* Winner Sparkles Effect - Using tsparticles for smooth GPU-accelerated animation */}
+      {isWinner && <VictoryParticles id={`victory-${position}`} />}
+
       {/* Winner/Loser Badge */}
       {(isWinner || isLoser) && (
         <div
           className={cn(
-            "absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider z-10",
-            isWinner && "bg-yellow-400 text-yellow-900",
-            isLoser && "bg-gray-500 text-white"
+            "absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider z-30 shadow-lg whitespace-nowrap",
+            isWinner &&
+              "bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 animate-bounce-subtle",
+            isLoser && "bg-gray-500 text-white",
           )}
         >
-          {isWinner ? "Victory" : "Defeated"}
+          {isWinner ? "🏆 VICTORY" : "💀 DEFEATED"}
         </div>
       )}
 
@@ -128,7 +133,7 @@ export function BattleCard({
       <div
         className={cn(
           "relative w-48 h-48 rounded-lg overflow-hidden bg-muted mb-3",
-          isReceivingDamage && "ring-2 ring-red-500"
+          isReceivingDamage && "ring-2 ring-red-500",
         )}
       >
         {card.imageUrl ? (
@@ -199,7 +204,7 @@ export function BattleCard({
         className={cn(
           "text-lg font-bold text-center mb-2 truncate w-full",
           isWinner && "text-yellow-600",
-          isLoser && "text-gray-500"
+          isLoser && "text-gray-500",
         )}
       >
         {card.name}

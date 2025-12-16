@@ -19,7 +19,6 @@ import { AppLayout } from "@/components/layouts";
 import {
   BattleCard as BattleCardComponent,
   BattleLogPopup,
-  VictoryOverlay,
 } from "../components";
 import { Arena1D } from "../../arena1d/components";
 import {
@@ -98,7 +97,7 @@ export function ArenaBattlePage() {
   const executeMove = useArenaBattleStore((state) => state.executeMove);
   const executeAttack = useArenaBattleStore((state) => state.executeAttack);
   const toggleAutoBattle = useArenaBattleStore(
-    (state) => state.toggleAutoBattle
+    (state) => state.toggleAutoBattle,
   );
   const resetArena = useArenaBattleStore((state) => state.resetArena);
 
@@ -111,12 +110,12 @@ export function ArenaBattlePage() {
   const [isLogOpen, setIsLogOpen] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [animationState, setAnimationState] = useState<AnimationState>(
-    initialAnimationState
+    initialAnimationState,
   );
 
   // Ref for auto-battle interval
   const autoBattleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
-    null
+    null,
   );
 
   // Track if we've initialized for current selected cards
@@ -318,7 +317,7 @@ export function ArenaBattlePage() {
         <div
           className={cn(
             "text-white/70 text-sm transition-all duration-500",
-            entranceComplete ? "opacity-100" : "opacity-0"
+            entranceComplete ? "opacity-100" : "opacity-0",
           )}
         >
           {arenaPhase === PHASE_MOVING && (
@@ -340,7 +339,7 @@ export function ArenaBattlePage() {
         <div
           className={cn(
             "transition-all duration-700 w-full",
-            entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-90"
+            entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-90",
           )}
         >
           <ArenaBattleSection
@@ -366,7 +365,7 @@ export function ArenaBattlePage() {
         <div
           className={cn(
             "flex items-center gap-2 text-white/60 text-xs transition-all duration-500",
-            entranceComplete ? "opacity-100" : "opacity-0"
+            entranceComplete ? "opacity-100" : "opacity-0",
           )}
         >
           <span
@@ -374,7 +373,7 @@ export function ArenaBattlePage() {
               "px-2 py-1 rounded",
               arenaPhase === PHASE_MOVING
                 ? "bg-blue-500/30 text-blue-300"
-                : "bg-slate-700/50"
+                : "bg-slate-700/50",
             )}
           >
             Moving
@@ -385,7 +384,7 @@ export function ArenaBattlePage() {
               "px-2 py-1 rounded",
               arenaPhase === PHASE_COMBAT
                 ? "bg-red-500/30 text-red-300"
-                : "bg-slate-700/50"
+                : "bg-slate-700/50",
             )}
           >
             Combat
@@ -399,7 +398,7 @@ export function ArenaBattlePage() {
           "flex justify-center mb-8 transition-all duration-500",
           entranceComplete
             ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
+            : "opacity-0 translate-y-10",
         )}
         style={{ transitionDelay: "400ms" }}
       >
@@ -420,15 +419,6 @@ export function ArenaBattlePage() {
         onClose={() => setIsLogOpen(false)}
         entries={battleLog}
       />
-
-      {/* Victory Overlay */}
-      {isArenaFinished && winner && loser && (
-        <VictoryOverlay
-          winner={winner}
-          loser={loser}
-          onNewBattle={handleNewBattle}
-        />
-      )}
     </AppLayout>
   );
 }
@@ -602,7 +592,7 @@ function ArenaControls({
             "min-w-[120px]",
             actionLabel === "Move"
               ? "bg-blue-600 hover:bg-blue-700 text-white"
-              : "bg-red-600 hover:bg-red-700 text-white"
+              : "bg-red-600 hover:bg-red-700 text-white",
           )}
         >
           <span className="mr-2">{actionLabel === "Move" ? "🚶" : "⚔️"}</span>

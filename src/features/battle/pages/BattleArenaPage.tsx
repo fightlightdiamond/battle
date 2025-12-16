@@ -20,7 +20,6 @@ import {
   BattleCard,
   BattleControls,
   BattleLogPopup,
-  VictoryOverlay,
   BattleReplayPlayer,
 } from "../components";
 import {
@@ -121,7 +120,7 @@ export function BattleArenaPage() {
   const [isLogOpen, setIsLogOpen] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [animationState, setAnimationState] = useState<AnimationState>(
-    initialAnimationState
+    initialAnimationState,
   );
 
   // Auto-battle replay state (Requirement 6.6)
@@ -132,7 +131,7 @@ export function BattleArenaPage() {
 
   // Ref for auto-battle interval
   const autoBattleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
-    null
+    null,
   );
 
   /**
@@ -425,7 +424,7 @@ export function BattleArenaPage() {
           className={cn(
             "flex items-center justify-center gap-8 md:gap-16 lg:gap-24",
             "transition-all duration-700",
-            entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-90"
+            entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-90",
           )}
         >
           {/* Challenger Card (Left) - with integrated damage/heal display */}
@@ -434,7 +433,7 @@ export function BattleArenaPage() {
               "transform transition-all duration-600",
               entranceComplete
                 ? "translate-x-0 opacity-100"
-                : "-translate-x-20 opacity-0"
+                : "-translate-x-20 opacity-0",
             )}
             style={{ transitionDelay: "100ms" }}
           >
@@ -471,7 +470,7 @@ export function BattleArenaPage() {
           <div
             className={cn(
               "flex flex-col items-center transition-all duration-500",
-              entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-50"
+              entranceComplete ? "opacity-100 scale-100" : "opacity-0 scale-50",
             )}
             style={{ transitionDelay: "300ms" }}
           >
@@ -494,7 +493,7 @@ export function BattleArenaPage() {
               "transform transition-all duration-600",
               entranceComplete
                 ? "translate-x-0 opacity-100"
-                : "translate-x-20 opacity-0"
+                : "translate-x-20 opacity-0",
             )}
             style={{ transitionDelay: "200ms" }}
           >
@@ -535,7 +534,7 @@ export function BattleArenaPage() {
           "flex justify-center mb-8 transition-all duration-500",
           entranceComplete
             ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10"
+            : "opacity-0 translate-y-10",
         )}
         style={{ transitionDelay: "400ms" }}
       >
@@ -554,15 +553,6 @@ export function BattleArenaPage() {
         onClose={() => setIsLogOpen(false)}
         entries={battleLog}
       />
-
-      {/* Victory Overlay */}
-      {isBattleFinished && winner && loser && (
-        <VictoryOverlay
-          winner={winner}
-          loser={loser}
-          onNewBattle={handleNewBattle}
-        />
-      )}
     </AppLayout>
   );
 }

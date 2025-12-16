@@ -80,7 +80,7 @@ export function areAdjacent(pos1: CellIndex, pos2: CellIndex): boolean {
  */
 export function getNextPosition(
   currentPos: CellIndex,
-  targetPos: CellIndex
+  targetPos: CellIndex,
 ): CellIndex {
   if (currentPos < targetPos) {
     return (currentPos + 1) as CellIndex;
@@ -96,7 +96,7 @@ export function getNextPosition(
  */
 export function determinePhase(
   leftPos: CellIndex,
-  rightPos: CellIndex
+  rightPos: CellIndex,
 ): ArenaPhase {
   const distance = getDistance(leftPos, rightPos);
   if (distance > 1) {
@@ -111,7 +111,7 @@ export function determinePhase(
 function createMoveLogEntry(
   moverName: string,
   fromPos: CellIndex,
-  toPos: CellIndex
+  toPos: CellIndex,
 ): Readonly<BattleLogEntry> {
   return {
     id: generateLogId(),
@@ -130,7 +130,7 @@ function createAttackLogEntry(
   damage: number,
   defenderRemainingHp: number,
   isCrit?: boolean,
-  lifestealAmount?: number
+  lifestealAmount?: number,
 ): Readonly<BattleLogEntry> {
   return {
     id: generateLogId(),
@@ -175,7 +175,7 @@ const createInitialState = (): ArenaBattleState => ({
  * Property 5: Turn alternates after movement
  */
 const getNextTurn = (
-  current: "challenger" | "opponent"
+  current: "challenger" | "opponent",
 ): "challenger" | "opponent" =>
   current === "challenger" ? "opponent" : "challenger";
 
@@ -185,7 +185,7 @@ const getNextTurn = (
 const getWinnerName = (
   result: BattleResult,
   challenger: Readonly<BattleCard>,
-  opponent: Readonly<BattleCard>
+  opponent: Readonly<BattleCard>,
 ): string =>
   result === BATTLE_RESULTS.CHALLENGER_WINS ? challenger.name : opponent.name;
 
@@ -224,6 +224,7 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
      * Execute movement for current turn's card
      * Property 4: Movement is exactly 1 cell toward opponent
      * Property 5: Turn alternates after movement
+     * NEW: If adjacent after move, immediately attack in same turn
      */
     executeMove: (): void => {
       const {
@@ -258,13 +259,80 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
       // Determine new phase based on new positions
       const newPhase = determinePhase(newLeftPos, newRightPos);
 
-      set((state) => ({
-        leftPosition: newLeftPos,
-        rightPosition: newRightPos,
-        arenaPhase: newPhase,
-        currentTurn: getNextTurn(state.currentTurn),
-        battleLog: [...state.battleLog, moveLog],
-      }));
+      // Check if now adjacent - will attack immediately
+      const nowAdjacent = areAdjacent(newLeftPos, newRightPos);
+
+      if (nowAdjacent) {
+        // Move + Attack in same turn
+        const attacker = mover;
+        const defender = isChallenger ? opponent : challenger;
+
+        // Calculate attack
+        const attackResult = calculateAttack(attacker, defender);
+
+        // Create updated cards
+        const updatedDefender: Readonly<BattleCard> = {
+          ...defender,
+          currentHp: attackResult.defenderNewHp,
+        };
+        const updatedAttacker: Readonly<BattleCard> = {
+          ...attacker,
+          currentHp: attackResult.attackerNewHp,
+        };
+
+        const newChallenger = isChallenger ? updatedAttacker : updatedDefender;
+        const newOpponent = isChallenger ? updatedDefender : updatedAttacker;
+
+        // Check battle end
+        const battleResult = checkBattleEnd(newChallenger, newOpponent);
+
+        // Create attack log
+        const attackLog = createAttackLogEntry(
+          attacker.name,
+          defender.name,
+          attackResult.damage,
+          attackResult.defenderNewHp,
+          attackResult.damageResult?.isCrit,
+          attackResult.lifestealHeal,
+        );
+
+        set((state) => {
+          const newBattleLog: Readonly<BattleLogEntry>[] = [
+            ...state.battleLog,
+            moveLog,
+            attackLog,
+          ];
+
+          if (battleResult) {
+            newBattleLog.push(
+              createVictoryLogEntry(
+                getWinnerName(battleResult, newChallenger, newOpponent),
+              ),
+            );
+          }
+
+          return {
+            leftPosition: newLeftPos,
+            rightPosition: newRightPos,
+            challenger: newChallenger,
+            opponent: newOpponent,
+            arenaPhase: battleResult ? PHASE_FINISHED : PHASE_COMBAT,
+            currentTurn: getNextTurn(state.currentTurn),
+            battleLog: newBattleLog,
+            result: battleResult,
+            isAutoBattle: battleResult ? false : state.isAutoBattle,
+          };
+        });
+      } else {
+        // Just move, no attack yet
+        set((state) => ({
+          leftPosition: newLeftPos,
+          rightPosition: newRightPos,
+          arenaPhase: newPhase,
+          currentTurn: getNextTurn(state.currentTurn),
+          battleLog: [...state.battleLog, moveLog],
+        }));
+      }
     },
 
     /**
@@ -313,7 +381,7 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
         attackResult.damage,
         attackResult.defenderNewHp,
         attackResult.damageResult?.isCrit,
-        attackResult.lifestealHeal
+        attackResult.lifestealHeal,
       );
 
       set((state) => {
@@ -325,8 +393,8 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
         if (battleResult) {
           newBattleLog.push(
             createVictoryLogEntry(
-              getWinnerName(battleResult, newChallenger, newOpponent)
-            )
+              getWinnerName(battleResult, newChallenger, newOpponent),
+            ),
           );
         }
 
@@ -359,7 +427,7 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
     resetArena: (): void => {
       set(createInitialState());
     },
-  })
+  }),
 );
 
 // ============================================================================
@@ -386,7 +454,7 @@ export const selectIsMoving = (state: ArenaBattleState): boolean =>
   state.arenaPhase === PHASE_MOVING;
 
 export const selectWinner = (
-  state: ArenaBattleState
+  state: ArenaBattleState,
 ): Readonly<BattleCard> | null => {
   if (state.arenaPhase !== PHASE_FINISHED || !state.result) return null;
   return state.result === BATTLE_RESULTS.CHALLENGER_WINS
@@ -395,7 +463,7 @@ export const selectWinner = (
 };
 
 export const selectLoser = (
-  state: ArenaBattleState
+  state: ArenaBattleState,
 ): Readonly<BattleCard> | null => {
   if (state.arenaPhase !== PHASE_FINISHED || !state.result) return null;
   return state.result === BATTLE_RESULTS.CHALLENGER_WINS
