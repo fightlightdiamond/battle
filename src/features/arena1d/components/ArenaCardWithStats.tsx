@@ -30,9 +30,9 @@ export interface ArenaCardWithStatsProps {
   /** Whether card is in combat (adjacent to opponent) */
   isInCombat?: boolean;
   /** Direction of movement animation (reserved for future use) */
-  _moveDirection?: MoveDirection;
+  moveDirection?: MoveDirection;
   /** Whether movement animation just completed (reserved for future use) */
-  _moveComplete?: boolean;
+  moveComplete?: boolean;
   /** Damage to display on this card */
   damageDisplay?: { damage: number; isCritical: boolean } | null;
   /** Heal to display on this card (lifesteal) */
@@ -91,7 +91,7 @@ export function ArenaCardWithStats({
       className={cn(
         "relative flex flex-col items-center",
         // Danger state visual - pulsing border
-        isDanger && "animate-pulse"
+        isDanger && "animate-pulse",
       )}
     >
       {/* Card with ArenaCard component */}
@@ -160,7 +160,7 @@ export function ArenaCardWithStats({
           data-testid="hp-bar-container"
           className={cn(
             "h-1.5 w-full overflow-hidden rounded-full bg-gray-300",
-            isDanger && "ring-1 ring-red-500"
+            isDanger && "ring-1 ring-red-500",
           )}
         >
           <div
@@ -168,7 +168,7 @@ export function ArenaCardWithStats({
             data-percentage={hpPercentage}
             className={cn(
               "h-full rounded-full transition-all duration-300",
-              colorClass
+              colorClass,
             )}
             style={{ width: `${hpPercentage}%` }}
           />
@@ -184,7 +184,7 @@ export function ArenaCardWithStats({
         data-testid="stats-display"
         className={cn(
           "flex gap-1 text-[8px] font-medium mt-0.5",
-          side === SIDE_LEFT ? "text-blue-600" : "text-red-600"
+          side === SIDE_LEFT ? "text-blue-600" : "text-red-600",
         )}
       >
         <span data-testid="atk-stat">ATK:{card.atk}</span>

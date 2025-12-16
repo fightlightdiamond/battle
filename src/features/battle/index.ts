@@ -42,9 +42,9 @@ export type {
   BattleHistoryListParams,
   ReplaySpeed,
   ReplayState,
-  ReplayControls as ReplayControlsType,
   UseReplayStateReturn,
 } from "./hooks";
+// ReplayControls type is exported from hooks, component ReplayControls from components
 
 // Components - BattleCard component takes precedence
 export * from "./components";
