@@ -18,7 +18,7 @@ import { MemoryRouter } from "react-router-dom";
 import * as fc from "fast-check";
 import { StatusBar } from "./StatusBar";
 import { shouldShowStatusBar } from "./statusBarUtils";
-import { formatGold } from "@/features/betting/components/GoldBalanceDisplay";
+import { formatGold } from "@/features/betting/utils/formatGold";
 import { useBettingStore } from "@/features/betting/store/bettingStore";
 
 // Helper to render StatusBar with MemoryRouter at a specific route

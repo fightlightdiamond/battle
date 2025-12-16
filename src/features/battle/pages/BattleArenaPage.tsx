@@ -12,14 +12,14 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, ScrollText } from "lucide-react";
+import { ScrollText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { AppLayout } from "@/components/layouts";
 import {
   BattleCard,
   BattleControls,
-  BattleLog,
+  BattleLogPopup,
   VictoryOverlay,
   BattleReplayPlayer,
 } from "../components";
@@ -117,8 +117,8 @@ export function BattleArenaPage() {
   const executeAttack = useBattleStore((state) => state.executeAttack);
   const resetBattle = useBattleStore((state) => state.resetBattle);
 
-  // Local UI state
-  const [isLogOpen, setIsLogOpen] = useState(true);
+  // Local UI state - log popup hidden by default
+  const [isLogOpen, setIsLogOpen] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [animationState, setAnimationState] = useState<AnimationState>(
     initialAnimationState
@@ -375,12 +375,7 @@ export function BattleArenaPage() {
       className="text-white hover:bg-white/10"
     >
       <ScrollText className="h-5 w-5 mr-1" />
-      {isLogOpen ? "Hide Log" : "Show Log"}
-      {isLogOpen ? (
-        <ChevronRight className="h-4 w-4 ml-1" />
-      ) : (
-        <ChevronLeft className="h-4 w-4 ml-1" />
-      )}
+      Log
     </Button>
   );
 
@@ -553,30 +548,12 @@ export function BattleArenaPage() {
         />
       </div>
 
-      {/* Collapsible Battle Log Sidebar */}
-      <div
-        className={cn(
-          "fixed top-0 right-0 h-full w-80 bg-card/95 backdrop-blur-sm border-l shadow-xl",
-          "transform transition-transform duration-300 z-20",
-          isLogOpen ? "translate-x-0" : "translate-x-full"
-        )}
-      >
-        <div className="p-4 h-full flex flex-col">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Battle Log</h2>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsLogOpen(false)}
-            >
-              <ChevronRight className="h-5 w-5" />
-            </Button>
-          </div>
-          <div className="flex-1 overflow-hidden">
-            <BattleLog entries={battleLog} maxHeight="calc(100vh - 120px)" />
-          </div>
-        </div>
-      </div>
+      {/* Battle Log Popup */}
+      <BattleLogPopup
+        isOpen={isLogOpen}
+        onClose={() => setIsLogOpen(false)}
+        entries={battleLog}
+      />
 
       {/* Victory Overlay */}
       {isBattleFinished && winner && loser && (

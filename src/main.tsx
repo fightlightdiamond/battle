@@ -11,6 +11,7 @@ import {
 import {
   BattleSetupPage,
   BattleArenaPage,
+  ArenaBattlePage,
   BattleHistoryListPage,
   BattleHistoryDetailPage,
   BattleReplayPage,
@@ -37,6 +38,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/cards/:id/edit" element={<CardEditPage />} />
           <Route path="/battle/setup" element={<BattleSetupPage />} />
           <Route path="/battle/arena" element={<BattleArenaPage />} />
+          <Route path="/battle/arena-1d" element={<ArenaBattlePage />} />
           <Route path="/history" element={<BattleHistoryListPage />} />
           <Route path="/history/:id" element={<BattleHistoryDetailPage />} />
           <Route path="/history/:id/replay" element={<BattleReplayPage />} />

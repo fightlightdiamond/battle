@@ -17,6 +17,7 @@ import type {
   LifestealDetail,
   DefenderHpState,
   HpTimelineEntry,
+  BattleMode,
 } from "../types/battleHistoryTypes";
 
 // ============================================================================
@@ -25,7 +26,11 @@ import type {
 
 export interface BattleRecorderInstance {
   /** Start recording a new battle */
-  startRecording(challenger: Combatant, opponent: Combatant): void;
+  startRecording(
+    challenger: Combatant,
+    opponent: Combatant,
+    battleMode?: BattleMode
+  ): void;
 
   /** Record a single turn/attack */
   recordTurn(
@@ -163,6 +168,7 @@ export function createBattleRecorder(): BattleRecorderInstance {
   let opponentSnapshot: CombatantSnapshot | null = null;
   let turns: TurnRecord[] = [];
   let hpTimeline: HpTimelineEntry[] = [];
+  let currentBattleMode: BattleMode = "classic";
 
   return {
     /**
@@ -171,13 +177,18 @@ export function createBattleRecorder(): BattleRecorderInstance {
      *
      * Requirements: 1.1, 1.2, 5.6
      */
-    startRecording(challenger: Combatant, opponent: Combatant): void {
+    startRecording(
+      challenger: Combatant,
+      opponent: Combatant,
+      battleMode: BattleMode = "classic"
+    ): void {
       recording = true;
       battleId = generateUUID();
       startedAt = Date.now();
       challengerSnapshot = createCombatantSnapshot(challenger);
       opponentSnapshot = createCombatantSnapshot(opponent);
       turns = [];
+      currentBattleMode = battleMode;
 
       // Create initial HP timeline entry (turn 0)
       // Requirements: 5.6
@@ -282,6 +293,7 @@ export function createBattleRecorder(): BattleRecorderInstance {
         startedAt,
         endedAt,
         battleDurationMs,
+        battleMode: currentBattleMode,
         challenger: challengerSnapshot,
         opponent: opponentSnapshot,
         winnerId,
@@ -308,6 +320,7 @@ export function createBattleRecorder(): BattleRecorderInstance {
       opponentSnapshot = null;
       turns = [];
       hpTimeline = [];
+      currentBattleMode = "classic";
     },
 
     /**

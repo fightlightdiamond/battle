@@ -22,6 +22,11 @@ import { calculateAttack, checkBattleEnd } from "../services/battleService";
 import type { Card } from "../../cards/types";
 
 /**
+ * Battle mode type - 'classic' or 'arena'
+ */
+export type BattleMode = "classic" | "arena";
+
+/**
  * Battle store state interface (immutable via Readonly)
  */
 export interface BattleState {
@@ -32,6 +37,7 @@ export interface BattleState {
   readonly battleLog: ReadonlyArray<Readonly<BattleLogEntry>>;
   readonly result: BattleResult;
   readonly isAutoBattle: boolean;
+  readonly battleMode: BattleMode;
 }
 
 /**
@@ -40,6 +46,7 @@ export interface BattleState {
 export interface BattleActions {
   selectChallenger: (card: Card) => boolean;
   selectOpponent: (card: Card) => boolean;
+  setBattleMode: (mode: BattleMode) => void;
   startBattle: () => void;
   executeAttack: () => AttackResult | null;
   toggleAutoBattle: () => void;
@@ -126,6 +133,7 @@ const createInitialState = (): BattleState => ({
   battleLog: [],
   result: null,
   isAutoBattle: false,
+  battleMode: "classic",
 });
 
 /**
@@ -191,6 +199,10 @@ export const useBattleStore = create<BattleStoreState>((set, get) => ({
       phase: state.challenger ? BATTLE_PHASES.READY : BATTLE_PHASES.SETUP,
     }));
     return true;
+  },
+
+  setBattleMode: (mode: BattleMode): void => {
+    set({ battleMode: mode });
   },
 
   startBattle: (): void => {

@@ -139,3 +139,59 @@
       0 0 30px currentColor;
   }
 }
+
+/* Arena 1D Movement Animations */
+@keyframes arena-slide-left {
+  0% {
+    transform: translateX(100%);
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes arena-slide-right {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes arena-card-bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Arena card movement classes */
+.arena-card-moving {
+  transition: transform 300ms ease-out, opacity 200ms ease-in-out;
+}
+
+.arena-card-slide-left {
+  animation: arena-slide-left 300ms ease-out forwards;
+}
+
+.arena-card-slide-right {
+  animation: arena-slide-right 300ms ease-out forwards;
+}
+
+.arena-card-move-complete {
+  animation: arena-card-bounce 200ms ease-in-out;
+}

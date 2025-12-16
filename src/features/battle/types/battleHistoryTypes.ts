@@ -8,6 +8,17 @@
  */
 
 // ============================================================================
+// BATTLE MODE
+// ============================================================================
+
+/**
+ * Battle mode type - distinguishes between Classic and Arena battles
+ * - classic: Traditional instant combat mode
+ * - arena: 1D arena mode with movement and positioning
+ */
+export type BattleMode = "classic" | "arena";
+
+// ============================================================================
 // COMBATANT SNAPSHOT
 // ============================================================================
 
@@ -186,6 +197,12 @@ export interface BattleRecord {
   readonly endedAt: number;
   /** Battle duration in milliseconds */
   readonly battleDurationMs: number;
+
+  /**
+   * Battle mode - 'classic' or 'arena'
+   * Optional for backward compatibility with existing records
+   */
+  readonly battleMode?: BattleMode;
 
   // Combatants (snapshots at battle start)
   readonly challenger: CombatantSnapshot;

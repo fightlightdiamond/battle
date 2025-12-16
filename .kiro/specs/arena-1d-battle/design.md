@@ -171,7 +171,7 @@ _For any_ ArenaState where |leftPosition - rightPosition| equals 1, the phase SH
 
 ### Property 6: Position bounds are respected
 
-_For any_ ArenaState, leftPosition SHALL be in range [0, 6] AND rightPosition SHALL be in range [1, 7].
+_For any_ ArenaState, both leftPosition and rightPosition SHALL be in range [0, 7]. Both cards can move to any position on the arena.
 **Validates: Requirements 4.3**
 
 ## Error Handling

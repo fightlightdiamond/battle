@@ -24,6 +24,7 @@ export {
 
 // Battle History type exports
 export type {
+  BattleMode,
   CombatantSnapshot,
   DamageBreakdown,
   LifestealDetail,

@@ -14,6 +14,9 @@ export type { HealNumberProps } from "./HealNumber";
 export { BattleLog } from "./BattleLog";
 export type { BattleLogProps } from "./BattleLog";
 
+export { BattleLogPopup } from "./BattleLogPopup";
+export type { BattleLogPopupProps } from "./BattleLogPopup";
+
 export { BattleControls } from "./BattleControls";
 export type { BattleControlsProps } from "./BattleControls";
 
@@ -31,3 +34,14 @@ export type { BattleReplayPlayerProps } from "./BattleReplayPlayer";
 
 export { ReplayControls } from "./ReplayControls";
 export type { ReplayControlsProps } from "./ReplayControls";
+
+export {
+  BattleModeSelector,
+  getBattleModeRoute,
+  BATTLE_MODE_ROUTES,
+} from "./BattleModeSelector";
+export type {
+  BattleModeSelectorProps,
+  BattleMode,
+  BattleModeOption,
+} from "./BattleModeSelector";
