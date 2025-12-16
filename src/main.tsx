@@ -27,9 +27,12 @@ import {
   MatchupAdminPage,
 } from "./features/matchup/pages";
 
+// Get basename from Vite's base config for GitHub Pages deployment
+const basename = import.meta.env.BASE_URL;
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <App>
         <Routes>
           <Route path="/" element={<Navigate to="/cards" replace />} />
@@ -68,5 +71,5 @@ createRoot(document.getElementById("root")!).render(
         </Routes>
       </App>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );
