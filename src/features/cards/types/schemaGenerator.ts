@@ -4,6 +4,7 @@
 
 import { z } from "zod";
 import { STAT_REGISTRY, type StatDefinition } from "./statConfig";
+import type { CardStats } from "./statTypes";
 
 /**
  * Generate a Zod schema for a single stat based on its definition
@@ -29,15 +30,26 @@ function generateStatFieldSchema(stat: StatDefinition): z.ZodNumber {
   return schema;
 }
 
+// Type for stat schema shape - maps CardStats keys to ZodNumber
+type StatSchemaShape = {
+  [K in keyof CardStats]: z.ZodNumber;
+};
+
+// Type for stat schema shape with defaults
+type StatSchemaShapeWithDefaults = {
+  [K in keyof CardStats]: z.ZodDefault<z.ZodNumber>;
+};
+
 /**
  * Generate a complete stat schema object from the registry
  * Returns schema without defaults (for form validation with explicit values)
  */
-export function generateStatSchema(): z.ZodObject<Record<string, z.ZodNumber>> {
-  const shape: Record<string, z.ZodNumber> = {};
+export function generateStatSchema(): z.ZodObject<StatSchemaShape> {
+  const shape = {} as StatSchemaShape;
 
   for (const stat of STAT_REGISTRY) {
-    shape[stat.key] = generateStatFieldSchema(stat);
+    (shape as Record<string, z.ZodNumber>)[stat.key] =
+      generateStatFieldSchema(stat);
   }
 
   return z.object(shape);
@@ -47,13 +59,12 @@ export function generateStatSchema(): z.ZodObject<Record<string, z.ZodNumber>> {
  * Generate a complete stat schema object with default values
  * Returns schema with defaults (for parsing input that may have missing fields)
  */
-export function generateStatSchemaWithDefaults(): z.ZodObject<
-  Record<string, z.ZodDefault<z.ZodNumber>>
-> {
-  const shape: Record<string, z.ZodDefault<z.ZodNumber>> = {};
+export function generateStatSchemaWithDefaults(): z.ZodObject<StatSchemaShapeWithDefaults> {
+  const shape = {} as StatSchemaShapeWithDefaults;
 
   for (const stat of STAT_REGISTRY) {
-    shape[stat.key] = generateStatFieldSchema(stat).default(stat.defaultValue);
+    (shape as Record<string, z.ZodDefault<z.ZodNumber>>)[stat.key] =
+      generateStatFieldSchema(stat).default(stat.defaultValue);
   }
 
   return z.object(shape);

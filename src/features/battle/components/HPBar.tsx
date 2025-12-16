@@ -53,13 +53,21 @@ export function HPBar({
 
   // Handle flash effect when damage is received
   useEffect(() => {
-    if (showFlash) {
+    if (!showFlash) return;
+
+    // Use requestAnimationFrame to batch state updates
+    const rafId = requestAnimationFrame(() => {
       setIsFlashing(true);
-      const timer = setTimeout(() => {
-        setIsFlashing(false);
-      }, 200); // Flash duration 200ms per design spec
-      return () => clearTimeout(timer);
-    }
+    });
+
+    const timer = setTimeout(() => {
+      setIsFlashing(false);
+    }, 200); // Flash duration 200ms per design spec
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(timer);
+    };
   }, [showFlash, currentHp]);
 
   return (

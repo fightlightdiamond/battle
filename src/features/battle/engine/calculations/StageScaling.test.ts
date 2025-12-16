@@ -10,8 +10,11 @@ import type { CombatantStats } from "../core/types";
 const combatantStatsArb: fc.Arbitrary<CombatantStats> = fc.record({
   atk: fc.integer({ min: 1, max: 9999 }),
   def: fc.integer({ min: 0, max: 9999 }),
-  critRate: fc.float({ min: 0, max: 1, noNaN: true }),
-  critDamage: fc.float({ min: 1, max: 5, noNaN: true }),
+  spd: fc.integer({ min: 1, max: 999 }),
+  critChance: fc.integer({ min: 0, max: 100 }),
+  critDamage: fc.integer({ min: 100, max: 500 }),
+  armorPen: fc.integer({ min: 0, max: 100 }),
+  lifesteal: fc.integer({ min: 0, max: 100 }),
 });
 
 const stageNumberArb = fc.integer({ min: 0, max: 100 });
@@ -45,8 +48,8 @@ describe("StageScaling", () => {
             Math.floor(baseStats.def * expectedMultiplier)
           );
 
-          // critRate and critDamage should remain unchanged (they are percentages/multipliers)
-          expect(scaledStats.critRate).toBe(baseStats.critRate);
+          // critChance and critDamage should remain unchanged (they are percentages/multipliers)
+          expect(scaledStats.critChance).toBe(baseStats.critChance);
           expect(scaledStats.critDamage).toBe(baseStats.critDamage);
         }
       ),
@@ -63,23 +66,29 @@ describe("StageScaling", () => {
       const baseStats: CombatantStats = {
         atk: 100,
         def: 50,
-        critRate: 0.1,
-        critDamage: 1.5,
+        spd: 10,
+        critChance: 10,
+        critDamage: 150,
+        armorPen: 0,
+        lifesteal: 0,
       };
       const scaled = stageScaling.scaleStats(baseStats, 0);
 
       expect(scaled.atk).toBe(100);
       expect(scaled.def).toBe(50);
-      expect(scaled.critRate).toBe(0.1);
-      expect(scaled.critDamage).toBe(1.5);
+      expect(scaled.critChance).toBe(10);
+      expect(scaled.critDamage).toBe(150);
     });
 
     it("scales stats by 10% per stage", () => {
       const baseStats: CombatantStats = {
         atk: 100,
         def: 100,
-        critRate: 0.1,
-        critDamage: 1.5,
+        spd: 10,
+        critChance: 10,
+        critDamage: 150,
+        armorPen: 0,
+        lifesteal: 0,
       };
 
       // Stage 1: 1.1x multiplier
@@ -102,8 +111,11 @@ describe("StageScaling", () => {
       const baseStats: CombatantStats = {
         atk: 33,
         def: 17,
-        critRate: 0.1,
-        critDamage: 1.5,
+        spd: 10,
+        critChance: 10,
+        critDamage: 150,
+        armorPen: 0,
+        lifesteal: 0,
       };
 
       // Stage 1: 33 × 1.1 = 36.3 → 36
@@ -113,17 +125,20 @@ describe("StageScaling", () => {
       expect(scaled.def).toBe(18);
     });
 
-    it("does not scale critRate and critDamage", () => {
+    it("does not scale critChance and critDamage", () => {
       const baseStats: CombatantStats = {
         atk: 100,
         def: 50,
-        critRate: 0.25,
-        critDamage: 2.0,
+        spd: 10,
+        critChance: 25,
+        critDamage: 200,
+        armorPen: 0,
+        lifesteal: 0,
       };
 
       const scaled = stageScaling.scaleStats(baseStats, 10);
-      expect(scaled.critRate).toBe(0.25);
-      expect(scaled.critDamage).toBe(2.0);
+      expect(scaled.critChance).toBe(25);
+      expect(scaled.critDamage).toBe(200);
     });
   });
 

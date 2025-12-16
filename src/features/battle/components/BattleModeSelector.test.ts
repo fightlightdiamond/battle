@@ -12,7 +12,7 @@ import {
   getBattleModeRoute,
   BATTLE_MODE_ROUTES,
   type BattleMode,
-} from "./BattleModeSelector";
+} from "./battleModeConfig";
 
 /**
  * **Feature: arena-battle-mode, Property 1: Navigation routes to correct page based on mode**

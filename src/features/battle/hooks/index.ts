@@ -9,6 +9,6 @@ export {
   useReplayState,
   type ReplaySpeed,
   type ReplayState,
-  type ReplayControls,
+  type ReplayControls as ReplayControlsType,
   type UseReplayStateReturn,
 } from "./useReplayState";

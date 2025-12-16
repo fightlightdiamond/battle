@@ -21,9 +21,9 @@ import { AppLayout } from "@/components/layouts";
 import { CardSelector } from "../components/CardSelector";
 import {
   BattleModeSelector,
-  getBattleModeRoute,
   type BattleMode,
 } from "../components/BattleModeSelector";
+import { getBattleModeRoute } from "../components/battleModeConfig";
 import { useBattleStore, selectCanStartBattle } from "../store/battleStore";
 import { useCards } from "../../cards/hooks/useCards";
 import { matchupService } from "../../matchup/services/matchupService";

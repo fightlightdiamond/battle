@@ -4,25 +4,6 @@ import { createDamageCalculator, damageCalculator } from "./DamageCalculator";
 import type { DamageCalculationInput } from "../core/types";
 
 // ============================================================================
-// ARBITRARIES (Generators for property-based testing)
-// ============================================================================
-
-const damageCalculationInputArb: fc.Arbitrary<DamageCalculationInput> =
-  fc.record({
-    attackerAtk: fc.integer({ min: 1, max: 9999 }),
-    defenderDef: fc.integer({ min: 0, max: 9999 }),
-    skillMultiplier: fc.option(fc.float({ min: 0.5, max: 3, noNaN: true }), {
-      nil: undefined,
-    }),
-    critRate: fc.option(fc.float({ min: 0, max: 1, noNaN: true }), {
-      nil: undefined,
-    }),
-    critDamage: fc.option(fc.float({ min: 1, max: 5, noNaN: true }), {
-      nil: undefined,
-    }),
-  });
-
-// ============================================================================
 // PROPERTY-BASED TESTS
 // ============================================================================
 

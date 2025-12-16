@@ -5,33 +5,10 @@
 
 import { cn } from "@/lib/utils";
 import { Swords, Grid3X3 } from "lucide-react";
+import type { BattleMode, BattleModeOption } from "./battleModeConfig";
 
-export type BattleMode = "classic" | "arena";
-
-export interface BattleModeOption {
-  id: BattleMode;
-  label: string;
-  description: string;
-  icon: React.ReactNode;
-}
-
-/**
- * Route configuration for each battle mode
- * Used by BattleSetupPage to navigate to the correct arena page
- */
-export const BATTLE_MODE_ROUTES: Record<BattleMode, string> = {
-  classic: "/battle/arena",
-  arena: "/battle/arena-1d",
-};
-
-/**
- * Get the navigation route for a given battle mode
- * @param mode - The selected battle mode
- * @returns The route path for the battle arena page
- */
-export function getBattleModeRoute(mode: BattleMode): string {
-  return BATTLE_MODE_ROUTES[mode];
-}
+// Re-export types from config
+export type { BattleMode, BattleModeOption };
 
 export interface BattleModeSelectorProps {
   selectedMode: BattleMode;
@@ -39,7 +16,11 @@ export interface BattleModeSelectorProps {
   className?: string;
 }
 
-const BATTLE_MODES: BattleModeOption[] = [
+interface BattleModeOptionWithIcon extends BattleModeOption {
+  icon: React.ReactNode;
+}
+
+const BATTLE_MODES: BattleModeOptionWithIcon[] = [
   {
     id: "classic",
     label: "Classic",

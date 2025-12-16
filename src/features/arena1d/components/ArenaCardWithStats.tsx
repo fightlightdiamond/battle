@@ -68,8 +68,11 @@ export function ArenaCardWithStats({
   side,
   isMoving = false,
   isInCombat = false,
-  moveDirection,
-  moveComplete = false,
+  // moveDirection and moveComplete are kept in props for future use
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  moveDirection: _moveDirection,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  moveComplete: _moveComplete = false,
   damageDisplay = null,
   healDisplay = null,
   animationKey = 0,
@@ -98,8 +101,6 @@ export function ArenaCardWithStats({
           side={side}
           isMoving={isMoving}
           isInCombat={isInCombat}
-          moveDirection={moveDirection}
-          moveComplete={moveComplete}
         />
 
         {/* Danger indicator icon */}

@@ -264,7 +264,7 @@ export const SyncQueue = {
   ): Promise<SyncItemResult> {
     try {
       switch (item.operation) {
-        case "create":
+        case "create": {
           if (!item.data) {
             throw new Error("Create operation missing card data");
           }
@@ -295,8 +295,9 @@ export const SyncQueue = {
             await cardApi.upsert(item.data);
           }
           break;
+        }
 
-        case "update":
+        case "update": {
           if (!item.data) {
             throw new Error("Update operation missing card data");
           }
@@ -327,8 +328,9 @@ export const SyncQueue = {
             await cardApi.upsert(item.data);
           }
           break;
+        }
 
-        case "delete":
+        case "delete": {
           // Try to delete - ignore 404 errors (already deleted)
           try {
             await cardApi.delete(item.cardId);
@@ -339,6 +341,7 @@ export const SyncQueue = {
             }
           }
           break;
+        }
       }
 
       return { item, success: true };
