@@ -7,7 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   // Configure base path for GitHub Pages deployment
-  base: process.env.GITHUB_ACTIONS ? "/r2/" : "/",
+  base: process.env.GITHUB_ACTIONS ? "/battle/" : "/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
