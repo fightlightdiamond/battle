@@ -100,6 +100,11 @@ function validateCombatant(data: unknown, name: string): Combatant {
     maxHp: validateNumber(data.maxHp, `${name}.maxHp`),
     buffs: validateBuffs(data.buffs, `${name}.buffs`),
     isDefeated: validateBoolean(data.isDefeated, `${name}.isDefeated`),
+    effectiveRange: validateNumberWithDefault(
+      data.effectiveRange,
+      `${name}.effectiveRange`,
+      1,
+    ),
   };
 }
 
@@ -128,7 +133,7 @@ function validateBuffs(data: unknown, name: string): readonly ActiveBuff[] {
   }
 
   return data.map((buff, index) =>
-    validateActiveBuff(buff, `${name}[${index}]`)
+    validateActiveBuff(buff, `${name}[${index}]`),
   );
 }
 
@@ -173,7 +178,7 @@ function validateActiveBuff(data: unknown, name: string): ActiveBuff {
     isPercentage: validateBoolean(data.isPercentage, `${name}.isPercentage`),
     remainingDuration: validateNumber(
       data.remainingDuration,
-      `${name}.remainingDuration`
+      `${name}.remainingDuration`,
     ),
     stackRule,
     stacks: validateNumber(data.stacks, `${name}.stacks`),
@@ -186,7 +191,7 @@ function validateBattleLog(data: unknown): readonly BattleLogEntry[] {
   }
 
   return data.map((entry, index) =>
-    validateBattleLogEntry(entry, `battleLog[${index}]`)
+    validateBattleLogEntry(entry, `battleLog[${index}]`),
   );
 }
 
@@ -237,7 +242,7 @@ function validateAttackLogData(data: unknown, name: string): AttackLogData {
     isCritical: validateBoolean(data.isCritical, `${name}.isCritical`),
     defenderRemainingHp: validateNumber(
       data.defenderRemainingHp,
-      `${name}.defenderRemainingHp`
+      `${name}.defenderRemainingHp`,
     ),
   };
 }
@@ -316,6 +321,20 @@ function validateNullableString(value: unknown, name: string): string | null {
 }
 
 function validateNumber(value: unknown, name: string): number {
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    throw new Error(`${name} must be a number`);
+  }
+  return value;
+}
+
+function validateNumberWithDefault(
+  value: unknown,
+  name: string,
+  defaultValue: number,
+): number {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
   if (typeof value !== "number" || Number.isNaN(value)) {
     throw new Error(`${name} must be a number`);
   }

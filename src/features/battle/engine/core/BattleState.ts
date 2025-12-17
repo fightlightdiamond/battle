@@ -22,7 +22,7 @@ import {
  * Updated for Tier-Based Stat System
  */
 function getDefaultStats(
-  config: DefaultStatsConfig = DEFAULT_STATS_CONFIG
+  config: DefaultStatsConfig = DEFAULT_STATS_CONFIG,
 ): CombatantStats {
   return {
     // Core Stats (Tier 1)
@@ -39,9 +39,15 @@ function getDefaultStats(
 }
 
 /**
+ * Default effective range for combatants without weapon
+ * Cards can attack adjacent cells (distance 1) by default
+ */
+const DEFAULT_EFFECTIVE_RANGE = 1;
+
+/**
  * Creates a Combatant from minimal input data.
  * Useful for creating combatants from card data.
- * Updated for Tier-Based Stat System
+ * Updated for Tier-Based Stat System and Weapon Attack Range
  *
  * @param input - Partial combatant data
  * @returns A fully initialized Combatant
@@ -61,8 +67,10 @@ export function createCombatant(
     critDamage?: number;
     armorPen?: number;
     lifesteal?: number;
+    // Range Stats
+    effectiveRange?: number;
   },
-  statsConfig?: DefaultStatsConfig
+  statsConfig?: DefaultStatsConfig,
 ): Combatant {
   const defaults = getDefaultStats(statsConfig);
   const baseStats: CombatantStats = {
@@ -86,6 +94,7 @@ export function createCombatant(
     maxHp: input.hp,
     buffs: [],
     isDefeated: false,
+    effectiveRange: input.effectiveRange ?? DEFAULT_EFFECTIVE_RANGE,
   };
 }
 
@@ -105,7 +114,7 @@ export function createCombatant(
  */
 export function createInitialState(
   challenger: Combatant,
-  opponent: Combatant
+  opponent: Combatant,
 ): BattleState {
   return {
     phase: BATTLE_PHASES.READY,
@@ -132,7 +141,7 @@ export function createInitialState(
  */
 export function updateChallenger(
   state: BattleState,
-  challenger: Partial<Combatant>
+  challenger: Partial<Combatant>,
 ): BattleState {
   return {
     ...state,
@@ -152,7 +161,7 @@ export function updateChallenger(
  */
 export function updateOpponent(
   state: BattleState,
-  opponent: Partial<Combatant>
+  opponent: Partial<Combatant>,
 ): BattleState {
   return {
     ...state,
@@ -174,7 +183,7 @@ export function updateOpponent(
 export function updateCombatant(
   state: BattleState,
   role: CombatantRole,
-  updates: Partial<Combatant>
+  updates: Partial<Combatant>,
 ): BattleState {
   return role === COMBATANT_ROLES.CHALLENGER
     ? updateChallenger(state, updates)
@@ -190,7 +199,7 @@ export function updateCombatant(
  */
 export function setPhase(
   state: BattleState,
-  phase: BattleState["phase"]
+  phase: BattleState["phase"],
 ): BattleState {
   return {
     ...state,
@@ -207,7 +216,7 @@ export function setPhase(
  */
 export function addLogEntry(
   state: BattleState,
-  entry: BattleLogEntry
+  entry: BattleLogEntry,
 ): BattleState {
   return {
     ...state,
@@ -224,7 +233,7 @@ export function addLogEntry(
  */
 export function setResult(
   state: BattleState,
-  result: BattleResult
+  result: BattleResult,
 ): BattleState {
   return {
     ...state,
@@ -272,7 +281,7 @@ export function advanceTurn(state: BattleState): BattleState {
 export function applyDamage(
   state: BattleState,
   role: CombatantRole,
-  damage: number
+  damage: number,
 ): BattleState {
   const combatant = state[role];
   const newHp = Math.max(0, combatant.currentHp - damage);

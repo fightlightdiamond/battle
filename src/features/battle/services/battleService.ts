@@ -16,6 +16,14 @@ import {
   COMBAT_CONSTANTS,
 } from "../types";
 import { createDamageCalculator } from "../engine/calculations/DamageCalculator";
+import type { Card } from "../../cards/types";
+import type { Weapon } from "../../weapons/types/weapon";
+import {
+  EquipmentService,
+  calculateEffectiveStats,
+  calculateEffectiveRange,
+} from "../../weapons/services/equipmentService";
+import { WeaponService } from "../../weapons/services/weaponService";
 
 /**
  * Calculate HP percentage
@@ -25,7 +33,7 @@ import { createDamageCalculator } from "../engine/calculations/DamageCalculator"
  */
 export function calculateHpPercentage(
   currentHp: number,
-  maxHp: number
+  maxHp: number,
 ): number {
   if (maxHp <= 0) return 0;
   const percentage = (currentHp / maxHp) * 100;
@@ -64,7 +72,7 @@ export function getHpBarColor(percentage: number): HpBarColor {
  */
 export function calculateAttack(
   attacker: BattleCard,
-  defender: BattleCard
+  defender: BattleCard,
 ): AttackResult {
   // Use calculateWithDetails for full damage breakdown (Requirements 4.1, 4.2, 4.3)
   const calculator = createDamageCalculator();
@@ -88,7 +96,7 @@ export function calculateAttack(
   // Calculate attacker's new HP after lifesteal, capped at maxHp
   const attackerNewHp = Math.min(
     attacker.maxHp,
-    attacker.currentHp + lifestealAmount
+    attacker.currentHp + lifestealAmount,
   );
 
   return {
@@ -123,7 +131,7 @@ export function calculateAttack(
  */
 export function checkBattleEnd(
   challenger: BattleCard,
-  opponent: BattleCard
+  opponent: BattleCard,
 ): BattleResult {
   if (challenger.currentHp <= 0) {
     return BATTLE_RESULTS.OPPONENT_WINS;
@@ -135,6 +143,80 @@ export function checkBattleEnd(
 }
 
 /**
+ * Convert a Card to a BattleCard with optional weapon bonuses
+ * Maps all Card stats to BattleCard for combat
+ *
+ * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 2.2
+ * - 4.1: Calculate effective stats by adding weapon stats to card base stats
+ * - 4.2: Use effective ATK value (card ATK + weapon ATK)
+ * - 4.3: Use effective Crit Chance (card Crit Chance + weapon Crit Chance)
+ * - 4.4: Use effective Crit Damage (card Crit Damage + weapon Crit Damage)
+ * - 4.5: Use effective Armor Pen (card Armor Pen + weapon Armor Pen)
+ * - 4.6: Use effective Lifesteal (card Lifesteal + weapon Lifesteal)
+ * - 2.2: Calculate effective range as default range (1) + weapon attack range bonus
+ */
+export function cardToBattleCardWithWeapon(
+  card: Card,
+  weapon: Weapon | null,
+): Readonly<BattleCard> {
+  const effectiveStats = calculateEffectiveStats(card, weapon);
+  const effectiveRange = calculateEffectiveRange(weapon);
+
+  return {
+    id: card.id,
+    name: card.name,
+    imageUrl: card.imageUrl,
+
+    // HP tracking
+    maxHp: effectiveStats.hp,
+    currentHp: effectiveStats.hp,
+
+    // Core Stats (Tier 1)
+    atk: effectiveStats.atk,
+    def: effectiveStats.def,
+    spd: effectiveStats.spd,
+
+    // Combat Stats (Tier 2)
+    critChance: effectiveStats.critChance,
+    critDamage: effectiveStats.critDamage,
+    armorPen: effectiveStats.armorPen,
+    lifesteal: effectiveStats.lifesteal,
+
+    // Range Stats (Weapon Attack Range)
+    effectiveRange,
+  };
+}
+
+/**
+ * Load equipment and weapon for a card
+ * Returns the weapon if equipped, null otherwise
+ *
+ * Requirement: 4.1 - Card with equipped weapon enters battle with effective stats
+ */
+export async function loadCardWeapon(cardId: string): Promise<Weapon | null> {
+  const equipment = await EquipmentService.getEquipment(cardId);
+
+  if (!equipment?.weaponId) {
+    return null;
+  }
+
+  return WeaponService.getById(equipment.weaponId);
+}
+
+/**
+ * Convert a Card to a BattleCard, loading equipment if available
+ * This is the main entry point for battle initialization
+ *
+ * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6
+ */
+export async function cardToBattleCardWithEquipment(
+  card: Card,
+): Promise<Readonly<BattleCard>> {
+  const weapon = await loadCardWeapon(card.id);
+  return cardToBattleCardWithWeapon(card, weapon);
+}
+
+/**
  * Battle service object with all combat functions
  */
 export const battleService = {
@@ -142,4 +224,7 @@ export const battleService = {
   checkBattleEnd,
   calculateHpPercentage,
   getHpBarColor,
+  cardToBattleCardWithWeapon,
+  loadCardWeapon,
+  cardToBattleCardWithEquipment,
 };

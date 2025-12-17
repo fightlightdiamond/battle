@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Pencil, Trash2, ImageOff } from "lucide-react";
+import { Pencil, Trash2, ImageOff, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -99,19 +99,23 @@ function CardItem({ card, onDelete }: CardItemProps) {
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="flex-1" asChild>
+            <Link to={`/cards/${card.id}`}>
+              <Eye className="h-4 w-4" />
+              View
+            </Link>
+          </Button>
+          <Button variant="outline" size="sm" asChild>
             <Link to={`/cards/${card.id}/edit`}>
               <Pencil className="h-4 w-4" />
-              Edit
             </Link>
           </Button>
           <Button
             variant="outline"
             size="sm"
-            className="flex-1 text-destructive hover:text-destructive"
+            className="text-destructive hover:text-destructive"
             onClick={onDelete}
           >
             <Trash2 className="h-4 w-4" />
-            Delete
           </Button>
         </div>
       </CardContent>

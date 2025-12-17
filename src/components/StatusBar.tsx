@@ -20,6 +20,7 @@ import {
   Trophy,
   ScrollText,
   Settings,
+  Sword,
 } from "lucide-react";
 
 interface NavItem {
@@ -53,6 +54,25 @@ const navGroups: NavGroup[] = [
       {
         path: "/cards/new",
         label: "New Card",
+        icon: <Plus className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    label: "Weapons",
+    icon: <Sword className="h-5 w-5" />,
+    color: "from-purple-500 to-pink-400",
+    glowColor: "shadow-purple-500/50",
+    basePaths: ["/weapons"],
+    items: [
+      {
+        path: "/weapons",
+        label: "All Weapons",
+        icon: <Sword className="h-4 w-4" />,
+      },
+      {
+        path: "/weapons/create",
+        label: "New Weapon",
         icon: <Plus className="h-4 w-4" />,
       },
     ],
@@ -160,7 +180,7 @@ export function StatusBar({ className, visible }: StatusBarProps) {
           "bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900",
           "border-b-2 border-yellow-500/30",
           "shadow-lg shadow-black/50",
-          className
+          className,
         )}
         data-testid="status-bar"
       >
@@ -184,7 +204,7 @@ export function StatusBar({ className, visible }: StatusBarProps) {
                     `bg-gradient-to-r ${group.color}`,
                     "text-white",
                     isActive && `shadow-lg ${group.glowColor}`,
-                    isOpen && "ring-2 ring-white/50"
+                    isOpen && "ring-2 ring-white/50",
                   )}
                 >
                   {/* Animated icon */}
@@ -226,7 +246,7 @@ export function StatusBar({ className, visible }: StatusBarProps) {
                         "bg-slate-800/95 backdrop-blur-sm",
                         "border border-slate-600/50 rounded-lg",
                         "shadow-xl shadow-black/50",
-                        "overflow-hidden"
+                        "overflow-hidden",
                       )}
                     >
                       {group.items.map((item, index) => (
@@ -244,7 +264,7 @@ export function StatusBar({ className, visible }: StatusBarProps) {
                             `hover:${group.color}`,
                             isItemActive(item)
                               ? `bg-gradient-to-r ${group.color} text-white`
-                              : "text-slate-200 hover:text-white"
+                              : "text-slate-200 hover:text-white",
                           )}
                         >
                           <span

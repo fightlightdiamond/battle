@@ -3,11 +3,19 @@
  * Using fast-check for property-based testing
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import * as fc from "fast-check";
+import "fake-indexeddb/auto";
 import { useBattleStore } from "./battleStore";
 import { BATTLE_PARTICIPANTS, BATTLE_PHASES } from "../types";
 import type { Card } from "../../cards/types";
+
+// Mock OPFS since it's not available in Node.js
+vi.mock("../../cards/services/imageStorage", () => ({
+  saveImage: vi.fn().mockResolvedValue("test-image.png"),
+  deleteImage: vi.fn().mockResolvedValue(true),
+  getImageUrl: vi.fn().mockResolvedValue("blob:test-url"),
+}));
 
 /**
  * Arbitrary generator for Card (from cards feature)
@@ -60,17 +68,19 @@ describe("battleStore", () => {
    * SHALL remain unchanged.
    */
   describe("Property 1: Card Selection Prevents Duplicates", () => {
-    it("selecting the same card as opponent when already challenger returns false and state unchanged", () => {
-      fc.assert(
-        fc.property(cardArb, (card) => {
+    it("selecting the same card as opponent when already challenger returns false and state unchanged", async () => {
+      await fc.assert(
+        fc.asyncProperty(cardArb, async (card) => {
           useBattleStore.getState().resetBattle();
 
           // Select card as challenger
-          const result1 = useBattleStore.getState().selectChallenger(card);
+          const result1 = await useBattleStore
+            .getState()
+            .selectChallenger(card);
           expect(result1).toBe(true);
 
           // Try to select same card as opponent
-          const result2 = useBattleStore.getState().selectOpponent(card);
+          const result2 = await useBattleStore.getState().selectOpponent(card);
           expect(result2).toBe(false);
 
           // Verify opponent is still null
@@ -78,21 +88,23 @@ describe("battleStore", () => {
           expect(state.opponent).toBeNull();
           expect(state.challenger?.id).toBe(card.id);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
-    it("selecting the same card as challenger when already opponent returns false and state unchanged", () => {
-      fc.assert(
-        fc.property(cardArb, (card) => {
+    it("selecting the same card as challenger when already opponent returns false and state unchanged", async () => {
+      await fc.assert(
+        fc.asyncProperty(cardArb, async (card) => {
           useBattleStore.getState().resetBattle();
 
           // Select card as opponent
-          const result1 = useBattleStore.getState().selectOpponent(card);
+          const result1 = await useBattleStore.getState().selectOpponent(card);
           expect(result1).toBe(true);
 
           // Try to select same card as challenger
-          const result2 = useBattleStore.getState().selectChallenger(card);
+          const result2 = await useBattleStore
+            .getState()
+            .selectChallenger(card);
           expect(result2).toBe(false);
 
           // Verify challenger is still null
@@ -100,31 +112,34 @@ describe("battleStore", () => {
           expect(state.challenger).toBeNull();
           expect(state.opponent?.id).toBe(card.id);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
-    it("selecting different cards succeeds", () => {
-      fc.assert(
-        fc.property(twoDistinctCardsArb, ([challengerCard, opponentCard]) => {
-          useBattleStore.getState().resetBattle();
+    it("selecting different cards succeeds", async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          twoDistinctCardsArb,
+          async ([challengerCard, opponentCard]) => {
+            useBattleStore.getState().resetBattle();
 
-          // Select different cards
-          const result1 = useBattleStore
-            .getState()
-            .selectChallenger(challengerCard);
-          const result2 = useBattleStore
-            .getState()
-            .selectOpponent(opponentCard);
+            // Select different cards
+            const result1 = await useBattleStore
+              .getState()
+              .selectChallenger(challengerCard);
+            const result2 = await useBattleStore
+              .getState()
+              .selectOpponent(opponentCard);
 
-          expect(result1).toBe(true);
-          expect(result2).toBe(true);
+            expect(result1).toBe(true);
+            expect(result2).toBe(true);
 
-          const state = useBattleStore.getState();
-          expect(state.challenger?.id).toBe(challengerCard.id);
-          expect(state.opponent?.id).toBe(opponentCard.id);
-        }),
-        { numRuns: 100 }
+            const state = useBattleStore.getState();
+            expect(state.challenger?.id).toBe(challengerCard.id);
+            expect(state.opponent?.id).toBe(opponentCard.id);
+          },
+        ),
+        { numRuns: 100 },
       );
     });
   });
@@ -145,63 +160,71 @@ describe("battleStore", () => {
       expect(useBattleStore.getState().phase).toBe(BATTLE_PHASES.SETUP);
     });
 
-    it("phase is 'setup' when only challenger is selected", () => {
-      fc.assert(
-        fc.property(cardArb, (card) => {
+    it("phase is 'setup' when only challenger is selected", async () => {
+      await fc.assert(
+        fc.asyncProperty(cardArb, async (card) => {
           useBattleStore.getState().resetBattle();
-          useBattleStore.getState().selectChallenger(card);
+          await useBattleStore.getState().selectChallenger(card);
           expect(useBattleStore.getState().phase).toBe(BATTLE_PHASES.SETUP);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
-    it("phase is 'setup' when only opponent is selected", () => {
-      fc.assert(
-        fc.property(cardArb, (card) => {
+    it("phase is 'setup' when only opponent is selected", async () => {
+      await fc.assert(
+        fc.asyncProperty(cardArb, async (card) => {
           useBattleStore.getState().resetBattle();
-          useBattleStore.getState().selectOpponent(card);
+          await useBattleStore.getState().selectOpponent(card);
           expect(useBattleStore.getState().phase).toBe(BATTLE_PHASES.SETUP);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
-    it("phase is 'ready' when both cards are selected", () => {
-      fc.assert(
-        fc.property(twoDistinctCardsArb, ([challengerCard, opponentCard]) => {
-          useBattleStore.getState().resetBattle();
-          useBattleStore.getState().selectChallenger(challengerCard);
-          useBattleStore.getState().selectOpponent(opponentCard);
-          expect(useBattleStore.getState().phase).toBe(BATTLE_PHASES.READY);
-        }),
-        { numRuns: 100 }
-      );
-    });
-
-    it("phase transitions to 'fighting' after startBattle()", () => {
-      fc.assert(
-        fc.property(twoDistinctCardsArb, ([challengerCard, opponentCard]) => {
-          useBattleStore.getState().resetBattle();
-          useBattleStore.getState().selectChallenger(challengerCard);
-          useBattleStore.getState().selectOpponent(opponentCard);
-          useBattleStore.getState().startBattle();
-          expect(useBattleStore.getState().phase).toBe(BATTLE_PHASES.FIGHTING);
-        }),
-        { numRuns: 100 }
-      );
-    });
-
-    it("phase transitions to 'finished' when a card's HP reaches zero", () => {
-      fc.assert(
-        fc.property(
-          twoDistinctCardsArb.filter(
-            ([c1, c2]) => c1.atk >= c2.hp || c2.atk >= c1.hp
-          ),
-          ([challengerCard, opponentCard]) => {
+    it("phase is 'ready' when both cards are selected", async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          twoDistinctCardsArb,
+          async ([challengerCard, opponentCard]) => {
             useBattleStore.getState().resetBattle();
-            useBattleStore.getState().selectChallenger(challengerCard);
-            useBattleStore.getState().selectOpponent(opponentCard);
+            await useBattleStore.getState().selectChallenger(challengerCard);
+            await useBattleStore.getState().selectOpponent(opponentCard);
+            expect(useBattleStore.getState().phase).toBe(BATTLE_PHASES.READY);
+          },
+        ),
+        { numRuns: 100 },
+      );
+    });
+
+    it("phase transitions to 'fighting' after startBattle()", async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          twoDistinctCardsArb,
+          async ([challengerCard, opponentCard]) => {
+            useBattleStore.getState().resetBattle();
+            await useBattleStore.getState().selectChallenger(challengerCard);
+            await useBattleStore.getState().selectOpponent(opponentCard);
+            useBattleStore.getState().startBattle();
+            expect(useBattleStore.getState().phase).toBe(
+              BATTLE_PHASES.FIGHTING,
+            );
+          },
+        ),
+        { numRuns: 100 },
+      );
+    });
+
+    it("phase transitions to 'finished' when a card's HP reaches zero", async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          twoDistinctCardsArb.filter(
+            ([c1, c2]) => c1.atk >= c2.hp || c2.atk >= c1.hp,
+          ),
+          async ([challengerCard, opponentCard]) => {
+            useBattleStore.getState().resetBattle();
+            await useBattleStore.getState().selectChallenger(challengerCard);
+            await useBattleStore.getState().selectOpponent(opponentCard);
             useBattleStore.getState().startBattle();
 
             // Execute attacks until battle ends
@@ -215,11 +238,11 @@ describe("battleStore", () => {
             }
 
             expect(useBattleStore.getState().phase).toBe(
-              BATTLE_PHASES.FINISHED
+              BATTLE_PHASES.FINISHED,
             );
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
   });
@@ -233,17 +256,17 @@ describe("battleStore", () => {
    * SHALL be by opponent, and vice versa.
    */
   describe("Property 4: Turn Alternation", () => {
-    it("attacker alternates between challenger and opponent after each attack", () => {
-      fc.assert(
-        fc.property(
+    it("attacker alternates between challenger and opponent after each attack", async () => {
+      await fc.assert(
+        fc.asyncProperty(
           twoDistinctCardsArb.chain(([c1, c2]) =>
             fc.tuple(
               fc.constant(c1),
               fc.constant(c2),
-              fc.integer({ min: 2, max: 10 })
-            )
+              fc.integer({ min: 2, max: 10 }),
+            ),
           ),
-          ([challengerCard, opponentCard, numAttacks]) => {
+          async ([challengerCard, opponentCard, numAttacks]) => {
             useBattleStore.getState().resetBattle();
 
             // Use very high HP cards to ensure battle doesn't end early
@@ -252,8 +275,8 @@ describe("battleStore", () => {
             const highHpChallenger = { ...challengerCard, hp: 100000 };
             const highHpOpponent = { ...opponentCard, hp: 100000 };
 
-            useBattleStore.getState().selectChallenger(highHpChallenger);
-            useBattleStore.getState().selectOpponent(highHpOpponent);
+            await useBattleStore.getState().selectChallenger(highHpChallenger);
+            await useBattleStore.getState().selectOpponent(highHpOpponent);
             useBattleStore.getState().startBattle();
 
             // Track attackers
@@ -278,9 +301,9 @@ describe("battleStore", () => {
 
             // First attacker should be challenger
             expect(attackers[0]).toBe(BATTLE_PARTICIPANTS.CHALLENGER);
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
   });
@@ -293,17 +316,17 @@ describe("battleStore", () => {
    * on the battle state (HP values, turn order, and log remain unchanged).
    */
   describe("Property 8: Battle End Disables Attacks", () => {
-    it("executeAttack returns null and state unchanged when phase is 'finished'", () => {
-      fc.assert(
-        fc.property(
+    it("executeAttack returns null and state unchanged when phase is 'finished'", async () => {
+      await fc.assert(
+        fc.asyncProperty(
           twoDistinctCardsArb.map(([c1, c2]) => [
             { ...c1, hp: 1, atk: 100 }, // challenger will be knocked out quickly
             { ...c2, hp: 1000, atk: 100 },
           ]),
-          ([challengerCard, opponentCard]) => {
+          async ([challengerCard, opponentCard]) => {
             useBattleStore.getState().resetBattle();
-            useBattleStore.getState().selectChallenger(challengerCard);
-            useBattleStore.getState().selectOpponent(opponentCard);
+            await useBattleStore.getState().selectChallenger(challengerCard);
+            await useBattleStore.getState().selectOpponent(opponentCard);
             useBattleStore.getState().startBattle();
 
             // Execute attacks until battle ends
@@ -312,7 +335,7 @@ describe("battleStore", () => {
             }
 
             expect(useBattleStore.getState().phase).toBe(
-              BATTLE_PHASES.FINISHED
+              BATTLE_PHASES.FINISHED,
             );
 
             // Capture state before attempting attack
@@ -332,9 +355,9 @@ describe("battleStore", () => {
             expect(stateAfter.opponent?.currentHp).toBe(opponentHpBefore);
             expect(stateAfter.battleLog.length).toBe(logLengthBefore);
             expect(stateAfter.currentAttacker).toBe(currentAttackerBefore);
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -344,18 +367,21 @@ describe("battleStore", () => {
       expect(result).toBeNull();
     });
 
-    it("executeAttack returns null when phase is 'ready'", () => {
-      fc.assert(
-        fc.property(twoDistinctCardsArb, ([challengerCard, opponentCard]) => {
-          useBattleStore.getState().resetBattle();
-          useBattleStore.getState().selectChallenger(challengerCard);
-          useBattleStore.getState().selectOpponent(opponentCard);
+    it("executeAttack returns null when phase is 'ready'", async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          twoDistinctCardsArb,
+          async ([challengerCard, opponentCard]) => {
+            useBattleStore.getState().resetBattle();
+            await useBattleStore.getState().selectChallenger(challengerCard);
+            await useBattleStore.getState().selectOpponent(opponentCard);
 
-          expect(useBattleStore.getState().phase).toBe(BATTLE_PHASES.READY);
-          const result = useBattleStore.getState().executeAttack();
-          expect(result).toBeNull();
-        }),
-        { numRuns: 100 }
+            expect(useBattleStore.getState().phase).toBe(BATTLE_PHASES.READY);
+            const result = useBattleStore.getState().executeAttack();
+            expect(result).toBeNull();
+          },
+        ),
+        { numRuns: 100 },
       );
     });
   });
@@ -368,17 +394,17 @@ describe("battleStore", () => {
    * the isAutoBattle flag SHALL be set to false.
    */
   describe("Property 10: Auto-Battle Stops on Victory", () => {
-    it("isAutoBattle is set to false when battle ends", () => {
-      fc.assert(
-        fc.property(
+    it("isAutoBattle is set to false when battle ends", async () => {
+      await fc.assert(
+        fc.asyncProperty(
           twoDistinctCardsArb.map(([c1, c2]) => [
             { ...c1, hp: 50, atk: 100 }, // Low HP for quick battle
             { ...c2, hp: 50, atk: 100 },
           ]),
-          ([challengerCard, opponentCard]) => {
+          async ([challengerCard, opponentCard]) => {
             useBattleStore.getState().resetBattle();
-            useBattleStore.getState().selectChallenger(challengerCard);
-            useBattleStore.getState().selectOpponent(opponentCard);
+            await useBattleStore.getState().selectChallenger(challengerCard);
+            await useBattleStore.getState().selectOpponent(opponentCard);
             useBattleStore.getState().startBattle();
 
             // Enable auto-battle
@@ -392,44 +418,47 @@ describe("battleStore", () => {
 
             // Verify auto-battle is disabled
             expect(useBattleStore.getState().phase).toBe(
-              BATTLE_PHASES.FINISHED
+              BATTLE_PHASES.FINISHED,
             );
             expect(useBattleStore.getState().isAutoBattle).toBe(false);
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
-    it("toggleAutoBattle only works during fighting phase", () => {
-      fc.assert(
-        fc.property(twoDistinctCardsArb, ([challengerCard, opponentCard]) => {
-          useBattleStore.getState().resetBattle();
+    it("toggleAutoBattle only works during fighting phase", async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          twoDistinctCardsArb,
+          async ([challengerCard, opponentCard]) => {
+            useBattleStore.getState().resetBattle();
 
-          // Try toggle in setup phase
-          useBattleStore.getState().toggleAutoBattle();
-          expect(useBattleStore.getState().isAutoBattle).toBe(false);
+            // Try toggle in setup phase
+            useBattleStore.getState().toggleAutoBattle();
+            expect(useBattleStore.getState().isAutoBattle).toBe(false);
 
-          // Select cards
-          useBattleStore.getState().selectChallenger(challengerCard);
-          useBattleStore.getState().selectOpponent(opponentCard);
+            // Select cards
+            await useBattleStore.getState().selectChallenger(challengerCard);
+            await useBattleStore.getState().selectOpponent(opponentCard);
 
-          // Try toggle in ready phase
-          useBattleStore.getState().toggleAutoBattle();
-          expect(useBattleStore.getState().isAutoBattle).toBe(false);
+            // Try toggle in ready phase
+            useBattleStore.getState().toggleAutoBattle();
+            expect(useBattleStore.getState().isAutoBattle).toBe(false);
 
-          // Start battle
-          useBattleStore.getState().startBattle();
+            // Start battle
+            useBattleStore.getState().startBattle();
 
-          // Toggle should work in fighting phase
-          useBattleStore.getState().toggleAutoBattle();
-          expect(useBattleStore.getState().isAutoBattle).toBe(true);
+            // Toggle should work in fighting phase
+            useBattleStore.getState().toggleAutoBattle();
+            expect(useBattleStore.getState().isAutoBattle).toBe(true);
 
-          // Toggle again
-          useBattleStore.getState().toggleAutoBattle();
-          expect(useBattleStore.getState().isAutoBattle).toBe(false);
-        }),
-        { numRuns: 100 }
+            // Toggle again
+            useBattleStore.getState().toggleAutoBattle();
+            expect(useBattleStore.getState().isAutoBattle).toBe(false);
+          },
+        ),
+        { numRuns: 100 },
       );
     });
   });

@@ -4,6 +4,9 @@
  *
  * Updated for battle-combat-visuals feature with calculateWithDetails
  * Requirements: 4.1, 4.2, 4.3
+ *
+ * Updated for weapon-equipment feature with effective stats calculation
+ * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6
  */
 
 import { describe, it, expect } from "vitest";
@@ -12,9 +15,13 @@ import {
   calculateAttack,
   checkBattleEnd,
   getHpBarColor,
+  cardToBattleCardWithWeapon,
 } from "./battleService";
 import type { BattleCard } from "../types";
 import { BATTLE_RESULTS, COMBAT_CONSTANTS } from "../types";
+import type { Card } from "../../cards/types";
+import type { Weapon } from "../../weapons/types/weapon";
+import { WEAPON_STAT_RANGES } from "../../weapons/types/weapon";
 
 /**
  * Arbitrary generator for BattleCard
@@ -74,7 +81,7 @@ describe("battleService", () => {
           // finalDamage should match result.damage
           expect(result.damageResult!.finalDamage).toBe(result.damage);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -87,7 +94,7 @@ describe("battleService", () => {
 
           expect(result.defenderNewHp).toBe(expectedNewHp);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
   });
@@ -108,9 +115,9 @@ describe("battleService", () => {
           fc.float({ min: Math.fround(50.01), max: 100, noNaN: true }),
           (percentage) => {
             expect(getHpBarColor(percentage)).toBe("green");
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -120,9 +127,9 @@ describe("battleService", () => {
           fc.float({ min: 25, max: 50, noNaN: true }),
           (percentage) => {
             expect(getHpBarColor(percentage)).toBe("yellow");
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -132,9 +139,9 @@ describe("battleService", () => {
           fc.float({ min: 0, max: Math.fround(24.99), noNaN: true }),
           (percentage) => {
             expect(getHpBarColor(percentage)).toBe("red");
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
   });
@@ -155,9 +162,9 @@ describe("battleService", () => {
           (challenger, opponent) => {
             const result = checkBattleEnd(challenger, opponent);
             expect(result).toBe(BATTLE_RESULTS.OPPONENT_WINS);
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -169,9 +176,9 @@ describe("battleService", () => {
           (challenger, opponent) => {
             const result = checkBattleEnd(challenger, opponent);
             expect(result).toBe(BATTLE_RESULTS.CHALLENGER_WINS);
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -183,9 +190,9 @@ describe("battleService", () => {
           (challenger, opponent) => {
             const result = checkBattleEnd(challenger, opponent);
             expect(result).toBeNull();
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
   });
@@ -205,13 +212,14 @@ describe("battleService", () => {
 
           if (result.damageResult!.isCrit) {
             expect(result.damageResult!.critBonus).toBe(
-              result.damageResult!.finalDamage - result.damageResult!.baseDamage
+              result.damageResult!.finalDamage -
+                result.damageResult!.baseDamage,
             );
           } else {
             expect(result.damageResult!.critBonus).toBe(0);
           }
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
   });
@@ -230,13 +238,13 @@ describe("battleService", () => {
           const result = calculateAttack(attacker, defender);
 
           const expectedLifesteal = Math.floor(
-            (result.damage * attacker.lifesteal) / 100
+            (result.damage * attacker.lifesteal) / 100,
           );
 
           expect(result.damageResult!.lifestealAmount).toBe(expectedLifesteal);
           expect(result.lifestealHeal).toBe(expectedLifesteal);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -247,12 +255,12 @@ describe("battleService", () => {
 
           const expectedAttackerHp = Math.min(
             attacker.maxHp,
-            attacker.currentHp + result.lifestealHeal
+            attacker.currentHp + result.lifestealHeal,
           );
 
           expect(result.attackerNewHp).toBe(expectedAttackerHp);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
   });
@@ -280,8 +288,167 @@ describe("battleService", () => {
 
           expect(result.isCritical).toBe(expectedCritical);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
+  });
+});
+
+/**
+ * Arbitrary generator for Card
+ * Generates valid card entities for testing
+ */
+const cardArb: fc.Arbitrary<Card> = fc.record({
+  id: fc.uuid(),
+  name: fc.string({ minLength: 1, maxLength: 50 }),
+  imagePath: fc.constantFrom(null, "test-image.png"),
+  imageUrl: fc.option(fc.webUrl(), { nil: null }),
+  createdAt: fc.integer({ min: 0, max: Date.now() }),
+  updatedAt: fc.integer({ min: 0, max: Date.now() }),
+
+  // Card stats
+  hp: fc.integer({ min: 1, max: 10000 }),
+  atk: fc.integer({ min: 1, max: 1000 }),
+  def: fc.integer({ min: 0, max: 500 }),
+  spd: fc.integer({ min: 1, max: 500 }),
+  critChance: fc.integer({ min: 0, max: 100 }),
+  critDamage: fc.integer({ min: 100, max: 300 }),
+  armorPen: fc.integer({ min: 0, max: 100 }),
+  lifesteal: fc.integer({ min: 0, max: 100 }),
+});
+
+/**
+ * Arbitrary generator for Weapon
+ * Generates valid weapon entities for testing
+ */
+const weaponArb: fc.Arbitrary<Weapon> = fc.record({
+  id: fc.uuid(),
+  name: fc.string({ minLength: 1, maxLength: 50 }),
+  imagePath: fc.constantFrom(null, "weapon-image.png"),
+  imageUrl: fc.option(fc.webUrl(), { nil: null }),
+  createdAt: fc.integer({ min: 0, max: Date.now() }),
+  updatedAt: fc.integer({ min: 0, max: Date.now() }),
+
+  // Weapon stats
+  atk: fc.integer({
+    min: WEAPON_STAT_RANGES.atk.min,
+    max: WEAPON_STAT_RANGES.atk.max,
+  }),
+  critChance: fc.integer({
+    min: WEAPON_STAT_RANGES.critChance.min,
+    max: WEAPON_STAT_RANGES.critChance.max,
+  }),
+  critDamage: fc.integer({
+    min: WEAPON_STAT_RANGES.critDamage.min,
+    max: WEAPON_STAT_RANGES.critDamage.max,
+  }),
+  armorPen: fc.integer({
+    min: WEAPON_STAT_RANGES.armorPen.min,
+    max: WEAPON_STAT_RANGES.armorPen.max,
+  }),
+  lifesteal: fc.integer({
+    min: WEAPON_STAT_RANGES.lifesteal.min,
+    max: WEAPON_STAT_RANGES.lifesteal.max,
+  }),
+});
+
+/**
+ * **Feature: weapon-equipment, Property 1: Weapon creation with valid data persists correctly**
+ * **Validates: Requirements 1.1**
+ *
+ * Note: This test validates that when a card with an equipped weapon enters battle,
+ * the effective stats are correctly calculated by adding weapon stats to card base stats.
+ *
+ * For any card with base stats and equipped weapon with bonus stats, the BattleCard
+ * effective stats should equal base stats + weapon stats for all offensive stats
+ * (atk, critChance, critDamage, armorPen, lifesteal).
+ *
+ * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6
+ */
+describe("Property: Battle effective stats with weapon bonuses", () => {
+  it("property: cardToBattleCardWithWeapon calculates effective stats correctly", () => {
+    fc.assert(
+      fc.property(cardArb, weaponArb, (card, weapon) => {
+        const battleCard = cardToBattleCardWithWeapon(card, weapon);
+
+        // HP should be unchanged (weapons don't affect HP)
+        expect(battleCard.maxHp).toBe(card.hp);
+        expect(battleCard.currentHp).toBe(card.hp);
+
+        // DEF should be unchanged (weapons don't affect DEF)
+        expect(battleCard.def).toBe(card.def);
+
+        // SPD should be unchanged (weapons don't affect SPD)
+        expect(battleCard.spd).toBe(card.spd);
+
+        // ATK should be card ATK + weapon ATK (Requirement 4.2)
+        expect(battleCard.atk).toBe(card.atk + weapon.atk);
+
+        // Crit Chance should be card critChance + weapon critChance (Requirement 4.3)
+        expect(battleCard.critChance).toBe(card.critChance + weapon.critChance);
+
+        // Crit Damage should be card critDamage + weapon critDamage (Requirement 4.4)
+        expect(battleCard.critDamage).toBe(card.critDamage + weapon.critDamage);
+
+        // Armor Pen should be card armorPen + weapon armorPen (Requirement 4.5)
+        expect(battleCard.armorPen).toBe(card.armorPen + weapon.armorPen);
+
+        // Lifesteal should be card lifesteal + weapon lifesteal (Requirement 4.6)
+        expect(battleCard.lifesteal).toBe(card.lifesteal + weapon.lifesteal);
+
+        // ID and name should be preserved from card
+        expect(battleCard.id).toBe(card.id);
+        expect(battleCard.name).toBe(card.name);
+        expect(battleCard.imageUrl).toBe(card.imageUrl);
+      }),
+      { numRuns: 100 },
+    );
+  });
+
+  it("property: cardToBattleCardWithWeapon with null weapon returns base stats", () => {
+    fc.assert(
+      fc.property(cardArb, (card) => {
+        const battleCard = cardToBattleCardWithWeapon(card, null);
+
+        // All stats should equal card base stats when no weapon equipped
+        expect(battleCard.maxHp).toBe(card.hp);
+        expect(battleCard.currentHp).toBe(card.hp);
+        expect(battleCard.atk).toBe(card.atk);
+        expect(battleCard.def).toBe(card.def);
+        expect(battleCard.spd).toBe(card.spd);
+        expect(battleCard.critChance).toBe(card.critChance);
+        expect(battleCard.critDamage).toBe(card.critDamage);
+        expect(battleCard.armorPen).toBe(card.armorPen);
+        expect(battleCard.lifesteal).toBe(card.lifesteal);
+
+        // ID and name should be preserved
+        expect(battleCard.id).toBe(card.id);
+        expect(battleCard.name).toBe(card.name);
+      }),
+      { numRuns: 100 },
+    );
+  });
+
+  it("property: effective stats are additive (commutative)", () => {
+    fc.assert(
+      fc.property(cardArb, weaponArb, (card, weapon) => {
+        const battleCard = cardToBattleCardWithWeapon(card, weapon);
+
+        // Verify additive property: card.stat + weapon.stat = battleCard.stat
+        // This should hold regardless of the order of addition
+        const expectedAtk = card.atk + weapon.atk;
+        const expectedCritChance = card.critChance + weapon.critChance;
+        const expectedCritDamage = card.critDamage + weapon.critDamage;
+        const expectedArmorPen = card.armorPen + weapon.armorPen;
+        const expectedLifesteal = card.lifesteal + weapon.lifesteal;
+
+        expect(battleCard.atk).toBe(expectedAtk);
+        expect(battleCard.critChance).toBe(expectedCritChance);
+        expect(battleCard.critDamage).toBe(expectedCritDamage);
+        expect(battleCard.armorPen).toBe(expectedArmorPen);
+        expect(battleCard.lifesteal).toBe(expectedLifesteal);
+      }),
+      { numRuns: 100 },
+    );
   });
 });

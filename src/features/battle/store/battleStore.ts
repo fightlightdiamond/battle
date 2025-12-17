@@ -18,7 +18,11 @@ import {
   BATTLE_RESULTS,
   COMBAT_CONSTANTS,
 } from "../types/battle";
-import { calculateAttack, checkBattleEnd } from "../services/battleService";
+import {
+  calculateAttack,
+  checkBattleEnd,
+  cardToBattleCardWithEquipment,
+} from "../services/battleService";
 import type { Card } from "../../cards/types";
 
 /**
@@ -44,8 +48,8 @@ export interface BattleState {
  * Battle store actions interface
  */
 export interface BattleActions {
-  selectChallenger: (card: Card) => boolean;
-  selectOpponent: (card: Card) => boolean;
+  selectChallenger: (card: Card) => Promise<boolean>;
+  selectOpponent: (card: Card) => Promise<boolean>;
   setBattleMode: (mode: BattleMode) => void;
   startBattle: () => void;
   executeAttack: () => AttackResult | null;
@@ -57,34 +61,6 @@ export interface BattleActions {
  * Combined store interface
  */
 export type BattleStoreState = BattleState & BattleActions;
-
-/**
- * Convert a Card to a BattleCard
- * Maps all Card stats to BattleCard for combat
- * Requirements: 1.1, 7.1-7.6
- */
-function cardToBattleCard(card: Card): Readonly<BattleCard> {
-  return {
-    id: card.id,
-    name: card.name,
-    imageUrl: card.imageUrl,
-
-    // HP tracking
-    maxHp: card.hp,
-    currentHp: card.hp,
-
-    // Core Stats (Tier 1)
-    atk: card.atk,
-    def: card.def,
-    spd: card.spd,
-
-    // Combat Stats (Tier 2)
-    critChance: card.critChance,
-    critDamage: card.critDamage,
-    armorPen: card.armorPen,
-    lifesteal: card.lifesteal,
-  };
-}
 
 /**
  * Generate a unique ID for battle log entries
@@ -100,7 +76,7 @@ function createAttackLogEntry(
   attackerName: string,
   defenderName: string,
   damage: number,
-  defenderRemainingHp: number
+  defenderRemainingHp: number,
 ): Readonly<BattleLogEntry> {
   return {
     id: generateLogId(),
@@ -142,7 +118,7 @@ const createInitialState = (): BattleState => ({
 function getParticipants(
   currentAttacker: CurrentAttacker,
   challenger: Readonly<BattleCard>,
-  opponent: Readonly<BattleCard>
+  opponent: Readonly<BattleCard>,
 ) {
   const isChallengerAttacking =
     currentAttacker === BATTLE_PARTICIPANTS.CHALLENGER;
@@ -167,7 +143,7 @@ const getNextAttacker = (current: CurrentAttacker): CurrentAttacker =>
 const getWinnerName = (
   result: BattleResult,
   challenger: Readonly<BattleCard>,
-  opponent: Readonly<BattleCard>
+  opponent: Readonly<BattleCard>,
 ): string =>
   result === BATTLE_RESULTS.CHALLENGER_WINS ? challenger.name : opponent.name;
 
@@ -177,11 +153,12 @@ const getWinnerName = (
 export const useBattleStore = create<BattleStoreState>((set, get) => ({
   ...createInitialState(),
 
-  selectChallenger: (card: Card): boolean => {
+  selectChallenger: async (card: Card): Promise<boolean> => {
     const { opponent } = get();
     if (opponent?.id === card.id) return false;
 
-    const battleCard = cardToBattleCard(card);
+    // Load equipment and convert to battle card with weapon bonuses
+    const battleCard = await cardToBattleCardWithEquipment(card);
     set((state) => ({
       challenger: battleCard,
       phase: state.opponent ? BATTLE_PHASES.READY : BATTLE_PHASES.SETUP,
@@ -189,11 +166,12 @@ export const useBattleStore = create<BattleStoreState>((set, get) => ({
     return true;
   },
 
-  selectOpponent: (card: Card): boolean => {
+  selectOpponent: async (card: Card): Promise<boolean> => {
     const { challenger } = get();
     if (challenger?.id === card.id) return false;
 
-    const battleCard = cardToBattleCard(card);
+    // Load equipment and convert to battle card with weapon bonuses
+    const battleCard = await cardToBattleCardWithEquipment(card);
     set((state) => ({
       opponent: battleCard,
       phase: state.challenger ? BATTLE_PHASES.READY : BATTLE_PHASES.SETUP,
@@ -228,7 +206,7 @@ export const useBattleStore = create<BattleStoreState>((set, get) => ({
     const { attacker, defender, isChallengerAttacking } = getParticipants(
       currentAttacker,
       challenger,
-      opponent
+      opponent,
     );
 
     // Calculate attack (pure)
@@ -262,7 +240,7 @@ export const useBattleStore = create<BattleStoreState>((set, get) => ({
       attacker.name,
       defender.name,
       attackResult.damage,
-      attackResult.defenderNewHp
+      attackResult.defenderNewHp,
     );
 
     // Update state immutably
@@ -275,8 +253,8 @@ export const useBattleStore = create<BattleStoreState>((set, get) => ({
       if (battleResult) {
         newBattleLog.push(
           createVictoryLogEntry(
-            getWinnerName(battleResult, newChallenger, newOpponent)
-          )
+            getWinnerName(battleResult, newChallenger, newOpponent),
+          ),
         );
       }
 
@@ -326,7 +304,7 @@ export const selectIsBattleInProgress = (state: BattleState): boolean =>
   state.phase === BATTLE_PHASES.FIGHTING;
 
 export const selectWinner = (
-  state: BattleState
+  state: BattleState,
 ): Readonly<BattleCard> | null => {
   if (state.phase !== BATTLE_PHASES.FINISHED || !state.result) return null;
   return state.result === BATTLE_RESULTS.CHALLENGER_WINS
@@ -335,7 +313,7 @@ export const selectWinner = (
 };
 
 export const selectLoser = (
-  state: BattleState
+  state: BattleState,
 ): Readonly<BattleCard> | null => {
   if (state.phase !== BATTLE_PHASES.FINISHED || !state.result) return null;
   return state.result === BATTLE_RESULTS.CHALLENGER_WINS
@@ -344,7 +322,7 @@ export const selectLoser = (
 };
 
 export const selectCurrentAttackerCard = (
-  state: BattleState
+  state: BattleState,
 ): Readonly<BattleCard> | null => {
   if (!state.challenger || !state.opponent) return null;
   return state.currentAttacker === BATTLE_PARTICIPANTS.CHALLENGER
@@ -353,7 +331,7 @@ export const selectCurrentAttackerCard = (
 };
 
 export const selectCurrentDefenderCard = (
-  state: BattleState
+  state: BattleState,
 ): Readonly<BattleCard> | null => {
   if (!state.challenger || !state.opponent) return null;
   return state.currentAttacker === BATTLE_PARTICIPANTS.CHALLENGER
@@ -362,7 +340,7 @@ export const selectCurrentDefenderCard = (
 };
 
 export const selectLatestLogEntry = (
-  state: BattleState
+  state: BattleState,
 ): Readonly<BattleLogEntry> | null =>
   state.battleLog.length > 0
     ? state.battleLog[state.battleLog.length - 1]
@@ -381,7 +359,7 @@ export const selectOpponentInDanger = (state: BattleState): boolean =>
     : false;
 
 export const selectDangerStatus = (
-  state: BattleState
+  state: BattleState,
 ): Readonly<{ challengerInDanger: boolean; opponentInDanger: boolean }> => ({
   challengerInDanger: selectChallengerInDanger(state),
   opponentInDanger: selectOpponentInDanger(state),

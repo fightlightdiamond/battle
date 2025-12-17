@@ -32,6 +32,7 @@ export const BATTLE_RESULTS = {
 /**
  * Represents a card in battle with combat-relevant stats
  * Updated for Tier-Based Stat System (Requirements: 1.1, 7.1-7.6)
+ * Updated for Weapon Attack Range (Requirements: 2.2, 2.3)
  */
 export interface BattleCard {
   id: string;
@@ -52,6 +53,9 @@ export interface BattleCard {
   critDamage: number; // 100+ (150 = 1.5x multiplier)
   armorPen: number; // 0-100 (percentage)
   lifesteal: number; // 0-100 (percentage)
+
+  // Range Stats (Weapon Attack Range)
+  effectiveRange: number; // Base (1) + weapon attackRange bonus (Requirements: 2.2, 2.3)
 }
 
 /**

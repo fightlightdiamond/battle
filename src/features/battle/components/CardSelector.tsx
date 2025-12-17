@@ -22,8 +22,8 @@ export interface CardSelectorProps {
   selectedCardId: string | null;
   /** Card ID that is already selected by the other selector (to prevent duplicates) */
   otherSelectedCardId: string | null;
-  /** Callback when a card is selected */
-  onSelect: (card: CardType) => boolean;
+  /** Callback when a card is selected - can be sync or async */
+  onSelect: (card: CardType) => boolean | Promise<boolean>;
   /** Loading state */
   isLoading?: boolean;
   /** Label for this selector (e.g., "Challenger", "Opponent") */
@@ -45,7 +45,7 @@ export function CardSelector({
   position,
 }: CardSelectorProps) {
   const handleCardClick = useCallback(
-    (card: CardType) => {
+    async (card: CardType) => {
       // Check if card is already selected by the other selector
       if (card.id === otherSelectedCardId) {
         toast.warning("Card already selected", {
@@ -55,8 +55,8 @@ export function CardSelector({
         return;
       }
 
-      // Try to select the card
-      const success = onSelect(card);
+      // Try to select the card (handle both sync and async callbacks)
+      const success = await Promise.resolve(onSelect(card));
       if (!success) {
         toast.warning("Cannot select card", {
           description: "This card cannot be selected at this time.",
@@ -64,7 +64,7 @@ export function CardSelector({
         });
       }
     },
-    [otherSelectedCardId, onSelect]
+    [otherSelectedCardId, onSelect],
   );
 
   const selectedCard = cards.find((c) => c.id === selectedCardId);
@@ -75,7 +75,7 @@ export function CardSelector({
       <div
         className={cn(
           "flex items-center gap-2 text-lg font-semibold",
-          position === "left" ? "justify-start" : "justify-end"
+          position === "left" ? "justify-start" : "justify-end",
         )}
       >
         <span>{label}</span>
@@ -128,7 +128,7 @@ function SelectedCardPreview({ card, position }: SelectedCardPreviewProps) {
       <Card
         className={cn(
           "overflow-hidden border-2 border-dashed border-muted-foreground/30",
-          "min-h-[200px] flex items-center justify-center"
+          "min-h-[200px] flex items-center justify-center",
         )}
       >
         <div className="text-center text-muted-foreground">
@@ -143,7 +143,7 @@ function SelectedCardPreview({ card, position }: SelectedCardPreviewProps) {
     <Card
       className={cn(
         "overflow-hidden border-2 border-primary py-0",
-        "ring-2 ring-primary/20 shadow-lg"
+        "ring-2 ring-primary/20 shadow-lg",
       )}
     >
       <div className="aspect-[3/4] relative bg-muted max-h-[200px]">
@@ -163,7 +163,7 @@ function SelectedCardPreview({ card, position }: SelectedCardPreviewProps) {
           className={cn(
             "absolute top-2 bg-primary text-primary-foreground",
             "px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1",
-            position === "left" ? "left-2" : "right-2"
+            position === "left" ? "left-2" : "right-2",
           )}
         >
           <Check className="h-3 w-3" />
@@ -221,7 +221,7 @@ function SelectableCard({
         isDisabled && "opacity-50 cursor-not-allowed hover:scale-100",
         !isSelected &&
           !isDisabled &&
-          "border-transparent hover:border-primary/50"
+          "border-transparent hover:border-primary/50",
       )}
     >
       {/* Card image */}

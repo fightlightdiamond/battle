@@ -40,7 +40,7 @@ const activeBuffArb: fc.Arbitrary<ActiveBuff> = fc.record({
     "critChance",
     "critDamage",
     "armorPen",
-    "lifesteal"
+    "lifesteal",
   ) as fc.Arbitrary<keyof CombatantStats>,
   value: fc.integer({ min: 1, max: 1000 }),
   isPercentage: fc.boolean(),
@@ -60,6 +60,7 @@ const combatantArb: fc.Arbitrary<Combatant> = fc.record({
   maxHp: fc.integer({ min: 1, max: 9999 }),
   buffs: fc.array(activeBuffArb, { maxLength: 5 }),
   isDefeated: fc.boolean(),
+  effectiveRange: fc.integer({ min: 1, max: 7 }), // Base (1) + weapon attackRange (0-6)
 });
 
 const attackLogDataArb: fc.Arbitrary<AttackLogData> = fc.record({
@@ -92,7 +93,7 @@ const battleLogEntryArb: fc.Arbitrary<BattleLogEntry> = fc.oneof(
     timestamp: fc.integer({ min: 0 }),
     type: fc.constant("buff" as const),
     message: fc.string({ minLength: 1, maxLength: 200 }),
-  })
+  }),
 );
 
 const battleResultArb: fc.Arbitrary<BattleResult> = fc.record({
@@ -107,7 +108,7 @@ const battlePhaseArb: fc.Arbitrary<BattlePhase> = fc.constantFrom(
   "setup",
   "ready",
   "fighting",
-  "finished"
+  "finished",
 );
 
 const battleStateArb: fc.Arbitrary<BattleState> = fc.record({
@@ -145,7 +146,7 @@ describe("Serializer", () => {
         // Deep equality check
         expect(deserialized).toEqual(originalState);
       }),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -153,33 +154,33 @@ describe("Serializer", () => {
   describe("deserialize validation", () => {
     it("throws on invalid JSON", () => {
       expect(() => Serializer.deserialize("not valid json")).toThrow(
-        "Invalid JSON string"
+        "Invalid JSON string",
       );
     });
 
     it("throws on non-object input", () => {
       expect(() => Serializer.deserialize('"string"')).toThrow(
-        "BattleState must be an object"
+        "BattleState must be an object",
       );
       expect(() => Serializer.deserialize("123")).toThrow(
-        "BattleState must be an object"
+        "BattleState must be an object",
       );
       expect(() => Serializer.deserialize("null")).toThrow(
-        "BattleState must be an object"
+        "BattleState must be an object",
       );
     });
 
     it("throws on invalid phase", () => {
       const invalidState = { phase: "invalid" };
       expect(() =>
-        Serializer.deserialize(JSON.stringify(invalidState))
+        Serializer.deserialize(JSON.stringify(invalidState)),
       ).toThrow("Invalid phase");
     });
 
     it("throws on missing required fields", () => {
       const incompleteState = { phase: "setup" };
       expect(() =>
-        Serializer.deserialize(JSON.stringify(incompleteState))
+        Serializer.deserialize(JSON.stringify(incompleteState)),
       ).toThrow();
     });
   });

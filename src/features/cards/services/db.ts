@@ -2,6 +2,17 @@ import { openDB } from "idb";
 import type { DBSchema, IDBPDatabase } from "idb";
 import type { Card } from "../types";
 import type { SyncQueueItem } from "./syncQueue";
+import type { Weapon } from "../../weapons/types/weapon";
+
+// Stored weapon type (without runtime imageUrl)
+export type StoredWeapon = Omit<Weapon, "imageUrl">;
+
+// Card-Weapon equipment relationship
+export interface CardEquipment {
+  cardId: string;
+  weaponId: string | null;
+  equippedAt: number | null;
+}
 
 // Database schema definition
 interface CardGameDB extends DBSchema {
@@ -21,10 +32,25 @@ interface CardGameDB extends DBSchema {
       "by-timestamp": number;
     };
   };
+  weapons: {
+    key: string;
+    value: StoredWeapon;
+    indexes: {
+      "by-name": string;
+      "by-createdAt": number;
+    };
+  };
+  cardEquipment: {
+    key: string; // cardId
+    value: CardEquipment;
+    indexes: {
+      "by-weapon": string;
+    };
+  };
 }
 
 const DB_NAME = "card-game-db";
-const DB_VERSION = 2; // Bumped for syncQueue store
+const DB_VERSION = 3; // Bumped for weapons and cardEquipment stores
 
 let dbInstance: IDBPDatabase<CardGameDB> | null = null;
 
@@ -52,6 +78,17 @@ export async function getDB(): Promise<IDBPDatabase<CardGameDB>> {
         });
         syncQueueStore.createIndex("by-cardId", "cardId");
         syncQueueStore.createIndex("by-timestamp", "timestamp");
+      }
+      // Version 3: Add weapons and cardEquipment stores
+      if (oldVersion < 3) {
+        const weaponStore = db.createObjectStore("weapons", { keyPath: "id" });
+        weaponStore.createIndex("by-name", "name");
+        weaponStore.createIndex("by-createdAt", "createdAt");
+
+        const equipmentStore = db.createObjectStore("cardEquipment", {
+          keyPath: "cardId",
+        });
+        equipmentStore.createIndex("by-weapon", "weaponId");
       }
     },
     blocked() {

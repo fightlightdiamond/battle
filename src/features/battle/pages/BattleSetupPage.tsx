@@ -72,18 +72,18 @@ export function BattleSetupPage({ mode = "battle" }: BattleSetupPageProps) {
 
   // Handle challenger selection
   const handleSelectChallenger = useCallback(
-    (card: Card): boolean => {
+    async (card: Card): Promise<boolean> => {
       return selectChallenger(card);
     },
-    [selectChallenger]
+    [selectChallenger],
   );
 
   // Handle opponent selection
   const handleSelectOpponent = useCallback(
-    (card: Card): boolean => {
+    async (card: Card): Promise<boolean> => {
       return selectOpponent(card);
     },
-    [selectOpponent]
+    [selectOpponent],
   );
 
   // Handle start battle (practice mode)
@@ -273,12 +273,12 @@ export function BattleSetupPage({ mode = "battle" }: BattleSetupPageProps) {
                     : "both cards"
                 } to continue`
               : !challenger
-              ? `Select ${
-                  mode === "battle" ? "a challenger" : "Card 1"
-                } to continue`
-              : `Select ${
-                  mode === "battle" ? "an opponent" : "Card 2"
-                } to continue`}
+                ? `Select ${
+                    mode === "battle" ? "a challenger" : "Card 1"
+                  } to continue`
+                : `Select ${
+                    mode === "battle" ? "an opponent" : "Card 2"
+                  } to continue`}
           </p>
         )}
       </div>

@@ -5,6 +5,9 @@ export {
   checkBattleEnd,
   calculateHpPercentage,
   getHpBarColor,
+  cardToBattleCardWithWeapon,
+  cardToBattleCardWithEquipment,
+  loadCardWeapon,
 } from "./battleService";
 
 // Battle recorder exports

@@ -88,6 +88,7 @@ export function ArenaBattlePage() {
   const loser = useArenaBattleStore(selectLoser);
   const canMove = useArenaBattleStore(selectCanMove);
   const canAttack = useArenaBattleStore(selectCanAttack);
+
   const isInCombat = useArenaBattleStore(selectIsInCombat);
   const challengerInDanger = useArenaBattleStore(selectChallengerInDanger);
   const opponentInDanger = useArenaBattleStore(selectOpponentInDanger);

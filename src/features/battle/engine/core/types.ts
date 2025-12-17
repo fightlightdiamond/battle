@@ -36,6 +36,8 @@ export interface Combatant {
   readonly maxHp: number;
   readonly buffs: readonly ActiveBuff[];
   readonly isDefeated: boolean;
+  /** Effective attack range: base (1) + weapon attackRange bonus (Requirements: 2.2) */
+  readonly effectiveRange: number;
 }
 
 // ============================================================================

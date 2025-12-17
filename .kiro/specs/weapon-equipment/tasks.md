@@ -1,0 +1,190 @@
+# Implementation Plan
+
+- [x] 1. Set up Weapon feature structure and types
+  - [x] 1.1 Create weapon types and interfaces
+    - Create `src/features/weapons/types/weapon.ts` with Weapon, WeaponStats, WeaponFormInput interfaces
+    - Create `src/features/weapons/types/index.ts` for exports
+    - Define DEFAULT_WEAPON_STATS constant
+    - _Requirements: 1.1, 1.3_
+  - [x] 1.2 Write property test for default stats
+    - **Property 3: Default stats applied when not specified**
+    - **Validates: Requirements 1.3**
+  - [x] 1.3 Create weapon validation schema
+    - Create Zod schema for weapon form validation
+    - Implement name validation (non-empty, non-whitespace)
+    - Implement stat range validation
+    - _Requirements: 1.2_
+  - [x] 1.4 Write property test for name validation
+    - **Property 2: Empty/whitespace weapon names are rejected**
+    - **Validates: Requirements 1.2**
+
+- [x] 2. Implement WeaponService for IndexedDB
+  - [x] 2.1 Set up IndexedDB schema for weapons
+    - Update `src/features/cards/services/db.ts` to add weapons store
+    - Add indexes for weapon queries
+    - _Requirements: 1.1, 5.1_
+  - [x] 2.2 Implement WeaponService CRUD operations
+    - Create `src/features/weapons/services/weaponService.ts`
+    - Implement getAll, getById, create, update, delete methods
+    - Apply default stats when not provided
+    - Generate unique IDs with crypto.randomUUID()
+    - _Requirements: 1.1, 1.3, 1.4, 2.3_
+  - [x] 2.3 Write property test for unique IDs
+    - **Property 4: Unique IDs for all weapons**
+    - **Validates: Requirements 1.4**
+  - [x] 2.4 Write property test for update timestamp
+    - **Property 5: Weapon update persists changes with new timestamp**
+    - **Validates: Requirements 2.3**
+  - [x] 2.5 Write property test for weapon serialization round-trip
+    - **Property 11: Weapon serialization round-trip**
+    - **Validates: Requirements 5.1, 5.2, 5.3**
+
+- [x] 3. Implement Equipment types and service
+  - [x] 3.1 Create equipment types
+    - Create `src/features/weapons/types/equipment.ts` with CardEquipment, EffectiveCardStats
+    - Export from types/index.ts
+    - _Requirements: 3.2, 4.1_
+  - [x] 3.2 Set up IndexedDB schema for cardEquipment
+    - Add cardEquipment store to DB schema
+    - Add index by-weapon for reverse lookup
+    - _Requirements: 3.2, 6.1_
+  - [x] 3.3 Implement EquipmentService
+    - Create `src/features/weapons/services/equipmentService.ts`
+    - Implement getEquipment, equipWeapon, unequipWeapon
+    - Implement findCardByWeaponId for reverse lookup
+    - Implement calculateEffectiveStats function
+    - _Requirements: 3.2, 3.3, 3.4, 3.5_
+  - [x] 3.4 Write property test for effective stats calculation
+    - **Property 8: Effective stats calculation is additive**
+    - **Validates: Requirements 3.3, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6**
+  - [x] 3.5 Write property test for equipment association
+    - **Property 7: Equipment association persists correctly**
+    - **Validates: Requirements 3.2**
+  - [x] 3.6 Write property test for unequip reverts stats
+    - **Property 9: Unequip reverts to base stats**
+    - **Validates: Requirements 3.4**
+  - [x] 3.7 Write property test for weapon exclusivity
+    - **Property 10: Weapon exclusivity - one card at a time**
+    - **Validates: Requirements 3.5**
+  - [x] 3.8 Write property test for equipment state round-trip
+    - **Property 12: Equipment state serialization round-trip**
+    - **Validates: Requirements 6.1, 6.2, 6.3**
+
+- [x] 4. Implement weapon deletion with unequip cascade
+  - [x] 4.1 Update WeaponService.delete to unequip first
+    - Check if weapon is equipped to any card
+    - Unequip before deleting
+    - _Requirements: 2.4_
+  - [x] 4.2 Write property test for delete cascade
+    - **Property 6: Deleting equipped weapon unequips from card**
+    - **Validates: Requirements 2.4**
+
+- [x] 5. Checkpoint - Ensure all service tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 6. Create Weapon Zustand store
+  - [x] 6.1 Implement weaponStore
+    - Create `src/features/weapons/store/weaponStore.ts`
+    - Implement state: weapons, selectedWeapon, loading states, error
+    - Implement actions: setWeapons, addWeapon, updateWeapon, removeWeapon
+    - _Requirements: 2.1, 2.2, 2.3_
+  - [x] 6.2 Create weapon hooks
+    - Create `src/features/weapons/hooks/useWeapons.ts` for list
+    - Create `src/features/weapons/hooks/useWeapon.ts` for single weapon
+    - Create `src/features/weapons/hooks/useCreateWeapon.ts`
+    - Create `src/features/weapons/hooks/useUpdateWeapon.ts`
+    - Create `src/features/weapons/hooks/useDeleteWeapon.ts`
+    - _Requirements: 1.1, 2.1, 2.2, 2.3_
+
+- [x] 7. Create Equipment store and hooks
+  - [x] 7.1 Implement equipmentStore
+    - Create `src/features/weapons/store/equipmentStore.ts`
+    - State: cardEquipments map, loading states
+    - Actions: setEquipment, equipWeapon, unequipWeapon
+    - _Requirements: 3.2, 3.4_
+  - [x] 7.2 Create equipment hooks
+    - Create `src/features/weapons/hooks/useCardEquipment.ts`
+    - Create `src/features/weapons/hooks/useEquipWeapon.ts`
+    - Create `src/features/weapons/hooks/useUnequipWeapon.ts`
+    - _Requirements: 3.2, 3.4_
+
+- [x] 8. Create Weapon UI components
+  - [x] 8.1 Create WeaponForm component
+    - Create `src/features/weapons/components/WeaponForm.tsx`
+    - Form fields: name, image, atk, critChance, critDamage, armorPen, lifesteal
+    - Use Zod validation schema
+    - _Requirements: 1.1, 1.2_
+  - [x] 8.2 Create WeaponCard component
+    - Create `src/features/weapons/components/WeaponCard.tsx`
+    - Display weapon name, image, and stats
+    - _Requirements: 2.1_
+  - [x] 8.3 Create WeaponList component
+    - Create `src/features/weapons/components/WeaponList.tsx`
+    - Grid display of WeaponCard components
+    - _Requirements: 2.1_
+  - [x] 8.4 Create WeaponSelector component
+    - Create `src/features/weapons/components/WeaponSelector.tsx`
+    - Dropdown/modal to select weapon for equipping
+    - _Requirements: 3.2_
+
+- [x] 9. Create Weapon pages
+  - [x] 9.1 Create WeaponListPage
+    - Create `src/features/weapons/pages/WeaponListPage.tsx`
+    - Display all weapons with search/filter
+    - Navigation to create/edit
+    - _Requirements: 2.1_
+  - [x] 9.2 Create WeaponCreatePage
+    - Create `src/features/weapons/pages/WeaponCreatePage.tsx`
+    - WeaponForm for creating new weapon
+    - _Requirements: 1.1_
+  - [x] 9.3 Create WeaponEditPage
+    - Create `src/features/weapons/pages/WeaponEditPage.tsx`
+    - WeaponForm pre-filled with weapon data
+    - _Requirements: 2.2_
+
+- [x] 10. Create CardDetailPage with equipment
+  - [x] 10.1 Create CardDetailPage
+    - Create `src/features/cards/pages/CardDetailPage.tsx`
+    - Display card base stats
+    - Display equipped weapon info
+    - Display effective stats when weapon equipped
+    - _Requirements: 3.1, 3.3_
+  - [x] 10.2 Add equip/unequip functionality
+    - WeaponSelector integration
+    - Equip/unequip buttons
+    - _Requirements: 3.2, 3.4, 3.5_
+
+- [x] 11. Integrate with Battle Engine
+  - [x] 11.1 Update CardAdapter for weapon bonuses
+    - Modify `src/features/battle/engine/adapters/CardAdapter.ts`
+    - Add cardToCombatantWithWeapon function
+    - Calculate effective stats including weapon bonuses
+    - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
+  - [x] 11.2 Update battle service to load equipment
+    - Modify battle initialization to fetch card equipment
+    - Pass weapon data to CardAdapter
+    - _Requirements: 4.1_
+  - [x] 11.3 Write property test for battle effective stats
+    - **Property 1: Weapon creation with valid data persists correctly**
+    - **Validates: Requirements 1.1**
+
+- [x] 12. Add routes and navigation
+  - [x] 12.1 Add weapon routes to main router
+    - /weapons - WeaponListPage
+    - /weapons/create - WeaponCreatePage
+    - /weapons/:id/edit - WeaponEditPage
+    - /cards/:id - CardDetailPage
+    - _Requirements: 2.1, 2.2, 3.1_
+  - [x] 12.2 Add navigation links
+    - Add Weapons link to main navigation
+    - Add card detail link from card list
+    - _Requirements: 2.1, 3.1_
+
+- [x] 13. Create feature exports
+  - [x] 13.1 Create feature index files
+    - Create `src/features/weapons/index.ts`
+    - Export types, services, store, hooks, components, pages
+    - _Requirements: All_
+
+- [x] 14. Final Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.

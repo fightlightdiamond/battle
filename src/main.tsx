@@ -7,6 +7,7 @@ import {
   CardListPage,
   CardCreatePage,
   CardEditPage,
+  CardDetailPage,
 } from "./features/cards/pages";
 import {
   BattleSetupPage,
@@ -26,6 +27,11 @@ import {
   MatchupAdminListPage,
   MatchupAdminPage,
 } from "./features/matchup/pages";
+import {
+  WeaponListPage,
+  WeaponCreatePage,
+  WeaponEditPage,
+} from "./features/weapons/pages";
 
 // Get basename from Vite's base config for GitHub Pages deployment
 const basename = import.meta.env.BASE_URL;
@@ -38,7 +44,11 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/" element={<Navigate to="/cards" replace />} />
           <Route path="/cards" element={<CardListPage />} />
           <Route path="/cards/new" element={<CardCreatePage />} />
+          <Route path="/cards/:id" element={<CardDetailPage />} />
           <Route path="/cards/:id/edit" element={<CardEditPage />} />
+          <Route path="/weapons" element={<WeaponListPage />} />
+          <Route path="/weapons/create" element={<WeaponCreatePage />} />
+          <Route path="/weapons/:id/edit" element={<WeaponEditPage />} />
           <Route path="/battle/setup" element={<BattleSetupPage />} />
           <Route path="/battle/arena" element={<BattleArenaPage />} />
           <Route path="/battle/arena-1d" element={<ArenaBattlePage />} />
