@@ -41,3 +41,10 @@ export type {
 export { getBattleModeRoute, BATTLE_MODE_ROUTES } from "./battleModeConfig";
 
 export { VictoryParticles } from "./VictoryParticles";
+
+// Skill display components (Requirements: 9.4, 11.2)
+export { SkillActivationIndicator } from "./SkillActivationIndicator";
+export type { SkillActivationIndicatorProps } from "./SkillActivationIndicator";
+
+export { GemCooldownDisplay, GemCooldownInline } from "./GemCooldownDisplay";
+export type { GemCooldownDisplayProps } from "./GemCooldownDisplay";

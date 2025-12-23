@@ -1,7 +1,17 @@
 import { describe, it, expect } from "vitest";
 import * as fc from "fast-check";
-import { CombatLogger } from "./CombatLogger";
-import type { Combatant, CombatantStats, AttackLogData } from "../core/types";
+import {
+  CombatLogger,
+  getSkillEffectDescription,
+  type SkillActivationInput,
+} from "./CombatLogger";
+import type {
+  Combatant,
+  CombatantStats,
+  AttackLogData,
+  GemSkillLogData,
+} from "../core/types";
+import type { SkillType } from "../../../gems/types/gem";
 
 // ============================================================================
 // ARBITRARIES (Generators for property-based testing)
@@ -26,6 +36,26 @@ const combatantArb: fc.Arbitrary<Combatant> = fc.record({
   maxHp: fc.integer({ min: 1, max: 9999 }),
   buffs: fc.constant([]),
   isDefeated: fc.boolean(),
+  effectiveRange: fc.integer({ min: 1, max: 5 }),
+});
+
+// Valid skill types for gem skill logging
+const skillTypeArb: fc.Arbitrary<SkillType> = fc.constantFrom(
+  "knockback",
+  "retreat",
+  "double_move",
+  "double_attack",
+  "execute",
+  "leap_strike",
+);
+
+// Skill activation input generator
+const skillActivationInputArb: fc.Arbitrary<SkillActivationInput> = fc.record({
+  gemId: fc.uuid(),
+  gemName: fc.string({ minLength: 1, maxLength: 50 }),
+  skillType: skillTypeArb,
+  cardId: fc.uuid(),
+  cardName: fc.string({ minLength: 1, maxLength: 100 }),
 });
 
 // ============================================================================
@@ -53,7 +83,7 @@ describe("CombatLogger", () => {
             attacker,
             defender,
             damage,
-            remainingHp
+            remainingHp,
           );
 
           // Verify log entry has required structure
@@ -76,9 +106,9 @@ describe("CombatLogger", () => {
           expect(attackData.damage).toBe(damage);
           expect(attackData.defenderRemainingHp).toBe(remainingHp);
           expect(typeof attackData.isCritical).toBe("boolean");
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -202,6 +232,139 @@ describe("CombatLogger", () => {
       const log2 = CombatLogger.logVictory("Winner2");
 
       expect(log1.id).not.toBe(log2.id);
+    });
+  });
+
+  /**
+   * **Feature: gem-skill-system, Property 15: Skill Activation Logging**
+   *
+   * For any skill that activates, the battle log should contain an entry
+   * with the skill name and card name.
+   *
+   * **Validates: Requirements 11.1, 11.3**
+   */
+  describe("logSkillActivation", () => {
+    it("Property 15: skill activation log contains skill name and card name", () => {
+      fc.assert(
+        fc.property(skillActivationInputArb, (input) => {
+          const logEntry = CombatLogger.logSkillActivation(input);
+
+          // Verify log entry has required structure
+          expect(logEntry.id).toBeDefined();
+          expect(typeof logEntry.id).toBe("string");
+          expect(logEntry.id.length).toBeGreaterThan(0);
+
+          expect(logEntry.timestamp).toBeDefined();
+          expect(typeof logEntry.timestamp).toBe("number");
+
+          expect(logEntry.type).toBe("gem_skill");
+          expect(typeof logEntry.message).toBe("string");
+
+          // Verify message contains card name and gem name (Requirements 11.1)
+          expect(logEntry.message).toContain(input.cardName);
+          expect(logEntry.message).toContain(input.gemName);
+
+          // Verify skill data contains all required fields
+          expect(logEntry.data).toBeDefined();
+          const skillData = logEntry.data as GemSkillLogData;
+
+          expect(skillData.gemId).toBe(input.gemId);
+          expect(skillData.gemName).toBe(input.gemName);
+          expect(skillData.skillType).toBe(input.skillType);
+          expect(skillData.cardId).toBe(input.cardId);
+          expect(skillData.cardName).toBe(input.cardName);
+          expect(typeof skillData.effect).toBe("string");
+          expect(skillData.effect.length).toBeGreaterThan(0);
+        }),
+        { numRuns: 100 },
+      );
+    });
+
+    it("generates unique IDs for each skill log entry", () => {
+      const input: SkillActivationInput = {
+        gemId: "gem-1",
+        gemName: "Knockback Stone",
+        skillType: "knockback",
+        cardId: "card-1",
+        cardName: "Dragon",
+      };
+
+      const log1 = CombatLogger.logSkillActivation(input);
+      const log2 = CombatLogger.logSkillActivation(input);
+
+      expect(log1.id).not.toBe(log2.id);
+    });
+
+    it("includes effect description in log data", () => {
+      const skillTypes: SkillType[] = [
+        "knockback",
+        "retreat",
+        "double_move",
+        "double_attack",
+        "execute",
+        "leap_strike",
+      ];
+
+      for (const skillType of skillTypes) {
+        const input: SkillActivationInput = {
+          gemId: "gem-1",
+          gemName: "Test Gem",
+          skillType,
+          cardId: "card-1",
+          cardName: "Test Card",
+        };
+
+        const log = CombatLogger.logSkillActivation(input);
+        const skillData = log.data as GemSkillLogData;
+
+        // Effect should be a non-empty string
+        expect(skillData.effect).toBeDefined();
+        expect(skillData.effect.length).toBeGreaterThan(0);
+
+        // Effect should match the expected description
+        const expectedEffect = getSkillEffectDescription(skillType);
+        expect(skillData.effect).toBe(expectedEffect);
+      }
+    });
+
+    it("creates correct message format", () => {
+      const input: SkillActivationInput = {
+        gemId: "gem-1",
+        gemName: "Double Strike",
+        skillType: "double_attack",
+        cardId: "card-1",
+        cardName: "Warrior",
+      };
+
+      const log = CombatLogger.logSkillActivation(input);
+
+      // Message should follow format: "{cardName}'s {gemName} activated: {effect}!"
+      expect(log.message).toContain("Warrior");
+      expect(log.message).toContain("Double Strike");
+      expect(log.message).toContain("activated");
+    });
+  });
+
+  describe("getSkillEffectDescription", () => {
+    it("returns correct descriptions for all skill types", () => {
+      expect(getSkillEffectDescription("knockback")).toBe("pushed enemy back");
+      expect(getSkillEffectDescription("retreat")).toBe(
+        "retreated after attack",
+      );
+      expect(getSkillEffectDescription("double_move")).toBe("moved 2 cells");
+      expect(getSkillEffectDescription("double_attack")).toBe("attacked twice");
+      expect(getSkillEffectDescription("execute")).toBe(
+        "executed low HP enemy",
+      );
+      expect(getSkillEffectDescription("leap_strike")).toBe(
+        "leaped to enemy and knocked back",
+      );
+    });
+
+    it("returns fallback for unknown skill types", () => {
+      // Cast to SkillType to test fallback behavior
+      const unknownType = "unknown_skill" as SkillType;
+      expect(getSkillEffectDescription(unknownType)).toBe("activated skill");
     });
   });
 });

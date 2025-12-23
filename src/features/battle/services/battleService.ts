@@ -1,6 +1,7 @@
 /**
  * Battle Service - Core combat logic for the Card Battle System
  * Requirements: 3.1, 3.2, 4.1, 4.2, 4.3, 5.1, 8.2
+ * Gem Skill System Requirements: 2.4, 9.4
  */
 
 import type {
@@ -24,6 +25,8 @@ import {
   calculateEffectiveRange,
 } from "../../weapons/services/equipmentService";
 import { WeaponService } from "../../weapons/services/weaponService";
+import type { BattleCardGems, EquippedGemState } from "../../gems/types";
+import { GemService, GemEquipmentService } from "../../gems/services";
 
 /**
  * Calculate HP percentage
@@ -217,6 +220,62 @@ export async function cardToBattleCardWithEquipment(
 }
 
 /**
+ * Load equipped gems for a card and initialize battle gem states
+ * Returns BattleCardGems with all equipped gems and cooldowns set to 0
+ *
+ * Requirements: 2.4, 9.4
+ * - 2.4: Card has equipped gems shown visually
+ * - 9.4: Display remaining cooldown for each equipped gem
+ */
+export async function loadCardGems(cardId: string): Promise<BattleCardGems> {
+  const equipment = await GemEquipmentService.getCardGems(cardId);
+
+  if (!equipment || equipment.gemIds.length === 0) {
+    return {
+      cardId,
+      equippedGems: [],
+    };
+  }
+
+  // Load all gems in parallel
+  const gems = await Promise.all(
+    equipment.gemIds.map((gemId) => GemService.getById(gemId)),
+  );
+
+  // Filter out null gems (in case a gem was deleted but equipment wasn't updated)
+  const validGems = gems.filter((gem) => gem !== null);
+
+  // Initialize equipped gem states with cooldown = 0
+  const equippedGems: EquippedGemState[] = validGems.map((gem) => ({
+    gem: gem!,
+    currentCooldown: 0,
+  }));
+
+  return {
+    cardId,
+    equippedGems,
+  };
+}
+
+/**
+ * Initialize BattleCardGems from an existing BattleCardGems state
+ * Used for resetting cooldowns at battle start
+ *
+ * Requirements: 9.4
+ */
+export function initializeBattleCardGems(
+  cardGems: BattleCardGems,
+): BattleCardGems {
+  return {
+    ...cardGems,
+    equippedGems: cardGems.equippedGems.map((gemState) => ({
+      ...gemState,
+      currentCooldown: 0,
+    })),
+  };
+}
+
+/**
  * Battle service object with all combat functions
  */
 export const battleService = {
@@ -227,4 +286,6 @@ export const battleService = {
   cardToBattleCardWithWeapon,
   loadCardWeapon,
   cardToBattleCardWithEquipment,
+  loadCardGems,
+  initializeBattleCardGems,
 };

@@ -21,7 +21,8 @@ export interface BattleLogProps {
  * - attack with crit: Amber/gold styling for critical hits
  * - damage: Damage received styling
  * - victory: Victory announcement with special styling
- * Requirements: 2.2, 2.3
+ * - skill: Skill activation styling with purple/indigo theme
+ * Requirements: 2.2, 2.3, 11.1, 11.4
  */
 function getEntryStyles(entry: Readonly<BattleLogEntry>): string {
   const { type, isCrit, hasLifesteal } = entry;
@@ -43,6 +44,8 @@ function getEntryStyles(entry: Readonly<BattleLogEntry>): string {
       return "text-red-700 bg-red-50 border-l-red-500";
     case "victory":
       return "text-amber-700 bg-amber-50 border-l-amber-500 font-semibold";
+    case "skill":
+      return "text-purple-700 bg-purple-50 border-l-purple-500 font-medium";
     default:
       return "text-slate-700 bg-slate-50 border-l-slate-500";
   }
@@ -50,10 +53,10 @@ function getEntryStyles(entry: Readonly<BattleLogEntry>): string {
 
 /**
  * Get icon for log entry type with crit/lifesteal indicators
- * Requirements: 2.2, 2.3
+ * Requirements: 2.2, 2.3, 11.1
  */
 function getEntryIcon(entry: Readonly<BattleLogEntry>): string {
-  const { type, isCrit, hasLifesteal } = entry;
+  const { type, isCrit, hasLifesteal, skillActivation } = entry;
 
   switch (type) {
     case "attack":
@@ -72,6 +75,27 @@ function getEntryIcon(entry: Readonly<BattleLogEntry>): string {
       return "💥";
     case "victory":
       return "🏆";
+    case "skill":
+      // Return skill-specific icon based on skill type
+      if (skillActivation) {
+        switch (skillActivation.skillType) {
+          case "knockback":
+            return "💨";
+          case "retreat":
+            return "🔙";
+          case "double_move":
+            return "⚡";
+          case "double_attack":
+            return "⚔️⚔️";
+          case "execute":
+            return "💀";
+          case "leap_strike":
+            return "🦘";
+          default:
+            return "💎";
+        }
+      }
+      return "💎";
     default:
       return "📝";
   }

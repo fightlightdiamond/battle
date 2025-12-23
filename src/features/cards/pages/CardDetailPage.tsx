@@ -1,6 +1,13 @@
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { ArrowLeft, ImageOff, Sword, Pencil, ArrowRight } from "lucide-react";
+import {
+  ArrowLeft,
+  ImageOff,
+  Sword,
+  Pencil,
+  ArrowRight,
+  Gem as GemIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -24,11 +31,21 @@ import { getStatsByTier, type StatDefinition } from "../types/statConfig";
 import type { Card as CardType } from "../types/card";
 import type { Weapon } from "../../weapons/types/weapon";
 import type { EffectiveCardStats } from "../../weapons/types/equipment";
+// Gem imports
+import {
+  useCardGems,
+  useGems,
+  useEquipGem,
+  useUnequipGem,
+} from "../../gems/hooks";
+import { EquippedGems, GemSelectorWithActions } from "../../gems/components";
+import { MAX_GEM_SLOTS } from "../../gems/types/equipment";
+import type { Gem } from "../../gems/types/gem";
 
 /**
  * CardDetailPage
- * Display card base stats, equipped weapon info, and effective stats
- * Requirements: 3.1, 3.3, 3.2, 3.4, 3.5
+ * Display card base stats, equipped weapon info, equipped gems, and effective stats
+ * Requirements: 3.1, 3.3, 3.2, 3.4, 3.5, 2.1, 2.2, 2.3, 2.4 (gem)
  */
 export function CardDetailPage() {
   const navigate = useNavigate();
@@ -51,6 +68,28 @@ export function CardDetailPage() {
 
   // Local state for weapon selection before equipping
   const [selectedWeaponId, setSelectedWeaponId] = useState<string | null>(null);
+
+  // Gem equipment state
+  const { data: gemEquipment, isLoading: gemEquipmentLoading } = useCardGems(
+    id || "",
+  );
+  const { data: allGems = [], isLoading: gemsLoading } = useGems();
+  const equipGem = useEquipGem();
+  const unequipGem = useUnequipGem();
+
+  // Local state for gem selection before equipping
+  const [selectedGemId, setSelectedGemId] = useState<string | null>(null);
+
+  // Get equipped gems data
+  const equippedGemIds = useMemo(() => {
+    return gemEquipment?.gemIds || [];
+  }, [gemEquipment?.gemIds]);
+
+  const equippedGems = useMemo<Gem[]>(() => {
+    return equippedGemIds
+      .map((gemId) => allGems.find((g) => g.id === gemId))
+      .filter((g): g is Gem => g !== undefined);
+  }, [equippedGemIds, allGems]);
 
   // Calculate effective stats when card and weapon are available
   const effectiveStats = useMemo<EffectiveCardStats | null>(() => {
@@ -75,7 +114,19 @@ export function CardDetailPage() {
     await unequipWeapon.mutateAsync(id);
   };
 
-  const isLoading = cardLoading || equipmentLoading;
+  // Gem equipment handlers
+  const handleEquipGem = async () => {
+    if (!id || !selectedGemId) return;
+    await equipGem.mutateAsync({ cardId: id, gemId: selectedGemId });
+    setSelectedGemId(null);
+  };
+
+  const handleUnequipGem = async (gemId: string) => {
+    if (!id) return;
+    await unequipGem.mutateAsync({ cardId: id, gemId });
+  };
+
+  const isLoading = cardLoading || equipmentLoading || gemEquipmentLoading;
 
   if (isLoading) {
     return (
@@ -169,6 +220,20 @@ export function CardDetailPage() {
             isLoading={weaponsLoading}
             isEquipping={equipWeapon.isPending}
             isUnequipping={unequipWeapon.isPending}
+          />
+
+          {/* Equipped Gems */}
+          <EquippedGemsCard
+            equippedGems={equippedGems}
+            allGems={allGems}
+            equippedGemIds={equippedGemIds}
+            selectedGemId={selectedGemId}
+            onSelectGem={setSelectedGemId}
+            onEquipGem={handleEquipGem}
+            onUnequipGem={handleUnequipGem}
+            isLoading={gemsLoading}
+            isEquipping={equipGem.isPending}
+            isUnequipping={unequipGem.isPending}
           />
 
           {/* Effective Stats (only show when weapon equipped) */}
@@ -429,6 +494,88 @@ function EquippedWeaponCard({
             hasEquippedWeapon={!!weapon}
             placeholder="Select a weapon to equip"
           />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+interface EquippedGemsCardProps {
+  equippedGems: Gem[];
+  allGems: Gem[];
+  equippedGemIds: string[];
+  selectedGemId: string | null;
+  onSelectGem: (gemId: string | null) => void;
+  onEquipGem: () => void;
+  onUnequipGem: (gemId: string) => void;
+  isLoading: boolean;
+  isEquipping: boolean;
+  isUnequipping: boolean;
+}
+
+/**
+ * EquippedGemsCard - Display equipped gems and equip/unequip controls
+ * Requirements: 2.1, 2.2, 2.3, 2.4
+ */
+function EquippedGemsCard({
+  equippedGems,
+  allGems,
+  equippedGemIds,
+  selectedGemId,
+  onSelectGem,
+  onEquipGem,
+  onUnequipGem,
+  isLoading,
+  isEquipping,
+  isUnequipping,
+}: EquippedGemsCardProps) {
+  const canEquipMore = equippedGems.length < MAX_GEM_SLOTS;
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg flex items-center gap-2">
+          <GemIcon className="h-5 w-5" />
+          Equipped Gems
+          <span className="text-sm font-normal text-muted-foreground">
+            ({equippedGems.length}/{MAX_GEM_SLOTS})
+          </span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Equipped Gems Display */}
+        <EquippedGems
+          gems={equippedGems}
+          onUnequip={onUnequipGem}
+          isUnequipping={isUnequipping}
+          showEmptySlots={true}
+        />
+
+        <Separator />
+
+        {/* Gem Selector */}
+        <div>
+          <h4 className="text-sm font-medium mb-2">
+            {canEquipMore ? "Equip a Gem" : "All slots filled"}
+          </h4>
+          <GemSelectorWithActions
+            gems={allGems}
+            selectedGemId={selectedGemId}
+            onSelect={onSelectGem}
+            onEquip={onEquipGem}
+            equippedGemIds={equippedGemIds}
+            isLoading={isLoading}
+            isEquipping={isEquipping}
+            canEquip={canEquipMore}
+            placeholder={
+              canEquipMore ? "Select a gem to equip" : "No slots available"
+            }
+          />
+          {!canEquipMore && (
+            <p className="text-xs text-muted-foreground mt-2">
+              Unequip a gem to make room for a new one.
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>

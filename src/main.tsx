@@ -32,6 +32,7 @@ import {
   WeaponCreatePage,
   WeaponEditPage,
 } from "./features/weapons/pages";
+import { GemListPage, GemCreatePage, GemEditPage } from "./features/gems/pages";
 
 // Get basename from Vite's base config for GitHub Pages deployment
 const basename = import.meta.env.BASE_URL;
@@ -49,6 +50,9 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/weapons" element={<WeaponListPage />} />
           <Route path="/weapons/create" element={<WeaponCreatePage />} />
           <Route path="/weapons/:id/edit" element={<WeaponEditPage />} />
+          <Route path="/gems" element={<GemListPage />} />
+          <Route path="/gems/create" element={<GemCreatePage />} />
+          <Route path="/gems/:id/edit" element={<GemEditPage />} />
           <Route path="/battle/setup" element={<BattleSetupPage />} />
           <Route path="/battle/arena" element={<BattleArenaPage />} />
           <Route path="/battle/arena-1d" element={<ArenaBattlePage />} />

@@ -1,6 +1,7 @@
 /**
  * Arena Battle Store - Zustand state management for Arena Mode battles
  * Requirements: 2.2, 2.3, 3.1, 3.2, 3.4, 4.1, 4.2
+ * Gem Skill System Requirements: 2.4, 5.1, 8.1, 3.1, 4.1, 6.1, 7.1, 9.2
  */
 
 import { create } from "zustand";
@@ -15,6 +16,7 @@ import {
   calculateAttack,
   checkBattleEnd,
   cardToBattleCardWithEquipment,
+  loadCardGems,
 } from "../services/battleService";
 import type { Card } from "../../cards/types";
 import type { CellIndex, ArenaPhase } from "../../arena1d/types/arena";
@@ -26,9 +28,12 @@ import {
   PHASE_COMBAT,
   PHASE_FINISHED,
 } from "../../arena1d/types/arena";
+import type { BattleCardGems } from "../../gems/types";
+import { createSkillSystem } from "../engine/systems/SkillSystem";
 
 /**
  * Arena Battle store state interface
+ * Updated for Gem Skill System Requirements: 2.4, 9.4
  */
 export interface ArenaBattleState {
   readonly challenger: Readonly<BattleCard> | null;
@@ -40,13 +45,23 @@ export interface ArenaBattleState {
   readonly battleLog: ReadonlyArray<Readonly<BattleLogEntry>>;
   readonly result: BattleResult;
   readonly isAutoBattle: boolean;
+  /** Gem states for challenger card (Requirements: 2.4, 9.4) */
+  readonly challengerGems: BattleCardGems | null;
+  /** Gem states for opponent card (Requirements: 2.4, 9.4) */
+  readonly opponentGems: BattleCardGems | null;
 }
 
 /**
  * Arena Battle store actions interface
+ * Updated for Gem Skill System Requirements: 2.4, 9.4
  */
 export interface ArenaBattleActions {
-  initArena: (challenger: BattleCard, opponent: BattleCard) => void;
+  initArena: (
+    challenger: BattleCard,
+    opponent: BattleCard,
+    challengerGems?: BattleCardGems | null,
+    opponentGems?: BattleCardGems | null,
+  ) => void;
   initArenaWithCards: (challenger: Card, opponent: Card) => Promise<void>;
   executeMove: () => void;
   executeAttack: () => AttackResult | null;
@@ -214,7 +229,35 @@ function createVictoryLogEntry(winnerName: string): Readonly<BattleLogEntry> {
 }
 
 /**
+ * Create a battle log entry for skill activation
+ * Requirements: 11.1, 11.2, 11.3, 11.4
+ */
+function createSkillLogEntry(
+  cardName: string,
+  skillName: string,
+  effect: string,
+  skillType?: string,
+): Readonly<BattleLogEntry> {
+  return {
+    id: generateLogId(),
+    timestamp: Date.now(),
+    type: "skill",
+    message: `[${cardName}] activates [${skillName}]: ${effect}`,
+    skillActivation: {
+      skillType: skillType ?? "unknown",
+      gemName: skillName,
+      cardName,
+      effect,
+    },
+  };
+}
+
+// Create skill system instance for the store
+const skillSystem = createSkillSystem();
+
+/**
  * Initial state factory
+ * Updated for Gem Skill System Requirements: 2.4, 9.4
  */
 const createInitialState = (): ArenaBattleState => ({
   challenger: null,
@@ -226,6 +269,8 @@ const createInitialState = (): ArenaBattleState => ({
   battleLog: [],
   result: null,
   isAutoBattle: false,
+  challengerGems: null,
+  opponentGems: null,
 });
 
 /**
@@ -260,9 +305,15 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
      * - Challenger at position 0 (left boundary)
      * - Opponent at position 7 (right boundary)
      * Updated to use effective range for phase determination
+     * Updated for Gem Skill System Requirements: 2.4, 9.4
      * Requirements: 3.1, 4.1
      */
-    initArena: (challenger: BattleCard, opponent: BattleCard): void => {
+    initArena: (
+      challenger: BattleCard,
+      opponent: BattleCard,
+      challengerGems?: BattleCardGems | null,
+      opponentGems?: BattleCardGems | null,
+    ): void => {
       const leftPos = LEFT_BOUNDARY_INDEX as CellIndex;
       const rightPos = RIGHT_BOUNDARY_INDEX as CellIndex;
       const phase = determinePhaseWithRange(
@@ -282,6 +333,8 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
         battleLog: [],
         result: null,
         isAutoBattle: false,
+        challengerGems: challengerGems ?? null,
+        opponentGems: opponentGems ?? null,
       });
     },
 
@@ -289,6 +342,7 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
      * Initialize arena with Card entities, loading equipment automatically
      * Converts Cards to BattleCards with weapon bonuses applied
      * Updated to use effective range for phase determination
+     * Updated for Gem Skill System Requirements: 2.4, 9.4
      *
      * Requirements: 2.2, 3.1, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6
      */
@@ -297,9 +351,17 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
       opponent: Card,
     ): Promise<void> => {
       // Load equipment and convert to battle cards with weapon bonuses
-      const [challengerBattleCard, opponentBattleCard] = await Promise.all([
+      // Also load gem equipment for both cards (Requirements: 2.4, 9.4)
+      const [
+        challengerBattleCard,
+        opponentBattleCard,
+        challengerGems,
+        opponentGems,
+      ] = await Promise.all([
         cardToBattleCardWithEquipment(challenger),
         cardToBattleCardWithEquipment(opponent),
+        loadCardGems(challenger.id),
+        loadCardGems(opponent.id),
       ]);
 
       const leftPos = LEFT_BOUNDARY_INDEX as CellIndex;
@@ -321,6 +383,8 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
         battleLog: [],
         result: null,
         isAutoBattle: false,
+        challengerGems,
+        opponentGems,
       });
     },
 
@@ -331,6 +395,7 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
      * Property 7 & 8: Movement blocked when enemy in range, allowed when out of range
      * NEW: If enemy is in range, skip movement and proceed to attack
      * NEW: If in range after move, immediately attack in same turn
+     * Updated for Gem Skill System Requirements: 5.1, 8.1
      * Requirements: 4.1, 4.3, 4.4
      */
     executeMove: (): void => {
@@ -341,6 +406,8 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
         currentTurn,
         leftPosition,
         rightPosition,
+        challengerGems,
+        opponentGems,
       } = get();
 
       // Guards
@@ -352,6 +419,7 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
       const currentPos = isChallenger ? leftPosition : rightPosition;
       const targetPos = isChallenger ? rightPosition : leftPosition;
       const mover = isChallenger ? challenger : opponent;
+      const moverGems = isChallenger ? challengerGems : opponentGems;
 
       // Check if enemy is already in attack range - if so, skip movement and attack
       // Requirements: 4.1, 4.3, 4.4
@@ -404,6 +472,14 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
             );
           }
 
+          // Decrement cooldowns for both cards at turn end (Requirement 9.2)
+          const finalChallengerGems = state.challengerGems
+            ? skillSystem.decrementCooldowns(state.challengerGems)
+            : null;
+          const finalOpponentGems = state.opponentGems
+            ? skillSystem.decrementCooldowns(state.opponentGems)
+            : null;
+
           return {
             challenger: newChallenger,
             opponent: newOpponent,
@@ -412,33 +488,94 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
             battleLog: newBattleLog,
             result: battleResult,
             isAutoBattle: battleResult ? false : state.isAutoBattle,
+            // Update gem states with decremented cooldowns
+            challengerGems: finalChallengerGems,
+            opponentGems: finalOpponentGems,
           };
         });
         return;
       }
 
-      // Calculate new position (exactly 1 cell toward opponent)
-      const newPos = getNextPosition(currentPos, targetPos);
+      // Calculate normal new position (exactly 1 cell toward opponent)
+      const normalNewPos = getNextPosition(currentPos, targetPos);
 
-      // Create log entry
-      const moveLog = createMoveLogEntry(mover.name, currentPos, newPos);
+      // Process movement skills if mover has gems equipped (Requirements: 5.1, 8.1)
+      let finalMoverPos = normalNewPos;
+      let finalEnemyPos = targetPos;
+      const skillLogs: Readonly<BattleLogEntry>[] = [];
+      let updatedMoverGems = moverGems;
 
-      // Calculate new positions
-      const newLeftPos = isChallenger ? newPos : leftPosition;
-      const newRightPos = isChallenger ? rightPosition : newPos;
+      if (moverGems && moverGems.equippedGems.length > 0) {
+        // Create a mutable copy for skill processing
+        const mutableMoverGems: BattleCardGems = {
+          ...moverGems,
+          equippedGems: moverGems.equippedGems.map((gs) => ({ ...gs })),
+        };
+
+        const movementResult = skillSystem.processMovementSkills(
+          mutableMoverGems,
+          currentPos,
+          normalNewPos,
+          targetPos,
+        );
+
+        finalMoverPos = movementResult.finalPosition;
+
+        // Handle leap_strike knockback on enemy
+        if (movementResult.enemyNewPosition !== undefined) {
+          finalEnemyPos = movementResult.enemyNewPosition;
+        }
+
+        // Log skill activations (Requirements: 11.1, 11.2, 11.3)
+        for (const skill of movementResult.skillsActivated) {
+          let effectDescription = "";
+          switch (skill.skillType) {
+            case "double_move":
+              effectDescription = `moves 2 cells to position ${finalMoverPos}`;
+              break;
+            case "leap_strike":
+              effectDescription = `leaps to position ${finalMoverPos} and knocks enemy to position ${finalEnemyPos}`;
+              break;
+            default:
+              effectDescription = `activates ${skill.skillType}`;
+          }
+          skillLogs.push(
+            createSkillLogEntry(
+              mover.name,
+              skill.gemName,
+              effectDescription,
+              skill.skillType,
+            ),
+          );
+        }
+
+        // Update gem states with new cooldowns
+        updatedMoverGems = mutableMoverGems;
+      }
+
+      // Create move log entry
+      const moveLog = createMoveLogEntry(mover.name, currentPos, finalMoverPos);
+
+      // Calculate new positions based on who moved
+      const newLeftPos = isChallenger ? finalMoverPos : leftPosition;
+      const newRightPos = isChallenger ? rightPosition : finalMoverPos;
+
+      // Update enemy position if leap_strike knocked them back
+      const finalLeftPos = isChallenger ? newLeftPos : finalEnemyPos;
+      const finalRightPos = isChallenger ? finalEnemyPos : newRightPos;
 
       // Determine new phase based on new positions and effective ranges
       const newPhase = determinePhaseWithRange(
-        newLeftPos,
-        newRightPos,
+        finalLeftPos,
+        finalRightPos,
         challenger.effectiveRange,
         opponent.effectiveRange,
       );
 
       // Check if now in range - will attack immediately
       const nowInRange = isInAttackRange(
-        isChallenger ? newLeftPos : newRightPos,
-        isChallenger ? newRightPos : newLeftPos,
+        isChallenger ? finalLeftPos : finalRightPos,
+        isChallenger ? finalRightPos : finalLeftPos,
         mover.effectiveRange,
       );
 
@@ -479,6 +616,7 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
         set((state) => {
           const newBattleLog: Readonly<BattleLogEntry>[] = [
             ...state.battleLog,
+            ...skillLogs,
             moveLog,
             attackLog,
           ];
@@ -491,9 +629,24 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
             );
           }
 
+          // Decrement cooldowns for both cards at turn end (Requirement 9.2)
+          const updatedChallengerGems = isChallenger
+            ? updatedMoverGems
+            : state.challengerGems;
+          const updatedOpponentGems = isChallenger
+            ? state.opponentGems
+            : updatedMoverGems;
+
+          const finalChallengerGems = updatedChallengerGems
+            ? skillSystem.decrementCooldowns(updatedChallengerGems)
+            : null;
+          const finalOpponentGems = updatedOpponentGems
+            ? skillSystem.decrementCooldowns(updatedOpponentGems)
+            : null;
+
           return {
-            leftPosition: newLeftPos,
-            rightPosition: newRightPos,
+            leftPosition: finalLeftPos,
+            rightPosition: finalRightPos,
             challenger: newChallenger,
             opponent: newOpponent,
             arenaPhase: battleResult ? PHASE_FINISHED : PHASE_COMBAT,
@@ -501,17 +654,40 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
             battleLog: newBattleLog,
             result: battleResult,
             isAutoBattle: battleResult ? false : state.isAutoBattle,
+            // Update gem states with decremented cooldowns
+            challengerGems: finalChallengerGems,
+            opponentGems: finalOpponentGems,
           };
         });
       } else {
         // Just move, no attack yet
-        set((state) => ({
-          leftPosition: newLeftPos,
-          rightPosition: newRightPos,
-          arenaPhase: newPhase,
-          currentTurn: getNextTurn(state.currentTurn),
-          battleLog: [...state.battleLog, moveLog],
-        }));
+        set((state) => {
+          // Decrement cooldowns for both cards at turn end (Requirement 9.2)
+          const updatedChallengerGems = isChallenger
+            ? updatedMoverGems
+            : state.challengerGems;
+          const updatedOpponentGems = isChallenger
+            ? state.opponentGems
+            : updatedMoverGems;
+
+          const finalChallengerGems = updatedChallengerGems
+            ? skillSystem.decrementCooldowns(updatedChallengerGems)
+            : null;
+          const finalOpponentGems = updatedOpponentGems
+            ? skillSystem.decrementCooldowns(updatedOpponentGems)
+            : null;
+
+          return {
+            leftPosition: finalLeftPos,
+            rightPosition: finalRightPos,
+            arenaPhase: newPhase,
+            currentTurn: getNextTurn(state.currentTurn),
+            battleLog: [...state.battleLog, ...skillLogs, moveLog],
+            // Update gem states with decremented cooldowns
+            challengerGems: finalChallengerGems,
+            opponentGems: finalOpponentGems,
+          };
+        });
       }
     },
 
@@ -520,6 +696,7 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
      * Property 6: Combat executes attacks correctly
      * Property 7: Battle ends when HP reaches 0
      * Property 9: Attack execution within effective range
+     * Updated for Gem Skill System Requirements: 3.1, 4.1, 6.1, 7.1
      * Requirements: 3.2, 5.1, 5.2
      *
      * If attacker is not in range but we're in combat phase (because opponent is in range),
@@ -533,6 +710,8 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
         currentTurn,
         leftPosition,
         rightPosition,
+        challengerGems,
+        opponentGems,
       } = get();
 
       // Guards
@@ -545,6 +724,8 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
       const defender = isChallenger ? opponent : challenger;
       const attackerPos = isChallenger ? leftPosition : rightPosition;
       const defenderPos = isChallenger ? rightPosition : leftPosition;
+      const attackerGems = isChallenger ? challengerGems : opponentGems;
+      const defenderGems = isChallenger ? opponentGems : challengerGems;
 
       // If attacker is not in range, move 1 step closer and pass turn
       // This handles asymmetric range situations (e.g., one card has range 3, other has range 1)
@@ -567,10 +748,97 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
       // Calculate attack using existing battleService
       const attackResult = calculateAttack(attacker, defender);
 
-      // Create updated defender with new HP
+      // Process combat skills if attacker has gems equipped (Requirements: 3.1, 4.1, 6.1, 7.1)
+      let finalAttackerPos = attackerPos;
+      let finalDefenderPos = defenderPos;
+      let finalDefenderHp = attackResult.defenderNewHp;
+      const skillLogs: Readonly<BattleLogEntry>[] = [];
+      let updatedAttackerGems = attackerGems;
+      const additionalAttackLogs: Readonly<BattleLogEntry>[] = [];
+
+      if (attackerGems && attackerGems.equippedGems.length > 0) {
+        // Create mutable copies for skill processing
+        const mutableAttackerGems: BattleCardGems = {
+          ...attackerGems,
+          equippedGems: attackerGems.equippedGems.map((gs) => ({ ...gs })),
+        };
+        const mutableDefenderGems: BattleCardGems = defenderGems
+          ? {
+              ...defenderGems,
+              equippedGems: defenderGems.equippedGems.map((gs) => ({ ...gs })),
+            }
+          : { cardId: defender.id, equippedGems: [] };
+
+        // Create a performAttack callback for double_attack skill
+        const performAttack = () => {
+          const secondAttackResult = calculateAttack(attacker, {
+            ...defender,
+            currentHp: finalDefenderHp,
+          });
+          // Log the additional attack
+          additionalAttackLogs.push(
+            createAttackLogEntry(
+              attacker.name,
+              defender.name,
+              secondAttackResult.damage,
+              secondAttackResult.defenderNewHp,
+              secondAttackResult.damageResult?.isCrit,
+              secondAttackResult.lifestealHeal,
+            ),
+          );
+          return secondAttackResult;
+        };
+
+        const combatResult = skillSystem.processCombatSkills(
+          mutableAttackerGems,
+          mutableDefenderGems,
+          attackerPos,
+          defenderPos,
+          attackResult,
+          performAttack,
+        );
+
+        finalAttackerPos = combatResult.attackerNewPosition;
+        finalDefenderPos = combatResult.defenderNewPosition;
+        finalDefenderHp = combatResult.defenderNewHp;
+
+        // Log skill activations (Requirements: 11.1, 11.2, 11.3)
+        for (const skill of combatResult.skillsActivated) {
+          let effectDescription = "";
+          switch (skill.skillType) {
+            case "knockback":
+              effectDescription = `knocks enemy back to position ${finalDefenderPos}`;
+              break;
+            case "retreat":
+              effectDescription = `retreats to position ${finalAttackerPos}`;
+              break;
+            case "double_attack":
+              effectDescription = `attacks twice!`;
+              break;
+            case "execute":
+              effectDescription = `executes the enemy!`;
+              break;
+            default:
+              effectDescription = `activates ${skill.skillType}`;
+          }
+          skillLogs.push(
+            createSkillLogEntry(
+              attacker.name,
+              skill.gemName,
+              effectDescription,
+              skill.skillType,
+            ),
+          );
+        }
+
+        // Update gem states with new cooldowns
+        updatedAttackerGems = mutableAttackerGems;
+      }
+
+      // Create updated defender with final HP
       const updatedDefender: Readonly<BattleCard> = {
         ...defender,
-        currentHp: attackResult.defenderNewHp,
+        currentHp: finalDefenderHp,
       };
 
       // Create updated attacker with lifesteal healing
@@ -586,7 +854,7 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
       // Check battle end
       const battleResult = checkBattleEnd(newChallenger, newOpponent);
 
-      // Create log entry
+      // Create log entry for the initial attack
       const attackLog = createAttackLogEntry(
         attacker.name,
         defender.name,
@@ -596,10 +864,16 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
         attackResult.lifestealHeal,
       );
 
+      // Calculate final positions
+      const finalLeftPos = isChallenger ? finalAttackerPos : finalDefenderPos;
+      const finalRightPos = isChallenger ? finalDefenderPos : finalAttackerPos;
+
       set((state) => {
         const newBattleLog: Readonly<BattleLogEntry>[] = [
           ...state.battleLog,
           attackLog,
+          ...skillLogs,
+          ...additionalAttackLogs,
         ];
 
         if (battleResult) {
@@ -610,7 +884,26 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
           );
         }
 
+        // Decrement cooldowns for both cards at turn end (Requirement 9.2)
+        // First apply skill activation cooldowns, then decrement all cooldowns
+        const updatedChallengerGems = isChallenger
+          ? updatedAttackerGems
+          : state.challengerGems;
+        const updatedOpponentGems = isChallenger
+          ? state.opponentGems
+          : updatedAttackerGems;
+
+        // Decrement cooldowns at turn end
+        const finalChallengerGems = updatedChallengerGems
+          ? skillSystem.decrementCooldowns(updatedChallengerGems)
+          : null;
+        const finalOpponentGems = updatedOpponentGems
+          ? skillSystem.decrementCooldowns(updatedOpponentGems)
+          : null;
+
         return {
+          leftPosition: finalLeftPos,
+          rightPosition: finalRightPos,
           challenger: newChallenger,
           opponent: newOpponent,
           currentTurn: getNextTurn(state.currentTurn),
@@ -618,6 +911,9 @@ export const useArenaBattleStore = create<ArenaBattleStoreState>(
           arenaPhase: battleResult ? PHASE_FINISHED : PHASE_COMBAT,
           result: battleResult,
           isAutoBattle: battleResult ? false : state.isAutoBattle,
+          // Update gem states with decremented cooldowns
+          challengerGems: finalChallengerGems,
+          opponentGems: finalOpponentGems,
         };
       });
 

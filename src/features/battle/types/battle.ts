@@ -61,11 +61,12 @@ export interface BattleCard {
 /**
  * Types of entries that can appear in the battle log
  */
-export type BattleLogEntryType = "attack" | "damage" | "victory";
+export type BattleLogEntryType = "attack" | "damage" | "victory" | "skill";
 
 /**
  * A single entry in the battle log
  * Extended to support crit and lifesteal visual indicators
+ * Extended to support skill activation events (Requirements: 11.1, 11.4)
  * Requirements: 2.1, 2.2, 2.3, 2.4
  */
 export interface BattleLogEntry {
@@ -81,6 +82,13 @@ export interface BattleLogEntry {
   lifestealAmount?: number;
   /** The crit bonus damage (if any) */
   critBonus?: number;
+  /** Skill activation details (Requirements: 11.1, 11.4) */
+  skillActivation?: {
+    skillType: string;
+    gemName: string;
+    cardName: string;
+    effect: string;
+  };
 }
 
 /**

@@ -117,6 +117,18 @@ export interface SkillLogData {
 }
 
 /**
+ * Data for gem skill activation log entries
+ */
+export interface GemSkillLogData {
+  readonly gemId: string;
+  readonly gemName: string;
+  readonly skillType: string;
+  readonly cardId: string;
+  readonly cardName: string;
+  readonly effect: string;
+}
+
+/**
  * Type for battle log entry types
  */
 export type BattleLogEntryType =
@@ -124,7 +136,8 @@ export type BattleLogEntryType =
   | "damage"
   | "skill"
   | "buff"
-  | "victory";
+  | "victory"
+  | "gem_skill";
 
 /**
  * Constants for battle log entry types to avoid magic strings
@@ -135,6 +148,7 @@ export const LOG_ENTRY_TYPES = {
   SKILL: "skill" as const,
   BUFF: "buff" as const,
   VICTORY: "victory" as const,
+  GEM_SKILL: "gem_skill" as const,
 } as const;
 
 export interface BattleLogEntry {
@@ -142,7 +156,7 @@ export interface BattleLogEntry {
   readonly timestamp: number;
   readonly type: BattleLogEntryType;
   readonly message: string;
-  readonly data?: AttackLogData | SkillLogData;
+  readonly data?: AttackLogData | SkillLogData | GemSkillLogData;
 }
 
 export interface BattleState {

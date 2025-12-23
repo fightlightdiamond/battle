@@ -677,6 +677,602 @@
           "opponentMaxHp": 3500
         }
       ]
+    },
+    {
+      "id": "965af744-5bcc-4c09-89b0-1979e472f7ea",
+      "startedAt": 1765955890038,
+      "endedAt": 1765955890040,
+      "battleDurationMs": 2,
+      "battleMode": "classic",
+      "challenger": {
+        "id": "550e8400-e29b-41d4-a716-446655440005",
+        "name": "Earth Golem",
+        "imageUrl": "blob:http://localhost:5174/eb8e54e3-a103-42a3-a9d3-3f04af4af2c2",
+        "maxHp": 3500,
+        "currentHp": 3500,
+        "atk": 350,
+        "def": 50,
+        "spd": 100,
+        "critChance": 25,
+        "critDamage": 300,
+        "armorPen": 30,
+        "lifesteal": 10
+      },
+      "opponent": {
+        "id": "550e8400-e29b-41d4-a716-446655440004",
+        "name": "Shadow Assassin",
+        "imageUrl": "blob:http://localhost:5174/91be3403-fe45-469c-b0de-477d327eb37f",
+        "maxHp": 4200,
+        "currentHp": 4200,
+        "atk": 300,
+        "def": 50,
+        "spd": 100,
+        "critChance": 55,
+        "critDamage": 250,
+        "armorPen": 50,
+        "lifesteal": 20
+      },
+      "winnerId": "550e8400-e29b-41d4-a716-446655440004",
+      "winnerName": "Shadow Assassin",
+      "totalTurns": 14,
+      "turns": [
+        {
+          "turnNumber": 1,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440005",
+          "attackerName": "Earth Golem",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440004",
+          "defenderName": "Shadow Assassin",
+          "damage": {
+            "baseDamage": 350,
+            "isCrit": false,
+            "critMultiplier": 1,
+            "critBonus": 0,
+            "armorPenPercent": 30,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 35,
+            "finalDamage": 350
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 10,
+            "lifestealAmount": 35,
+            "attackerHpBefore": 3500,
+            "attackerHpAfter": 3500,
+            "attackerMaxHp": 3500
+          },
+          "defenderHp": {
+            "defenderHpBefore": 4200,
+            "defenderHpAfter": 3850,
+            "defenderMaxHp": 4200,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 2,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440004",
+          "attackerName": "Shadow Assassin",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440005",
+          "defenderName": "Earth Golem",
+          "damage": {
+            "baseDamage": 300,
+            "isCrit": false,
+            "critMultiplier": 1,
+            "critBonus": 0,
+            "armorPenPercent": 50,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 25,
+            "finalDamage": 300
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 20,
+            "lifestealAmount": 60,
+            "attackerHpBefore": 3850,
+            "attackerHpAfter": 3910,
+            "attackerMaxHp": 4200
+          },
+          "defenderHp": {
+            "defenderHpBefore": 3500,
+            "defenderHpAfter": 3200,
+            "defenderMaxHp": 3500,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 3,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440005",
+          "attackerName": "Earth Golem",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440004",
+          "defenderName": "Shadow Assassin",
+          "damage": {
+            "baseDamage": 350,
+            "isCrit": true,
+            "critMultiplier": 3,
+            "critBonus": 700,
+            "armorPenPercent": 30,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 35,
+            "finalDamage": 1050
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 10,
+            "lifestealAmount": 105,
+            "attackerHpBefore": 3200,
+            "attackerHpAfter": 3305,
+            "attackerMaxHp": 3500
+          },
+          "defenderHp": {
+            "defenderHpBefore": 3910,
+            "defenderHpAfter": 2860,
+            "defenderMaxHp": 4200,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 4,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440004",
+          "attackerName": "Shadow Assassin",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440005",
+          "defenderName": "Earth Golem",
+          "damage": {
+            "baseDamage": 300,
+            "isCrit": false,
+            "critMultiplier": 1,
+            "critBonus": 0,
+            "armorPenPercent": 50,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 25,
+            "finalDamage": 300
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 20,
+            "lifestealAmount": 60,
+            "attackerHpBefore": 2860,
+            "attackerHpAfter": 2920,
+            "attackerMaxHp": 4200
+          },
+          "defenderHp": {
+            "defenderHpBefore": 3305,
+            "defenderHpAfter": 3005,
+            "defenderMaxHp": 3500,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 5,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440005",
+          "attackerName": "Earth Golem",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440004",
+          "defenderName": "Shadow Assassin",
+          "damage": {
+            "baseDamage": 350,
+            "isCrit": true,
+            "critMultiplier": 3,
+            "critBonus": 700,
+            "armorPenPercent": 30,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 35,
+            "finalDamage": 1050
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 10,
+            "lifestealAmount": 105,
+            "attackerHpBefore": 3005,
+            "attackerHpAfter": 3110,
+            "attackerMaxHp": 3500
+          },
+          "defenderHp": {
+            "defenderHpBefore": 2920,
+            "defenderHpAfter": 1870,
+            "defenderMaxHp": 4200,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 6,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440004",
+          "attackerName": "Shadow Assassin",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440005",
+          "defenderName": "Earth Golem",
+          "damage": {
+            "baseDamage": 300,
+            "isCrit": true,
+            "critMultiplier": 2.5,
+            "critBonus": 450,
+            "armorPenPercent": 50,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 25,
+            "finalDamage": 750
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 20,
+            "lifestealAmount": 150,
+            "attackerHpBefore": 1870,
+            "attackerHpAfter": 2020,
+            "attackerMaxHp": 4200
+          },
+          "defenderHp": {
+            "defenderHpBefore": 3110,
+            "defenderHpAfter": 2360,
+            "defenderMaxHp": 3500,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 7,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440005",
+          "attackerName": "Earth Golem",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440004",
+          "defenderName": "Shadow Assassin",
+          "damage": {
+            "baseDamage": 350,
+            "isCrit": false,
+            "critMultiplier": 1,
+            "critBonus": 0,
+            "armorPenPercent": 30,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 35,
+            "finalDamage": 350
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 10,
+            "lifestealAmount": 35,
+            "attackerHpBefore": 2360,
+            "attackerHpAfter": 2395,
+            "attackerMaxHp": 3500
+          },
+          "defenderHp": {
+            "defenderHpBefore": 2020,
+            "defenderHpAfter": 1670,
+            "defenderMaxHp": 4200,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 8,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440004",
+          "attackerName": "Shadow Assassin",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440005",
+          "defenderName": "Earth Golem",
+          "damage": {
+            "baseDamage": 300,
+            "isCrit": true,
+            "critMultiplier": 2.5,
+            "critBonus": 450,
+            "armorPenPercent": 50,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 25,
+            "finalDamage": 750
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 20,
+            "lifestealAmount": 150,
+            "attackerHpBefore": 1670,
+            "attackerHpAfter": 1820,
+            "attackerMaxHp": 4200
+          },
+          "defenderHp": {
+            "defenderHpBefore": 2395,
+            "defenderHpAfter": 1645,
+            "defenderMaxHp": 3500,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 9,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440005",
+          "attackerName": "Earth Golem",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440004",
+          "defenderName": "Shadow Assassin",
+          "damage": {
+            "baseDamage": 350,
+            "isCrit": false,
+            "critMultiplier": 1,
+            "critBonus": 0,
+            "armorPenPercent": 30,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 35,
+            "finalDamage": 350
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 10,
+            "lifestealAmount": 35,
+            "attackerHpBefore": 1645,
+            "attackerHpAfter": 1680,
+            "attackerMaxHp": 3500
+          },
+          "defenderHp": {
+            "defenderHpBefore": 1820,
+            "defenderHpAfter": 1470,
+            "defenderMaxHp": 4200,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 10,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440004",
+          "attackerName": "Shadow Assassin",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440005",
+          "defenderName": "Earth Golem",
+          "damage": {
+            "baseDamage": 300,
+            "isCrit": true,
+            "critMultiplier": 2.5,
+            "critBonus": 450,
+            "armorPenPercent": 50,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 25,
+            "finalDamage": 750
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 20,
+            "lifestealAmount": 150,
+            "attackerHpBefore": 1470,
+            "attackerHpAfter": 1620,
+            "attackerMaxHp": 4200
+          },
+          "defenderHp": {
+            "defenderHpBefore": 1680,
+            "defenderHpAfter": 930,
+            "defenderMaxHp": 3500,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 11,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440005",
+          "attackerName": "Earth Golem",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440004",
+          "defenderName": "Shadow Assassin",
+          "damage": {
+            "baseDamage": 350,
+            "isCrit": false,
+            "critMultiplier": 1,
+            "critBonus": 0,
+            "armorPenPercent": 30,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 35,
+            "finalDamage": 350
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 10,
+            "lifestealAmount": 35,
+            "attackerHpBefore": 930,
+            "attackerHpAfter": 965,
+            "attackerMaxHp": 3500
+          },
+          "defenderHp": {
+            "defenderHpBefore": 1620,
+            "defenderHpAfter": 1270,
+            "defenderMaxHp": 4200,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 12,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440004",
+          "attackerName": "Shadow Assassin",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440005",
+          "defenderName": "Earth Golem",
+          "damage": {
+            "baseDamage": 300,
+            "isCrit": true,
+            "critMultiplier": 2.5,
+            "critBonus": 450,
+            "armorPenPercent": 50,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 25,
+            "finalDamage": 750
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 20,
+            "lifestealAmount": 150,
+            "attackerHpBefore": 1270,
+            "attackerHpAfter": 1420,
+            "attackerMaxHp": 4200
+          },
+          "defenderHp": {
+            "defenderHpBefore": 965,
+            "defenderHpAfter": 215,
+            "defenderMaxHp": 3500,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 13,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440005",
+          "attackerName": "Earth Golem",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440004",
+          "defenderName": "Shadow Assassin",
+          "damage": {
+            "baseDamage": 350,
+            "isCrit": false,
+            "critMultiplier": 1,
+            "critBonus": 0,
+            "armorPenPercent": 30,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 35,
+            "finalDamage": 350
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 10,
+            "lifestealAmount": 35,
+            "attackerHpBefore": 215,
+            "attackerHpAfter": 250,
+            "attackerMaxHp": 3500
+          },
+          "defenderHp": {
+            "defenderHpBefore": 1420,
+            "defenderHpAfter": 1070,
+            "defenderMaxHp": 4200,
+            "isKnockout": false
+          }
+        },
+        {
+          "turnNumber": 14,
+          "timestamp": 1765955890039,
+          "attackerId": "550e8400-e29b-41d4-a716-446655440004",
+          "attackerName": "Shadow Assassin",
+          "defenderId": "550e8400-e29b-41d4-a716-446655440005",
+          "defenderName": "Earth Golem",
+          "damage": {
+            "baseDamage": 300,
+            "isCrit": false,
+            "critMultiplier": 1,
+            "critBonus": 0,
+            "armorPenPercent": 50,
+            "defenderOriginalDef": 50,
+            "effectiveDefense": 25,
+            "finalDamage": 300
+          },
+          "lifesteal": {
+            "attackerLifestealPercent": 20,
+            "lifestealAmount": 60,
+            "attackerHpBefore": 1070,
+            "attackerHpAfter": 1130,
+            "attackerMaxHp": 4200
+          },
+          "defenderHp": {
+            "defenderHpBefore": 250,
+            "defenderHpAfter": 0,
+            "defenderMaxHp": 3500,
+            "isKnockout": true
+          }
+        }
+      ],
+      "hpTimeline": [
+        {
+          "turnNumber": 0,
+          "timestamp": 1765955890038,
+          "challengerHp": 3500,
+          "challengerMaxHp": 3500,
+          "opponentHp": 4200,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 1,
+          "timestamp": 1765955890039,
+          "challengerHp": 3500,
+          "challengerMaxHp": 3500,
+          "opponentHp": 3850,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 2,
+          "timestamp": 1765955890039,
+          "challengerHp": 3200,
+          "challengerMaxHp": 3500,
+          "opponentHp": 3910,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 3,
+          "timestamp": 1765955890039,
+          "challengerHp": 3305,
+          "challengerMaxHp": 3500,
+          "opponentHp": 2860,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 4,
+          "timestamp": 1765955890039,
+          "challengerHp": 3005,
+          "challengerMaxHp": 3500,
+          "opponentHp": 2920,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 5,
+          "timestamp": 1765955890039,
+          "challengerHp": 3110,
+          "challengerMaxHp": 3500,
+          "opponentHp": 1870,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 6,
+          "timestamp": 1765955890039,
+          "challengerHp": 2360,
+          "challengerMaxHp": 3500,
+          "opponentHp": 2020,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 7,
+          "timestamp": 1765955890039,
+          "challengerHp": 2395,
+          "challengerMaxHp": 3500,
+          "opponentHp": 1670,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 8,
+          "timestamp": 1765955890039,
+          "challengerHp": 1645,
+          "challengerMaxHp": 3500,
+          "opponentHp": 1820,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 9,
+          "timestamp": 1765955890039,
+          "challengerHp": 1680,
+          "challengerMaxHp": 3500,
+          "opponentHp": 1470,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 10,
+          "timestamp": 1765955890039,
+          "challengerHp": 930,
+          "challengerMaxHp": 3500,
+          "opponentHp": 1620,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 11,
+          "timestamp": 1765955890039,
+          "challengerHp": 965,
+          "challengerMaxHp": 3500,
+          "opponentHp": 1270,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 12,
+          "timestamp": 1765955890039,
+          "challengerHp": 215,
+          "challengerMaxHp": 3500,
+          "opponentHp": 1420,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 13,
+          "timestamp": 1765955890039,
+          "challengerHp": 250,
+          "challengerMaxHp": 3500,
+          "opponentHp": 1070,
+          "opponentMaxHp": 4200
+        },
+        {
+          "turnNumber": 14,
+          "timestamp": 1765955890039,
+          "challengerHp": 0,
+          "challengerMaxHp": 3500,
+          "opponentHp": 1130,
+          "opponentMaxHp": 4200
+        }
+      ]
     }
   ],
   "bets": [],
@@ -800,6 +1396,29 @@
       "updatedAt": 1765722295411,
       "resolvedAt": 1765722295411,
       "id": 4
+    }
+  ],
+  "gems": [
+    {
+      "id": "7a6eb10f-8754-4702-9267-5be82c34790d",
+      "name": "Speed",
+      "description": "",
+      "skillType": "double_move",
+      "trigger": "movement",
+      "activationChance": 30,
+      "cooldown": 0,
+      "effectParams": {
+        "moveDistance": 2
+      },
+      "createdAt": "2025-12-22T01:41:03.512Z",
+      "updatedAt": "2025-12-22T01:41:03.512Z"
+    }
+  ],
+  "cardGemEquipments": [
+    {
+      "cardId": "28e39fad-6da3-4cd3-a336-16f02fcb4517",
+      "gemIds": ["7a6eb10f-8754-4702-9267-5be82c34790d"],
+      "id": 1
     }
   ]
 }

@@ -1,0 +1,203 @@
+# Implementation Plan
+
+- [x] 1. Set up Gem feature structure and types
+  - [x] 1.1 Create gem types and interfaces
+    - Create `src/features/gems/types/gem.ts` with Gem, GemFormInput, SkillType, SkillTrigger, SkillEffectParams interfaces
+    - Create `src/features/gems/types/equipment.ts` with CardGemEquipment, EquippedGemState, BattleCardGems interfaces
+    - Create `src/features/gems/types/index.ts` barrel export
+    - _Requirements: 1.1_
+  - [x] 1.2 Write property test for gem types
+    - **Property 1: Gem CRUD Round Trip**
+    - **Validates: Requirements 1.1, 1.3**
+  - [x] 1.3 Create gem validation schemas
+    - Create `src/features/gems/types/schemas.ts` with Zod schemas for gem validation
+    - _Requirements: 1.1_
+
+- [x] 2. Implement Gem Service
+  - [x] 2.1 Create gem service with CRUD operations
+    - Create `src/features/gems/services/gemService.ts`
+    - Implement getAll, getById, create, update, delete methods
+    - Add to db.json gems collection
+    - _Requirements: 1.1, 1.2, 1.3, 1.4_
+  - [x] 2.2 Write unit tests for gem service
+    - Test CRUD operations
+    - Test validation errors
+    - _Requirements: 1.1, 1.2, 1.3, 1.4_
+
+- [x] 3. Implement Gem Equipment Service
+  - [x] 3.1 Create gem equipment service
+    - Create `src/features/gems/services/gemEquipmentService.ts`
+    - Implement getCardGems, equipGem, unequipGem, unequipAllByGemId methods
+    - Add to db.json cardGemEquipments collection
+    - _Requirements: 2.1, 2.2, 2.3_
+  - [x] 3.2 Write property test for gem slot limit
+    - **Property 2: Gem Slot Limit Invariant**
+    - **Validates: Requirements 2.1, 2.2**
+  - [x] 3.3 Write property test for equip/unequip round trip
+    - **Property 3: Equip/Unequip Round Trip**
+    - **Validates: Requirements 2.1, 2.3**
+  - [x] 3.4 Write property test for gem deletion cascade
+    - **Property 16: Gem Deletion Cascade**
+    - **Validates: Requirements 1.4**
+
+- [x] 4. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 5. Implement Skill System Core
+  - [x] 5.1 Create skill system types
+    - Create `src/features/battle/engine/systems/SkillSystem.ts`
+    - Define SkillSystem interface, MovementSkillResult, CombatSkillResult, ActivatedSkill
+    - _Requirements: 3.1, 4.1, 5.1, 6.1, 7.1, 8.1_
+  - [x] 5.2 Implement activation chance roller
+    - Implement rollActivation method with random number generation
+    - _Requirements: 10.1, 10.2, 10.3_
+  - [x] 5.3 Write property test for activation chance distribution
+    - **Property 13: Activation Chance Distribution**
+    - **Validates: Requirements 10.1, 10.2**
+  - [x] 5.4 Write property test for failed activation no cooldown
+    - **Property 14: Failed Activation No Cooldown**
+    - **Validates: Requirements 10.3**
+
+- [x] 6. Implement Cooldown System
+  - [x] 6.1 Implement cooldown management
+    - Add cooldown tracking to EquippedGemState
+    - Implement decrementCooldowns method
+    - Implement cooldown check in skill activation
+    - _Requirements: 9.1, 9.2, 9.3_
+  - [x] 6.2 Write property test for cooldown blocks activation
+    - **Property 11: Cooldown Blocks Activation**
+    - **Validates: Requirements 3.3, 4.3, 5.3, 6.3, 7.3, 8.5, 9.3**
+  - [x] 6.3 Write property test for cooldown decrement
+    - **Property 12: Cooldown Decrement**
+    - **Validates: Requirements 9.1, 9.2**
+
+- [x] 7. Implement Movement Skills
+  - [x] 7.1 Implement double move skill
+    - Add processMovementSkills method
+    - Implement double_move effect with position clamping
+    - _Requirements: 5.1, 5.2, 5.3_
+  - [x] 7.2 Write property test for double move distance
+    - **Property 6: Double Move Distance**
+    - **Validates: Requirements 5.1, 5.2**
+  - [x] 7.3 Implement leap strike skill
+    - Implement leap_strike detection and positioning
+    - Implement knockback after leap
+    - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
+  - [x] 7.4 Write property test for leap strike positioning
+    - **Property 9: Leap Strike Positioning**
+    - **Validates: Requirements 8.1, 8.4**
+  - [x] 7.5 Write property test for leap strike knockback
+    - **Property 10: Leap Strike Knockback**
+    - **Validates: Requirements 8.2, 8.3**
+
+- [x] 8. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 9. Implement Combat Skills
+  - [x] 9.1 Implement knockback skill
+    - Add processCombatSkills method
+    - Implement knockback effect with position clamping
+    - _Requirements: 3.1, 3.2, 3.3_
+  - [x] 9.2 Write property test for knockback position change
+    - **Property 4: Knockback Position Change**
+    - **Validates: Requirements 3.1, 3.2**
+  - [x] 9.3 Implement retreat skill
+    - Implement retreat effect with position clamping
+    - _Requirements: 4.1, 4.2, 4.3_
+  - [x] 9.4 Write property test for retreat position change
+    - **Property 5: Retreat Position Change**
+    - **Validates: Requirements 4.1, 4.2**
+  - [x] 9.5 Implement double attack skill
+    - Implement double_attack effect with second attack logic
+    - Handle defender defeat check
+    - _Requirements: 6.1, 6.2, 6.3_
+  - [x] 9.6 Write property test for double attack count
+    - **Property 7: Double Attack Count**
+    - **Validates: Requirements 6.1, 6.2**
+  - [x] 9.7 Implement execute skill
+    - Implement execute threshold check
+    - Set defender HP to 0 when below threshold
+    - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
+  - [x] 9.8 Write property test for execute threshold
+    - **Property 8: Execute Threshold**
+    - **Validates: Requirements 7.1, 7.2**
+
+- [x] 10. Integrate Skill System with Battle Engine
+  - [x] 10.1 Update BattleState to include gem states
+    - Add BattleCardGems to BattleState
+    - Initialize gem states from equipped gems
+    - _Requirements: 2.4, 9.4_
+  - [x] 10.2 Integrate movement skills with arena movement
+    - Call processMovementSkills in movement phase
+    - Update positions based on skill results
+    - _Requirements: 5.1, 8.1_
+  - [x] 10.3 Integrate combat skills with CombatSystem
+    - Call processCombatSkills after attack
+    - Apply position changes and additional attacks
+    - _Requirements: 3.1, 4.1, 6.1, 7.1_
+  - [x] 10.4 Add cooldown decrement to turn end
+    - Call decrementCooldowns at end of each turn
+    - _Requirements: 9.2_
+
+- [x] 11. Implement Skill Logging
+  - [x] 11.1 Add skill activation to battle log
+    - Create skill activation log entry type
+    - Log skill name, card name, and effect
+    - _Requirements: 11.1, 11.2, 11.3_
+  - [x] 11.2 Write property test for skill activation logging
+    - **Property 15: Skill Activation Logging**
+    - **Validates: Requirements 11.1, 11.3**
+
+- [x] 12. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 13. Create Gem Management UI
+  - [x] 13.1 Create gem list page
+    - Create `src/features/gems/pages/GemListPage.tsx`
+    - Display all gems with properties
+    - \_Requirements: 1.2_saz
+  - [x] 13.2 Create gem form component
+    - Create `src/features/gems/components/GemForm.tsx`
+    - Form for creating/editing gems with all fields
+    - _Requirements: 1.1, 1.3_
+  - [x] 13.3 Create gem create/edit pages
+    - Create `src/features/gems/pages/GemCreatePage.tsx`
+    - Create `src/features/gems/pages/GemEditPage.tsx`
+    - _Requirements: 1.1, 1.3_
+
+- [x] 14. Create Gem Equipment UI
+  - [x] 14.1 Create gem selector componenơt
+    - Create `src/features/gems/components/GemSelector.tsx`
+    - Show available gems for equipping
+    - _Requirements: 2.1_
+  - [x] 14.2 Create equipped gems display
+    - Create `src/features/gems/components/EquippedGems.tsx`
+    - Show equipped gems on card with unequip option
+    - _Requirements: 2.3, 2.4_
+  - [x] 14.3 Integrate gem equipment into card detail page
+    - Add gem equipment section to CardDetailPage
+    - Show 3 gem slots with equip/unequip functionality
+    - _Requirements: 2.1, 2.2, 2.3, 2.4_
+
+- [x] 15. Create Battle Skill Display
+  - [x] 15.1 Create skill activation indicator
+    - Create visual indicator for skill activation in battle
+    - Show skill name and effect briefly
+    - _Requirements: 11.2_
+  - [x] 15.2 Create cooldown display
+    - Show remaining cooldown on equipped gems during battle
+    - _Requirements: 9.4_
+  - [x] 15.3 Update battle log for skill events
+    - Display skill activations in battle log
+    - _Requirements: 11.1, 11.4_
+
+- [x] 16. Add Routes and Navigation
+  - [x] 16.1 Add gem routes to main router
+    - Add /gems, /gems/create, /gems/:id/edit routes
+    - _Requirements: 1.1, 1.2, 1.3_
+  - [x] 16.2 Add gem navigation to app layout
+    - Add Gems link to navigation menu
+    - _Requirements: 1.2_
+
+- [x] 17. Final Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.

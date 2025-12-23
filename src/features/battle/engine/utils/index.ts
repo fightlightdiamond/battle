@@ -1,6 +1,12 @@
 // Utils module barrel exports
 export { Serializer } from "./Serializer";
-export { CombatLogger } from "./CombatLogger";
+export {
+  CombatLogger,
+  createCombatLogger,
+  getSkillEffectDescription,
+  type CombatLoggerInstance,
+  type SkillActivationInput,
+} from "./CombatLogger";
 export {
   formatBattleMessage,
   type FormatMessageParams,

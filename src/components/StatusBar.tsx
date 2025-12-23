@@ -21,6 +21,7 @@ import {
   ScrollText,
   Settings,
   Sword,
+  Gem,
 } from "lucide-react";
 
 interface NavItem {
@@ -73,6 +74,25 @@ const navGroups: NavGroup[] = [
       {
         path: "/weapons/create",
         label: "New Weapon",
+        icon: <Plus className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    label: "Gems",
+    icon: <Gem className="h-5 w-5" />,
+    color: "from-emerald-500 to-teal-400",
+    glowColor: "shadow-emerald-500/50",
+    basePaths: ["/gems"],
+    items: [
+      {
+        path: "/gems",
+        label: "All Gems",
+        icon: <Gem className="h-4 w-4" />,
+      },
+      {
+        path: "/gems/create",
+        label: "New Gem",
         icon: <Plus className="h-4 w-4" />,
       },
     ],
