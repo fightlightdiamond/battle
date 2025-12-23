@@ -1,46 +1,10 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { CardEquipment } from "../types/equipment";
+import type { EquipmentState, EquipmentActions, EquipmentStore } from "./types";
 
-// ============================================
-// Equipment Store Types
-// ============================================
-
-export interface EquipmentState {
-  // Data - Map of cardId to CardEquipment
-  cardEquipments: Map<string, CardEquipment>;
-
-  // Loading states
-  isLoading: boolean;
-  isEquipping: boolean;
-  isUnequipping: boolean;
-
-  // Error state
-  error: string | null;
-}
-
-export interface EquipmentActions {
-  // Equipment operations
-  setEquipment: (cardId: string, equipment: CardEquipment) => void;
-  setMultipleEquipments: (equipments: CardEquipment[]) => void;
-  equipWeapon: (cardId: string, weaponId: string) => void;
-  unequipWeapon: (cardId: string) => void;
-  removeEquipment: (cardId: string) => void;
-
-  // Loading states
-  setLoading: (isLoading: boolean) => void;
-  setEquipping: (isEquipping: boolean) => void;
-  setUnequipping: (isUnequipping: boolean) => void;
-
-  // Error handling
-  setError: (error: string | null) => void;
-  clearError: () => void;
-
-  // Reset
-  reset: () => void;
-}
-
-export type EquipmentStore = EquipmentState & EquipmentActions;
+// Re-export types for convenience
+export type { EquipmentState, EquipmentActions, EquipmentStore };
 
 const initialState: EquipmentState = {
   cardEquipments: new Map(),

@@ -7,7 +7,6 @@ import { create } from "zustand";
 import type {
   BattleCard,
   BattleLogEntry,
-  BattlePhase,
   BattleResult,
   CurrentAttacker,
   AttackResult,
@@ -24,43 +23,15 @@ import {
   cardToBattleCardWithEquipment,
 } from "../services/battleService";
 import type { Card } from "../../cards/types";
+import type {
+  BattleMode,
+  BattleState,
+  BattleActions,
+  BattleStoreState,
+} from "./types";
 
-/**
- * Battle mode type - 'classic' or 'arena'
- */
-export type BattleMode = "classic" | "arena";
-
-/**
- * Battle store state interface (immutable via Readonly)
- */
-export interface BattleState {
-  readonly phase: BattlePhase;
-  readonly challenger: Readonly<BattleCard> | null;
-  readonly opponent: Readonly<BattleCard> | null;
-  readonly currentAttacker: CurrentAttacker;
-  readonly battleLog: ReadonlyArray<Readonly<BattleLogEntry>>;
-  readonly result: BattleResult;
-  readonly isAutoBattle: boolean;
-  readonly battleMode: BattleMode;
-}
-
-/**
- * Battle store actions interface
- */
-export interface BattleActions {
-  selectChallenger: (card: Card) => Promise<boolean>;
-  selectOpponent: (card: Card) => Promise<boolean>;
-  setBattleMode: (mode: BattleMode) => void;
-  startBattle: () => void;
-  executeAttack: () => AttackResult | null;
-  toggleAutoBattle: () => void;
-  resetBattle: () => void;
-}
-
-/**
- * Combined store interface
- */
-export type BattleStoreState = BattleState & BattleActions;
+// Re-export types for convenience
+export type { BattleMode, BattleState, BattleActions, BattleStoreState };
 
 /**
  * Generate a unique ID for battle log entries

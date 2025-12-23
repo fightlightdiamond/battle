@@ -11,6 +11,18 @@ import { create } from "zustand";
 import type { MatchupBet, PlaceBetRequest, Matchup } from "../types/matchup";
 import { matchupBetService } from "../services/matchupBetService";
 import { matchupService } from "../services/matchupService";
+import type {
+  MatchupBettingState,
+  MatchupBettingActions,
+  MatchupBettingStoreState,
+} from "./types";
+
+// Re-export types for convenience
+export type {
+  MatchupBettingState,
+  MatchupBettingActions,
+  MatchupBettingStoreState,
+};
 
 // Local storage key for gold balance (shared with betting store)
 const GOLD_BALANCE_STORAGE_KEY = "betting_gold_balance";
@@ -48,72 +60,6 @@ const persistBalance = (balance: number): void => {
     // Ignore localStorage errors
   }
 };
-
-/**
- * Matchup Betting Store State
- */
-export interface MatchupBettingState {
-  goldBalance: number;
-  currentBet: MatchupBet | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
-/**
- * Matchup Betting Store Actions
- */
-export interface MatchupBettingActions {
-  /**
-   * Place a bet on a matchup
-   * Requirements: 3.1, 3.2, 3.3, 3.4
-   */
-  placeMatchupBet: (request: PlaceBetRequest) => Promise<boolean>;
-
-  /**
-   * Update an existing bet amount
-   * Requirements: 4.3, 4.4, 4.5
-   */
-  updateMatchupBet: (betId: string, newAmount: number) => Promise<boolean>;
-
-  /**
-   * Cancel a bet and refund the amount
-   * Requirements: 4.1
-   */
-  cancelMatchupBet: (betId: string) => Promise<boolean>;
-
-  /**
-   * Resolve all bets for a completed matchup
-   * Requirements: 6.1, 6.2
-   */
-  resolveMatchupBets: (matchupId: string, winnerId: string) => Promise<void>;
-
-  /**
-   * Refund all bets for a cancelled matchup
-   * Requirements: 6.5
-   */
-  refundMatchupBets: (matchupId: string) => Promise<void>;
-
-  /**
-   * Load balance from local storage
-   */
-  loadBalance: () => void;
-
-  /**
-   * Set current bet
-   */
-  setCurrentBet: (bet: MatchupBet | null) => void;
-
-  /**
-   * Clear error
-   */
-  clearError: () => void;
-}
-
-/**
- * Combined store type
- */
-export type MatchupBettingStoreState = MatchupBettingState &
-  MatchupBettingActions;
 
 /**
  * Initial state factory
@@ -206,7 +152,7 @@ export const useMatchupBettingStore = create<MatchupBettingStoreState>(
      */
     updateMatchupBet: async (
       betId: string,
-      newAmount: number
+      newAmount: number,
     ): Promise<boolean> => {
       const { goldBalance } = get();
 
@@ -234,7 +180,7 @@ export const useMatchupBettingStore = create<MatchupBettingStoreState>(
 
         // Check matchup status (Requirements: 4.6)
         const matchup = await matchupService.getMatchupById(
-          currentBet.matchupId
+          currentBet.matchupId,
         );
         if (!matchup || matchup.status !== "pending") {
           set({
@@ -309,7 +255,7 @@ export const useMatchupBettingStore = create<MatchupBettingStoreState>(
 
         // Check matchup status (Requirements: 4.6)
         const matchup = await matchupService.getMatchupById(
-          currentBet.matchupId
+          currentBet.matchupId,
         );
         if (!matchup || matchup.status !== "pending") {
           set({
@@ -352,7 +298,7 @@ export const useMatchupBettingStore = create<MatchupBettingStoreState>(
      */
     resolveMatchupBets: async (
       matchupId: string,
-      winnerId: string
+      winnerId: string,
     ): Promise<void> => {
       const { goldBalance, currentBet } = get();
 
@@ -362,7 +308,7 @@ export const useMatchupBettingStore = create<MatchupBettingStoreState>(
         // Get all active bets for this matchup to calculate payout
         const activeBets = await matchupBetService.getBetsByMatchup(matchupId);
         const myActiveBets = activeBets.filter(
-          (bet) => bet.status === "active"
+          (bet) => bet.status === "active",
         );
 
         // Calculate total payout for winning bets
@@ -414,7 +360,7 @@ export const useMatchupBettingStore = create<MatchupBettingStoreState>(
         // Get all active bets for this matchup to calculate refund
         const activeBets = await matchupBetService.getBetsByMatchup(matchupId);
         const myActiveBets = activeBets.filter(
-          (bet) => bet.status === "active"
+          (bet) => bet.status === "active",
         );
 
         // Calculate total refund
@@ -467,7 +413,7 @@ export const useMatchupBettingStore = create<MatchupBettingStoreState>(
     clearError: (): void => {
       set({ error: null });
     },
-  })
+  }),
 );
 
 // ============================================================================
@@ -478,7 +424,7 @@ export const selectGoldBalance = (state: MatchupBettingState): number =>
   state.goldBalance;
 
 export const selectCurrentBet = (
-  state: MatchupBettingState
+  state: MatchupBettingState,
 ): MatchupBet | null => state.currentBet;
 
 export const selectIsLoading = (state: MatchupBettingState): boolean =>
@@ -505,7 +451,7 @@ export const selectCanAffordBet =
 export function validateBetPlacement(
   betAmount: number,
   goldBalance: number,
-  matchup: Matchup | null
+  matchup: Matchup | null,
 ): string | null {
   // Validate bet amount > 0 (Requirements: 3.3)
   if (betAmount <= 0) {
@@ -536,7 +482,7 @@ export function validateBetPlacement(
  */
 export function calculateBalanceAfterBet(
   currentBalance: number,
-  betAmount: number
+  betAmount: number,
 ): number {
   return currentBalance - betAmount;
 }
@@ -549,7 +495,7 @@ export function calculateBalanceAfterBet(
 export function calculateBalanceAfterUpdate(
   currentBalance: number,
   oldAmount: number,
-  newAmount: number
+  newAmount: number,
 ): number {
   const difference = newAmount - oldAmount;
   return currentBalance - difference;
@@ -562,7 +508,7 @@ export function calculateBalanceAfterUpdate(
  */
 export function calculateBalanceAfterCancellation(
   currentBalance: number,
-  betAmount: number
+  betAmount: number,
 ): number {
   return currentBalance + betAmount;
 }
@@ -575,7 +521,7 @@ export function calculateBalanceAfterCancellation(
 export function calculatePayout(
   betAmount: number,
   selectedCardId: string,
-  winnerId: string
+  winnerId: string,
 ): { payout: number; status: "won" | "lost" } {
   if (selectedCardId === winnerId) {
     return {
@@ -599,7 +545,7 @@ export function validateBetUpdate(
   newAmount: number,
   oldAmount: number,
   goldBalance: number,
-  matchup: Matchup | null
+  matchup: Matchup | null,
 ): string | null {
   // Validate new amount > 0
   if (newAmount <= 0) {
@@ -627,7 +573,7 @@ export function validateBetUpdate(
  * Requirements: 4.6
  */
 export function validateBetCancellation(
-  matchup: Matchup | null
+  matchup: Matchup | null,
 ): string | null {
   if (!matchup || matchup.status !== "pending") {
     return "Cannot cancel bet on non-pending matchup";

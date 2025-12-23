@@ -17,33 +17,14 @@ import {
   matchupBattleService,
   type MatchupBattleResult,
 } from "../services/matchupBattleService";
+import type {
+  MatchupStoreState,
+  MatchupStoreActions,
+  MatchupStore,
+} from "./types";
 
-export interface MatchupStoreState {
-  matchups: Matchup[];
-  currentMatchup: Matchup | null;
-  isLoading: boolean;
-  error: string | null;
-  lastBattleResult: MatchupBattleResult | null;
-}
-
-export interface MatchupStoreActions {
-  // CRUD Actions
-  fetchMatchups: (status?: MatchupStatus) => Promise<void>;
-  fetchMatchupById: (id: string) => Promise<void>;
-  createMatchup: (request: CreateMatchupRequest) => Promise<Matchup>;
-
-  // Battle Execution Actions (Requirements: 5.1, 5.2, 5.3, 5.4)
-  executeMatchupBattle: (matchupId: string) => Promise<MatchupBattleResult>;
-
-  // Cancellation Action (Requirements: 6.5)
-  cancelMatchup: (matchupId: string) => Promise<void>;
-
-  // Utility Actions
-  clearError: () => void;
-  clearLastBattleResult: () => void;
-}
-
-export type MatchupStore = MatchupStoreState & MatchupStoreActions;
+// Re-export types for convenience
+export type { MatchupStoreState, MatchupStoreActions, MatchupStore };
 
 /**
  * Initial state factory
@@ -149,20 +130,19 @@ export const useMatchupStore = create<MatchupStore>((set, get) => ({
    * Requirements: 5.1, 5.2, 5.3, 5.4, 6.1, 6.2, 6.3, 6.4
    */
   executeMatchupBattle: async (
-    matchupId: string
+    matchupId: string,
   ): Promise<MatchupBattleResult> => {
     set({ isLoading: true, error: null });
 
     try {
       // Execute battle and resolve bets in database
-      const result = await matchupBattleService.executeAndResolveBets(
-        matchupId
-      );
+      const result =
+        await matchupBattleService.executeAndResolveBets(matchupId);
 
       // Update matchups list with completed matchup
       const { matchups } = get();
       const updatedMatchups = matchups.map((m) =>
-        m.id === matchupId ? result.matchup : m
+        m.id === matchupId ? result.matchup : m,
       );
 
       set({
@@ -210,7 +190,7 @@ export const useMatchupStore = create<MatchupStore>((set, get) => ({
       // Update matchups list with cancelled matchup
       const { matchups } = get();
       const updatedMatchups = matchups.map((m) =>
-        m.id === matchupId ? cancelledMatchup : m
+        m.id === matchupId ? cancelledMatchup : m,
       );
 
       set({
@@ -255,7 +235,7 @@ export const selectMatchups = (state: MatchupStoreState): Matchup[] =>
   state.matchups;
 
 export const selectCurrentMatchup = (
-  state: MatchupStoreState
+  state: MatchupStoreState,
 ): Matchup | null => state.currentMatchup;
 
 export const selectIsLoading = (state: MatchupStoreState): boolean =>
@@ -265,7 +245,7 @@ export const selectError = (state: MatchupStoreState): string | null =>
   state.error;
 
 export const selectLastBattleResult = (
-  state: MatchupStoreState
+  state: MatchupStoreState,
 ): MatchupBattleResult | null => state.lastBattleResult;
 
 export const selectPendingMatchups = (state: MatchupStoreState): Matchup[] =>

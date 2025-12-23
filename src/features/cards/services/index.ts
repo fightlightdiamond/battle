@@ -5,7 +5,11 @@ export {
   applyDefaultStats,
 } from "./cardService";
 export { getDB, closeDB, deleteDB } from "./db";
-export type { CardGameDB } from "./db";
+export type {
+  CardGameDB,
+  StoredWeapon,
+  CardEquipment as DBCardEquipment,
+} from "./db";
 export {
   isOPFSSupported,
   saveImage,

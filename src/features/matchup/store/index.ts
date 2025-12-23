@@ -1,13 +1,26 @@
-// Matchup store barrel export
+// Store types (separated from implementation)
+export type {
+  MatchupStoreState,
+  MatchupStoreActions,
+  MatchupStore,
+  MatchupBettingState,
+  MatchupBettingActions,
+  MatchupBettingStoreState,
+} from "./types";
+
+// Matchup store exports
 export {
   useMatchupStore,
   selectMatchups,
   selectCurrentMatchup,
   selectIsLoading as selectMatchupIsLoading,
   selectError as selectMatchupError,
+  selectLastBattleResult,
+  selectPendingMatchups,
+  selectCompletedMatchups,
 } from "./matchupStore";
-export type { MatchupStoreState } from "./matchupStore";
 
+// Matchup betting store exports
 export {
   useMatchupBettingStore,
   selectGoldBalance,
@@ -23,4 +36,3 @@ export {
   validateBetUpdate,
   validateBetCancellation,
 } from "./matchupBettingStore";
-export type { MatchupBettingState } from "./matchupBettingStore";

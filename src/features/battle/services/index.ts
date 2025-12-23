@@ -8,6 +8,8 @@ export {
   cardToBattleCardWithWeapon,
   cardToBattleCardWithEquipment,
   loadCardWeapon,
+  loadCardGems,
+  initializeBattleCardGems,
 } from "./battleService";
 
 // Battle recorder exports

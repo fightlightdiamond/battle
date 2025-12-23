@@ -46,5 +46,15 @@ export {
 // Schemas and constants
 export * from "./schemas";
 
+// Schema generator types
+export type {
+  GeneratedStatSchemaType,
+  GeneratedStatSchemaWithDefaultsType,
+} from "./schemaGenerator";
+export {
+  generatedStatSchema,
+  generatedStatSchemaWithDefaults,
+} from "./schemaGenerator";
+
 // Stat constants (kept for backward compatibility)
 export { DEFAULT_STATS, STAT_RANGES } from "./constants";
