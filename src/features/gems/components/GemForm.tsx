@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -147,7 +147,10 @@ export function GemForm({
     },
   });
 
-  const selectedSkillType = form.watch("skillType");
+  const selectedSkillType = useWatch({
+    control: form.control,
+    name: "skillType",
+  });
 
   // Update trigger and effect params when skill type changes
   const handleSkillTypeChange = (value: SkillType) => {
