@@ -23,7 +23,13 @@ import {
   skillTypeSchema,
   skillTriggerSchema,
 } from "./schemas";
-import type { Gem, GemFormInput, SkillType, SkillTrigger } from "./gem";
+import type {
+  Gem,
+  GemFormInput,
+  SkillType,
+  SkillTrigger,
+  GemTierType,
+} from "./gem";
 
 // ============================================
 // Arbitraries (Generators)
@@ -43,6 +49,14 @@ const skillTypeArb: fc.Arbitrary<SkillType> = fc.constantFrom(
 const skillTriggerArb: fc.Arbitrary<SkillTrigger> = fc.constantFrom(
   "movement",
   "combat",
+);
+
+// Valid gem tiers
+const gemTierArb: fc.Arbitrary<GemTierType> = fc.constantFrom(
+  "basic",
+  "advanced",
+  "master",
+  "legendary",
 );
 
 // Valid name generator
@@ -144,6 +158,7 @@ const validGemArb: fc.Arbitrary<Gem> = fc.record({
     max: COOLDOWN_RANGE.max,
   }),
   effectParams: effectParamsArb,
+  tier: gemTierArb,
   imagePath: fc.option(fc.string({ minLength: 1, maxLength: 100 }), {
     nil: null,
   }),

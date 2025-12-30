@@ -1,4 +1,5 @@
 import type { Gem, GemFormInput } from "../types/gem";
+import { DEFAULT_GEM_TIER } from "../types/gem";
 import { gemFormSchema } from "../types/schemas";
 import {
   saveGemImage,
@@ -124,6 +125,7 @@ export const GemService = {
       activationChance: input.activationChance,
       cooldown: input.cooldown,
       effectParams: input.effectParams,
+      tier: input.tier ?? DEFAULT_GEM_TIER, // Default to "basic" if not specified
       imagePath,
       imageUrl,
       createdAt: now,
@@ -187,6 +189,7 @@ export const GemService = {
         inputWithoutImage.activationChance ?? existing.activationChance,
       cooldown: inputWithoutImage.cooldown ?? existing.cooldown,
       effectParams: inputWithoutImage.effectParams ?? existing.effectParams,
+      tier: inputWithoutImage.tier ?? existing.tier,
     };
 
     // Validate merged input

@@ -19,6 +19,18 @@ export type SkillType =
   | "leap_strike"; // Jump to enemy and knockback 2
 
 /**
+ * Gem tier enumeration - progression levels for gems
+ * Requirement 1.1: Support 4 tiers: Basic, Advanced, Master, Legendary
+ */
+export type GemTierType = "basic" | "advanced" | "master" | "legendary";
+
+/**
+ * Default tier for new gems
+ * Requirement 1.2: Default tier is "basic"
+ */
+export const DEFAULT_GEM_TIER: GemTierType = "basic";
+
+/**
  * Skill effect parameters - configurable values for each skill type
  */
 export interface SkillEffectParams {
@@ -32,6 +44,7 @@ export interface SkillEffectParams {
 
 /**
  * Gem entity stored in database
+ * Requirement 1.4: Store tier information as part of gem data
  */
 export interface Gem {
   id: string;
@@ -42,6 +55,7 @@ export interface Gem {
   activationChance: number; // 0-100 percentage
   cooldown: number; // 0 = no cooldown
   effectParams: SkillEffectParams;
+  tier: GemTierType; // Gem tier (basic, advanced, master, legendary)
   imagePath: string | null; // Path to stored image file
   imageUrl: string | null; // Blob URL for display
   createdAt: string;
@@ -50,6 +64,7 @@ export interface Gem {
 
 /**
  * Form input for creating/editing gems
+ * Requirement 1.2: Default tier is "basic" when not specified
  */
 export interface GemFormInput {
   name: string;
@@ -59,5 +74,6 @@ export interface GemFormInput {
   activationChance: number;
   cooldown: number;
   effectParams: SkillEffectParams;
+  tier?: GemTierType; // Optional, defaults to "basic"
   image?: File | null; // Optional image file for upload
 }

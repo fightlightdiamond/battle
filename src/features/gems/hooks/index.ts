@@ -13,3 +13,15 @@ export { useDeleteGem } from "./useDeleteGem";
 export { useCardGems } from "./useCardGems";
 export { useEquipGem } from "./useEquipGem";
 export { useUnequipGem } from "./useUnequipGem";
+
+// Skill tree hooks
+export {
+  useSkillTreeConfig,
+  SkillTreeConfigContext,
+} from "./useSkillTreeConfig";
+export {
+  useSkillTreeData,
+  applySkillTypeFilter,
+  skillTreeKeys,
+  type SkillTreeData,
+} from "./useSkillTreeData";

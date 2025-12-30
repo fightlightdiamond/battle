@@ -43,6 +43,14 @@ export const skillTypeSchema = z.enum([
   "leap_strike",
 ]);
 
+// Gem tier schema
+export const gemTierSchema = z.enum([
+  "basic",
+  "advanced",
+  "master",
+  "legendary",
+]);
+
 // Name schema - validates non-empty, non-whitespace
 const nameSchema = z
   .string()
@@ -133,6 +141,7 @@ export const gemFormSchema = z.object({
   activationChance: activationChanceSchema,
   cooldown: cooldownSchema,
   effectParams: skillEffectParamsSchema,
+  tier: gemTierSchema.optional(), // Optional, defaults to "basic"
 });
 
 // Gem schema for stored gems (with id and timestamps)
@@ -145,6 +154,7 @@ export const gemSchema = z.object({
   activationChance: activationChanceSchema,
   cooldown: cooldownSchema,
   effectParams: skillEffectParamsSchema,
+  tier: gemTierSchema, // Required for stored gems
   imagePath: z.string().nullable(),
   imageUrl: z.string().nullable(),
   createdAt: z.string(),

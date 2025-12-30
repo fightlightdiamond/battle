@@ -1410,8 +1410,190 @@
       "effectParams": {
         "moveDistance": 2
       },
+      "tier": "basic",
       "createdAt": "2025-12-22T01:41:03.512Z",
       "updatedAt": "2025-12-22T01:41:03.512Z"
+    },
+    {
+      "id": "gem-basic-knockback",
+      "name": "Knockback Stone",
+      "description": "A basic gem that pushes enemies back",
+      "skillType": "knockback",
+      "trigger": "combat",
+      "activationChance": 20,
+      "cooldown": 0,
+      "effectParams": {
+        "knockbackDistance": 1
+      },
+      "tier": "basic",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "gem-advanced-knockback",
+      "name": "Force Stone",
+      "description": "An advanced gem with stronger knockback",
+      "skillType": "knockback",
+      "trigger": "combat",
+      "activationChance": 35,
+      "cooldown": 0,
+      "effectParams": {
+        "knockbackDistance": 1
+      },
+      "tier": "advanced",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "gem-master-knockback",
+      "name": "Impact Stone",
+      "description": "A master gem with powerful knockback",
+      "skillType": "knockback",
+      "trigger": "combat",
+      "activationChance": 50,
+      "cooldown": 0,
+      "effectParams": {
+        "knockbackDistance": 2
+      },
+      "tier": "master",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "gem-basic-retreat",
+      "name": "Retreat Stone",
+      "description": "A basic gem that allows retreat after attack",
+      "skillType": "retreat",
+      "trigger": "combat",
+      "activationChance": 25,
+      "cooldown": 0,
+      "effectParams": {
+        "knockbackDistance": 1
+      },
+      "tier": "basic",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "gem-advanced-retreat",
+      "name": "Swift Retreat Stone",
+      "description": "An advanced gem with faster retreat",
+      "skillType": "retreat",
+      "trigger": "combat",
+      "activationChance": 40,
+      "cooldown": 0,
+      "effectParams": {
+        "knockbackDistance": 1
+      },
+      "tier": "advanced",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "gem-basic-double-attack",
+      "name": "Fury Stone",
+      "description": "A basic gem that enables double attacks",
+      "skillType": "double_attack",
+      "trigger": "combat",
+      "activationChance": 15,
+      "cooldown": 2,
+      "effectParams": {
+        "attackCount": 2
+      },
+      "tier": "basic",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "gem-advanced-double-attack",
+      "name": "Rage Stone",
+      "description": "An advanced gem with higher double attack chance",
+      "skillType": "double_attack",
+      "trigger": "combat",
+      "activationChance": 30,
+      "cooldown": 1,
+      "effectParams": {
+        "attackCount": 2
+      },
+      "tier": "advanced",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "gem-legendary-execute",
+      "name": "Death Stone",
+      "description": "A legendary gem that executes low HP enemies",
+      "skillType": "execute",
+      "trigger": "combat",
+      "activationChance": 100,
+      "cooldown": 3,
+      "effectParams": {
+        "executeThreshold": 20
+      },
+      "tier": "legendary",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
+  "evolutionPaths": [
+    {
+      "id": "evo-knockback-1",
+      "sourceGemId": "gem-basic-knockback",
+      "targetGemId": "gem-advanced-knockback",
+      "cost": {
+        "gold": 500
+      },
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "evo-knockback-2",
+      "sourceGemId": "gem-advanced-knockback",
+      "targetGemId": "gem-master-knockback",
+      "cost": {
+        "gold": 1500
+      },
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "evo-retreat-1",
+      "sourceGemId": "gem-basic-retreat",
+      "targetGemId": "gem-advanced-retreat",
+      "cost": {
+        "gold": 600
+      },
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "evo-double-attack-1",
+      "sourceGemId": "gem-basic-double-attack",
+      "targetGemId": "gem-advanced-double-attack",
+      "cost": {
+        "gold": 800
+      },
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
+  "playerGems": [
+    {
+      "id": "player-gems-1",
+      "playerId": "player-1",
+      "gemIds": [
+        "gem-basic-knockback",
+        "gem-basic-retreat",
+        "7a6eb10f-8754-4702-9267-5be82c34790d"
+      ]
+    }
+  ],
+  "playerResources": [
+    {
+      "id": "player-resources-1",
+      "playerId": "player-1",
+      "gold": 5000,
+      "materials": {}
     }
   ],
   "cardGemEquipments": [

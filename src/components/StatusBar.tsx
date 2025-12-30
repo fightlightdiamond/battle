@@ -95,6 +95,11 @@ const navGroups: NavGroup[] = [
         label: "New Gem",
         icon: <Plus className="h-4 w-4" />,
       },
+      {
+        path: "/gems/skill-tree",
+        label: "Skill Tree",
+        icon: <Gem className="h-4 w-4" />,
+      },
     ],
   },
   {
