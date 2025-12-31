@@ -22,6 +22,7 @@ import {
   Settings,
   Sword,
   Gem,
+  Code,
 } from "lucide-react";
 
 interface NavItem {
@@ -142,6 +143,20 @@ const navGroups: NavGroup[] = [
         path: "/admin/matchups",
         label: "Admin: Matchups",
         icon: <Settings className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    label: "Builder",
+    icon: <Code className="h-5 w-5" />,
+    color: "from-indigo-500 to-violet-400",
+    glowColor: "shadow-indigo-500/50",
+    basePaths: ["/lowcode"],
+    items: [
+      {
+        path: "/lowcode",
+        label: "Entity Builder",
+        icon: <Code className="h-4 w-4" />,
       },
     ],
   },

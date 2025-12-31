@@ -38,6 +38,7 @@ import {
   GemEditPage,
   SkillTreePage,
 } from "./features/gems/pages";
+import { EntityBuilderPage } from "./features/lowcode/pages";
 
 // Get basename from Vite's base config for GitHub Pages deployment
 const basename = import.meta.env.BASE_URL;
@@ -59,6 +60,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/gems/create" element={<GemCreatePage />} />
           <Route path="/gems/:id/edit" element={<GemEditPage />} />
           <Route path="/gems/skill-tree" element={<SkillTreePage />} />
+          <Route path="/lowcode" element={<EntityBuilderPage />} />
           <Route path="/battle/setup" element={<BattleSetupPage />} />
           <Route path="/battle/arena" element={<BattleArenaPage />} />
           <Route path="/battle/arena-1d" element={<ArenaBattlePage />} />
