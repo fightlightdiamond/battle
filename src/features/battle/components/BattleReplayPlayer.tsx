@@ -39,7 +39,7 @@ export interface BattleReplayPlayerProps {
 function combatantToBattleCard(
   combatant: BattleRecord["challenger"],
   currentHp: number,
-  imageUrl?: string | null
+  imageUrl?: string | null,
 ): BattleCardType {
   return {
     id: combatant.id,
@@ -54,6 +54,7 @@ function combatantToBattleCard(
     critDamage: combatant.critDamage,
     armorPen: combatant.armorPen,
     lifesteal: combatant.lifesteal,
+    effectiveRange: 1, // Default range for replay (range info not stored in history)
   };
 }
 
@@ -74,7 +75,7 @@ export function BattleReplayPlayer({
 }: BattleReplayPlayerProps) {
   const { state, controls, currentTurnRecord, totalTurns } = useReplayState(
     battleRecord,
-    onComplete
+    onComplete,
   );
 
   // Track which turn's damage is currently being shown
@@ -96,7 +97,7 @@ export function BattleReplayPlayer({
       try {
         // Fetch challenger card image
         const challengerCard = await cardApi.getById(
-          battleRecord.challenger.id
+          battleRecord.challenger.id,
         );
         if (!cancelled && challengerCard?.imagePath) {
           const url = await getImageUrl(challengerCard.imagePath);
@@ -153,9 +154,9 @@ export function BattleReplayPlayer({
       combatantToBattleCard(
         battleRecord.challenger,
         state.challengerHp,
-        challengerImageUrl
+        challengerImageUrl,
       ),
-    [battleRecord.challenger, state.challengerHp, challengerImageUrl]
+    [battleRecord.challenger, state.challengerHp, challengerImageUrl],
   );
 
   const opponentCard = useMemo(
@@ -163,9 +164,9 @@ export function BattleReplayPlayer({
       combatantToBattleCard(
         battleRecord.opponent,
         state.opponentHp,
-        opponentImageUrl
+        opponentImageUrl,
       ),
-    [battleRecord.opponent, state.opponentHp, opponentImageUrl]
+    [battleRecord.opponent, state.opponentHp, opponentImageUrl],
   );
 
   // Determine danger states (HP < 25%)

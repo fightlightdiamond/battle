@@ -7,16 +7,10 @@
  * Requirements: 1.4, 2.1, 2.2, 2.3, 2.4, 5.5
  */
 
-// ============================================================================
-// BATTLE MODE
-// ============================================================================
+import type { BattleMode } from "../store/types";
 
-/**
- * Battle mode type - distinguishes between Classic and Arena battles
- * - classic: Traditional instant combat mode
- * - arena: 1D arena mode with movement and positioning
- */
-export type BattleMode = "classic" | "arena";
+// Re-export BattleMode for backwards compatibility
+export type { BattleMode };
 
 // ============================================================================
 // COMBATANT SNAPSHOT

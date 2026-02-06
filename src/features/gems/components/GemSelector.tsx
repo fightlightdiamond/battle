@@ -20,6 +20,14 @@ const SKILL_TYPE_CONFIG: Record<SkillType, { label: string; color: string }> = {
   double_attack: { label: "Double Attack", color: "bg-red-500" },
   execute: { label: "Execute", color: "bg-purple-500" },
   leap_strike: { label: "Leap Strike", color: "bg-yellow-500" },
+  power_shot: { label: "Power Shot", color: "bg-cyan-500" },
+  evasive_shot: { label: "Evasive Shot", color: "bg-pink-500" },
+  piercing_thrust: { label: "Piercing Thrust", color: "bg-amber-500" },
+  whirlwind_charge: { label: "Whirlwind Charge", color: "bg-teal-500" },
+  speed_boost: { label: "Swift Advance", color: "bg-lime-500" },
+  damage_immunity: { label: "Iron Guard", color: "bg-slate-500" },
+  stunning_slash: { label: "Stunning Slash", color: "bg-rose-500" },
+  shield_bash: { label: "Shield Bash", color: "bg-indigo-500" },
 };
 
 interface GemSelectorProps {

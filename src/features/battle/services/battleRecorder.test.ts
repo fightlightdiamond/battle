@@ -29,7 +29,7 @@ function createTestCombatant(
   id: string,
   name: string,
   hp: number,
-  stats: CombatantStats
+  stats: CombatantStats,
 ): Combatant {
   return {
     id,
@@ -40,6 +40,7 @@ function createTestCombatant(
     maxHp: hp,
     buffs: [],
     isDefeated: false,
+    effectiveRange: 1,
   };
 }
 
@@ -53,7 +54,7 @@ function createTestAttackResult(
   isCrit: boolean,
   lifestealHeal: number,
   defenderNewHp: number,
-  attackerNewHp: number
+  attackerNewHp: number,
 ): AttackResult {
   const baseDamage = isCrit ? Math.floor(damage / 1.5) : damage;
   const critBonus = isCrit ? damage - baseDamage : 0;
@@ -110,7 +111,7 @@ const combatantPairArb = fc
     fc.integer({ min: 100, max: 1000 }),
     fc.integer({ min: 100, max: 1000 }),
     combatantStatsArb,
-    combatantStatsArb
+    combatantStatsArb,
   )
   .map(([id1, id2, name1, name2, hp1, hp2, stats1, stats2]) => ({
     challenger: createTestCombatant(id1, name1, hp1, stats1),
@@ -164,11 +165,11 @@ describe("BattleRecorder - Property Tests", () => {
             const damage = Math.min(50, defender.currentHp);
             const defenderNewHp = Math.max(0, defender.currentHp - damage);
             const lifestealHeal = Math.floor(
-              (damage * attacker.baseStats.lifesteal) / 100
+              (damage * attacker.baseStats.lifesteal) / 100,
             );
             const attackerNewHp = Math.min(
               attacker.maxHp,
-              attacker.currentHp + lifestealHeal
+              attacker.currentHp + lifestealHeal,
             );
 
             const attackResult = createTestAttackResult(
@@ -178,7 +179,7 @@ describe("BattleRecorder - Property Tests", () => {
               false,
               lifestealHeal,
               defenderNewHp,
-              attackerNewHp
+              attackerNewHp,
             );
 
             recorder.recordTurn(
@@ -187,7 +188,7 @@ describe("BattleRecorder - Property Tests", () => {
               defender,
               attackResult,
               defender.currentHp,
-              attacker.currentHp
+              attacker.currentHp,
             );
 
             if (isChallegerAttacking) {
@@ -215,7 +216,7 @@ describe("BattleRecorder - Property Tests", () => {
 
           const record = recorder.finishRecording(
             challenger.id,
-            challenger.name
+            challenger.name,
           );
 
           const turnNumbers = record.turns.map((t) => t.turnNumber);
@@ -227,9 +228,9 @@ describe("BattleRecorder - Property Tests", () => {
           }
 
           expect(turnNumbers.length).toBe(record.totalTurns);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -272,11 +273,11 @@ describe("BattleRecorder - Property Tests", () => {
             const damage = Math.min(50, defender.currentHp);
             const defenderNewHp = Math.max(0, defender.currentHp - damage);
             const lifestealHeal = Math.floor(
-              (damage * attacker.baseStats.lifesteal) / 100
+              (damage * attacker.baseStats.lifesteal) / 100,
             );
             const attackerNewHp = Math.min(
               attacker.maxHp,
-              attacker.currentHp + lifestealHeal
+              attacker.currentHp + lifestealHeal,
             );
 
             const attackResult = createTestAttackResult(
@@ -286,7 +287,7 @@ describe("BattleRecorder - Property Tests", () => {
               false,
               lifestealHeal,
               defenderNewHp,
-              attackerNewHp
+              attackerNewHp,
             );
 
             recorder.recordTurn(
@@ -295,7 +296,7 @@ describe("BattleRecorder - Property Tests", () => {
               defender,
               attackResult,
               defender.currentHp,
-              attacker.currentHp
+              attacker.currentHp,
             );
 
             if (isChallegerAttacking) {
@@ -329,7 +330,7 @@ describe("BattleRecorder - Property Tests", () => {
 
           const record = recorder.finishRecording(
             challenger.id,
-            challenger.name
+            challenger.name,
           );
 
           expect(record.hpTimeline.length).toBe(record.totalTurns + 1);
@@ -341,10 +342,10 @@ describe("BattleRecorder - Property Tests", () => {
 
           for (let i = 0; i < expectedTimeline.length; i++) {
             expect(record.hpTimeline[i].challengerHp).toBe(
-              expectedTimeline[i].challengerHp
+              expectedTimeline[i].challengerHp,
             );
             expect(record.hpTimeline[i].opponentHp).toBe(
-              expectedTimeline[i].opponentHp
+              expectedTimeline[i].opponentHp,
             );
           }
 
@@ -352,9 +353,9 @@ describe("BattleRecorder - Property Tests", () => {
             expect(entry.challengerMaxHp).toBe(challenger.maxHp);
             expect(entry.opponentMaxHp).toBe(opponent.maxHp);
           }
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -382,16 +383,16 @@ describe("BattleRecorder - Property Tests", () => {
           // Calculate expected values
           const expectedDefenderHpAfter = Math.max(
             0,
-            defenderHpBefore - damageAmount
+            defenderHpBefore - damageAmount,
           );
           const expectedIsKnockout = expectedDefenderHpAfter === 0;
 
           const lifestealHeal = Math.floor(
-            (damageAmount * attacker.baseStats.lifesteal) / 100
+            (damageAmount * attacker.baseStats.lifesteal) / 100,
           );
           const attackerNewHp = Math.min(
             attacker.maxHp,
-            attacker.currentHp + lifestealHeal
+            attacker.currentHp + lifestealHeal,
           );
 
           const attackResult = createTestAttackResult(
@@ -401,7 +402,7 @@ describe("BattleRecorder - Property Tests", () => {
             isCrit,
             lifestealHeal,
             expectedDefenderHpAfter,
-            attackerNewHp
+            attackerNewHp,
           );
 
           recorder.recordTurn(
@@ -410,12 +411,12 @@ describe("BattleRecorder - Property Tests", () => {
             defender,
             attackResult,
             defenderHpBefore,
-            attacker.currentHp
+            attacker.currentHp,
           );
 
           const record = recorder.finishRecording(
             challenger.id,
-            challenger.name
+            challenger.name,
           );
           const turn = record.turns[0];
 
@@ -425,18 +426,18 @@ describe("BattleRecorder - Property Tests", () => {
           expect(turn.defenderHp.defenderHpAfter).toBe(
             Math.max(
               0,
-              turn.defenderHp.defenderHpBefore - turn.damage.finalDamage
-            )
+              turn.defenderHp.defenderHpBefore - turn.damage.finalDamage,
+            ),
           );
 
           // Verify isKnockout is true iff defenderHpAfter === 0
           expect(turn.defenderHp.isKnockout).toBe(expectedIsKnockout);
           expect(turn.defenderHp.isKnockout).toBe(
-            turn.defenderHp.defenderHpAfter === 0
+            turn.defenderHp.defenderHpAfter === 0,
           );
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -468,7 +469,7 @@ describe("BattleRecorder - Property Tests", () => {
           challengerHp,
           opponentHp,
           lifestealPercent,
-          damageAmount
+          damageAmount,
         ) => {
           const challengerStats: CombatantStats = {
             atk: 100,
@@ -494,13 +495,13 @@ describe("BattleRecorder - Property Tests", () => {
             id1,
             name1,
             challengerHp,
-            challengerStats
+            challengerStats,
           );
           const opponent = createTestCombatant(
             id2,
             name2,
             opponentHp,
-            opponentStats
+            opponentStats,
           );
 
           recorder.startRecording(challenger, opponent);
@@ -510,11 +511,11 @@ describe("BattleRecorder - Property Tests", () => {
 
           // Calculate expected lifesteal values
           const expectedLifestealAmount = Math.floor(
-            (damageAmount * lifestealPercent) / 100
+            (damageAmount * lifestealPercent) / 100,
           );
           const expectedAttackerHpAfter = Math.min(
             attackerHpBefore + expectedLifestealAmount,
-            challenger.maxHp
+            challenger.maxHp,
           );
           const defenderNewHp = Math.max(0, defenderHpBefore - damageAmount);
 
@@ -525,7 +526,7 @@ describe("BattleRecorder - Property Tests", () => {
             false,
             expectedLifestealAmount,
             defenderNewHp,
-            expectedAttackerHpAfter
+            expectedAttackerHpAfter,
           );
 
           recorder.recordTurn(
@@ -534,26 +535,26 @@ describe("BattleRecorder - Property Tests", () => {
             opponent,
             attackResult,
             defenderHpBefore,
-            attackerHpBefore
+            attackerHpBefore,
           );
 
           const record = recorder.finishRecording(
             challenger.id,
-            challenger.name
+            challenger.name,
           );
           const turn = record.turns[0];
 
           // Verify lifesteal calculation
           expect(turn.lifesteal.attackerLifestealPercent).toBe(
-            lifestealPercent
+            lifestealPercent,
           );
           expect(turn.lifesteal.lifestealAmount).toBe(expectedLifestealAmount);
           expect(turn.lifesteal.lifestealAmount).toBe(
             Math.floor(
               (turn.damage.finalDamage *
                 turn.lifesteal.attackerLifestealPercent) /
-                100
-            )
+                100,
+            ),
           );
 
           // Verify attacker HP after lifesteal
@@ -562,17 +563,17 @@ describe("BattleRecorder - Property Tests", () => {
           expect(turn.lifesteal.attackerHpAfter).toBe(
             Math.min(
               turn.lifesteal.attackerHpBefore + turn.lifesteal.lifestealAmount,
-              turn.lifesteal.attackerMaxHp
-            )
+              turn.lifesteal.attackerMaxHp,
+            ),
           );
 
           // Verify HP is capped at maxHp
           expect(turn.lifesteal.attackerHpAfter).toBeLessThanOrEqual(
-            turn.lifesteal.attackerMaxHp
+            turn.lifesteal.attackerMaxHp,
           );
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 });

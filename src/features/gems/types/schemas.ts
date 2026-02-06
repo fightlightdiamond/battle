@@ -41,6 +41,14 @@ export const skillTypeSchema = z.enum([
   "double_attack",
   "execute",
   "leap_strike",
+  "power_shot",
+  "evasive_shot",
+  "piercing_thrust",
+  "whirlwind_charge",
+  "speed_boost",
+  "damage_immunity",
+  "stunning_slash",
+  "shield_bash",
 ]);
 
 // Gem tier schema

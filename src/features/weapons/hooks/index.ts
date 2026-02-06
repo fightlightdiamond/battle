@@ -8,3 +8,4 @@ export * from "./useDeleteWeapon";
 export * from "./useCardEquipment";
 export * from "./useEquipWeapon";
 export * from "./useUnequipWeapon";
+export * from "./useWeaponEnhancement";

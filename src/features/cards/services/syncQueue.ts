@@ -8,6 +8,7 @@
 import { getDB } from "./db";
 import { cardApi } from "../api/cardApi";
 import type { ApiCard } from "../api/types";
+import { syncLogger } from "@/lib/logger";
 
 // Types of operations that can be queued
 export type SyncOperationType = "create" | "update" | "delete";
@@ -94,7 +95,7 @@ export const SyncQueue = {
       lastError: null,
     };
     await this.addToQueue(item);
-    console.log("[SyncQueue] Queued create:", cardData.id, cardData.name);
+    syncLogger.info("Queued create:", cardData.id, cardData.name);
     return item;
   },
 
@@ -111,7 +112,7 @@ export const SyncQueue = {
       pendingCreate.data = cardData;
       pendingCreate.timestamp = Date.now();
       await this.updateQueueItem(pendingCreate);
-      console.log("[SyncQueue] Updated pending create:", cardData.id);
+      syncLogger.info("Updated pending create:", cardData.id);
       return pendingCreate;
     }
 
@@ -121,7 +122,7 @@ export const SyncQueue = {
       pendingUpdate.data = cardData;
       pendingUpdate.timestamp = Date.now();
       await this.updateQueueItem(pendingUpdate);
-      console.log("[SyncQueue] Updated pending update:", cardData.id);
+      syncLogger.info("Updated pending update:", cardData.id);
       return pendingUpdate;
     }
 
@@ -136,7 +137,7 @@ export const SyncQueue = {
       lastError: null,
     };
     await this.addToQueue(item);
-    console.log("[SyncQueue] Queued update:", cardData.id, cardData.name);
+    syncLogger.info("Queued update:", cardData.id, cardData.name);
     return item;
   },
 
@@ -148,24 +149,21 @@ export const SyncQueue = {
     const existingItems = await this.getQueueItemsForCard(cardId);
     for (const item of existingItems) {
       await this.removeFromQueue(item.id);
-      console.log(
-        "[SyncQueue] Removed pending",
+      syncLogger.info(
+        "Removed pending",
         item.operation,
         "for deleted card:",
-        cardId
+        cardId,
       );
     }
 
     // If there was a pending create, we don't need to sync the delete
     // (the card was never synced to the server)
     const hadPendingCreate = existingItems.some(
-      (i) => i.operation === "create"
+      (i) => i.operation === "create",
     );
     if (hadPendingCreate) {
-      console.log(
-        "[SyncQueue] Card was never synced, no delete needed:",
-        cardId
-      );
+      syncLogger.info("Card was never synced, no delete needed:", cardId);
       return {
         id: generateQueueId(),
         cardId,
@@ -188,7 +186,7 @@ export const SyncQueue = {
       lastError: null,
     };
     await this.addToQueue(item);
-    console.log("[SyncQueue] Queued delete:", cardId);
+    syncLogger.info("Queued delete:", cardId);
     return item;
   },
 
@@ -260,7 +258,7 @@ export const SyncQueue = {
    */
   async processItem(
     item: SyncQueueItem,
-    conflictStrategy: ConflictStrategy = CONFLICT_STRATEGIES.NEWEST_WINS
+    conflictStrategy: ConflictStrategy = CONFLICT_STRATEGIES.NEWEST_WINS,
   ): Promise<SyncItemResult> {
     try {
       switch (item.operation) {
@@ -275,7 +273,7 @@ export const SyncQueue = {
             const resolved = await this.resolveConflict(
               item.data,
               existingCreate,
-              conflictStrategy
+              conflictStrategy,
             );
             // Always update to ensure we have the resolved version with all stats
             await cardApi.update(item.cardId, {
@@ -308,7 +306,7 @@ export const SyncQueue = {
             const resolved = await this.resolveConflict(
               item.data,
               existingUpdate,
-              conflictStrategy
+              conflictStrategy,
             );
             // Update with all stats
             await cardApi.update(item.cardId, {
@@ -358,7 +356,7 @@ export const SyncQueue = {
   async resolveConflict(
     local: ApiCard,
     server: ApiCard,
-    strategy: ConflictStrategy
+    strategy: ConflictStrategy,
   ): Promise<ApiCard> {
     switch (strategy) {
       case CONFLICT_STRATEGIES.LOCAL_WINS:
@@ -376,10 +374,10 @@ export const SyncQueue = {
    * Returns results for each item processed
    */
   async processQueue(
-    conflictStrategy: ConflictStrategy = CONFLICT_STRATEGIES.NEWEST_WINS
+    conflictStrategy: ConflictStrategy = CONFLICT_STRATEGIES.NEWEST_WINS,
   ): Promise<SyncQueueResult> {
     if (!isOnline()) {
-      console.log("[SyncQueue] Offline, skipping queue processing");
+      syncLogger.info("Offline, skipping queue processing");
       return {
         processed: 0,
         succeeded: 0,
@@ -393,7 +391,7 @@ export const SyncQueue = {
     let succeeded = 0;
     let failed = 0;
 
-    console.log(`[SyncQueue] Processing ${queue.length} queued operations`);
+    syncLogger.info(`Processing ${queue.length} queued operations`);
 
     for (const item of queue) {
       const result = await this.processItem(item, conflictStrategy);
@@ -403,7 +401,7 @@ export const SyncQueue = {
         // Remove from queue on success
         await this.removeFromQueue(item.id);
         succeeded++;
-        console.log(`[SyncQueue] ✓ ${item.operation} ${item.cardId}`);
+        syncLogger.info(`✓ ${item.operation} ${item.cardId}`);
       } else {
         // Update retry count and error
         item.retryCount++;
@@ -412,25 +410,23 @@ export const SyncQueue = {
         if (item.retryCount >= MAX_RETRIES) {
           // Max retries reached - remove from queue
           await this.removeFromQueue(item.id);
-          console.error(
-            `[SyncQueue] ✗ ${item.operation} ${item.cardId} - Max retries reached:`,
-            result.error
+          syncLogger.error(
+            `✗ ${item.operation} ${item.cardId} - Max retries reached:`,
+            result.error,
           );
         } else {
           // Update item with new retry count
           await this.updateQueueItem(item);
-          console.warn(
-            `[SyncQueue] ✗ ${item.operation} ${item.cardId} - Retry ${item.retryCount}/${MAX_RETRIES}:`,
-            result.error
+          syncLogger.warn(
+            `✗ ${item.operation} ${item.cardId} - Retry ${item.retryCount}/${MAX_RETRIES}:`,
+            result.error,
           );
         }
         failed++;
       }
     }
 
-    console.log(
-      `[SyncQueue] Complete: ${succeeded} succeeded, ${failed} failed`
-    );
+    syncLogger.info(`Complete: ${succeeded} succeeded, ${failed} failed`);
 
     return {
       processed: queue.length,

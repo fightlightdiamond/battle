@@ -85,6 +85,7 @@ const weaponArb: fc.Arbitrary<Weapon> = fc.record({
   imageUrl: fc.constantFrom(null, "blob:test-weapon-url"),
   createdAt: fc.integer({ min: 0, max: Date.now() + 1000000 }),
   updatedAt: fc.integer({ min: 0, max: Date.now() + 1000000 }),
+  weaponType: fc.constantFrom("bow", "spear", "sword_shield"),
   atk: fc.integer({
     min: WEAPON_STAT_RANGES.atk.min,
     max: WEAPON_STAT_RANGES.atk.max,
@@ -109,6 +110,8 @@ const weaponArb: fc.Arbitrary<Weapon> = fc.record({
     min: WEAPON_STAT_RANGES.attackRange.min,
     max: WEAPON_STAT_RANGES.attackRange.max,
   }),
+  enhanceLevel: fc.constant(0),
+  enhanceHistory: fc.constant([]),
 });
 
 // CardEquipment generator

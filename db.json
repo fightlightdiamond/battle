@@ -7,7 +7,7 @@
       "hp": 2500,
       "imagePath": "550e8400-e29b-41d4-a716-446655440001.jpeg",
       "createdAt": 1702300800000,
-      "updatedAt": 1765629058784,
+      "updatedAt": 1770333376333,
       "def": 150,
       "spd": 90,
       "critChance": 35,
@@ -53,9 +53,9 @@
       "name": "Earth Golem",
       "atk": 150,
       "hp": 3500,
-      "imagePath": "550e8400-e29b-41d4-a716-446655440005.jpeg",
+      "imagePath": "550e8400-e29b-41d4-a716-446655440005.png",
       "createdAt": 1702646400000,
-      "updatedAt": 1765519448880
+      "updatedAt": 1770333376454
     },
     {
       "id": "2bd03d48-8bc4-438e-9314-de6851113ccb",
@@ -64,7 +64,7 @@
       "hp": 1900,
       "imagePath": "2bd03d48-8bc4-438e-9314-de6851113ccb.png",
       "createdAt": 1765420354441,
-      "updatedAt": 1765421683890
+      "updatedAt": 1770333376462
     },
     {
       "id": "5aac4773-2825-4a96-9432-0caeb1c873d1",
@@ -73,7 +73,13 @@
       "hp": 100000,
       "imagePath": "5aac4773-2825-4a96-9432-0caeb1c873d1.png",
       "createdAt": 1765420268279,
-      "updatedAt": 1765421696133
+      "updatedAt": 1770333520262,
+      "def": 75,
+      "spd": 100,
+      "critChance": 5,
+      "critDamage": 150,
+      "armorPen": 0,
+      "lifesteal": 0
     },
     {
       "id": "9c07be55-b903-4592-9d24-c3b948bb7274",
@@ -1593,7 +1599,12 @@
       "id": "player-resources-1",
       "playerId": "player-1",
       "gold": 5000,
-      "materials": {}
+      "materials": {
+        "enhancement_stone_basic": 5,
+        "enhancement_stone_intermediate": 0,
+        "enhancement_stone_advanced": 2,
+        "protection_scroll": 3
+      }
     }
   ],
   "cardGemEquipments": [
@@ -1601,6 +1612,258 @@
       "cardId": "28e39fad-6da3-4cd3-a336-16f02fcb4517",
       "gemIds": ["7a6eb10f-8754-4702-9267-5be82c34790d"],
       "id": 1
+    }
+  ],
+  "gameTemplates": [
+    {
+      "id": "game-001",
+      "name": "Cặp đôi trời sinh - Giao tiếp cơ bản",
+      "description": "Học các câu giao tiếp hàng ngày",
+      "coverImage": "/images/basic-greetings.jpg",
+      "config": {
+        "pairsPerRound": 5,
+        "timeLimit": 120,
+        "showHints": true,
+        "allowRetry": true,
+        "shuffleCards": true
+      },
+      "isActive": true,
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "game-002",
+      "name": "Cặp đôi trời sinh - Ẩm thực",
+      "description": "Từ vựng và câu về đồ ăn, nhà hàng",
+      "coverImage": "/images/food.jpg",
+      "config": {
+        "pairsPerRound": 6,
+        "timeLimit": 150,
+        "showHints": false,
+        "allowRetry": true,
+        "shuffleCards": true
+      },
+      "isActive": true,
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "game-003",
+      "name": "Cặp đôi trời sinh - Công việc",
+      "description": "Tiếng Anh văn phòng và kinh doanh",
+      "coverImage": "/images/business.jpg",
+      "config": {
+        "pairsPerRound": 8,
+        "timeLimit": 180,
+        "showHints": false,
+        "allowRetry": false,
+        "shuffleCards": true
+      },
+      "isActive": true,
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    }
+  ],
+  "sentences": [
+    {
+      "id": "sent-001",
+      "gameTemplateId": "game-001",
+      "english": "Hello, how are you?",
+      "vietnamese": "Xin chào, bạn khỏe không?",
+      "difficulty": "easy",
+      "category": "greetings",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-002",
+      "gameTemplateId": "game-001",
+      "english": "I love learning English",
+      "vietnamese": "Tôi thích học tiếng Anh",
+      "difficulty": "easy",
+      "category": "education",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-003",
+      "gameTemplateId": "game-001",
+      "english": "What is your name?",
+      "vietnamese": "Tên bạn là gì?",
+      "difficulty": "easy",
+      "category": "greetings",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-004",
+      "gameTemplateId": "game-001",
+      "english": "The weather is nice today",
+      "vietnamese": "Hôm nay thời tiết đẹp",
+      "difficulty": "easy",
+      "category": "weather",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-005",
+      "gameTemplateId": "game-002",
+      "english": "I would like to order a coffee",
+      "vietnamese": "Tôi muốn gọi một ly cà phê",
+      "difficulty": "medium",
+      "category": "food",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-006",
+      "gameTemplateId": "game-001",
+      "english": "Could you please help me?",
+      "vietnamese": "Bạn có thể giúp tôi được không?",
+      "difficulty": "medium",
+      "category": "requests",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-007",
+      "gameTemplateId": "game-003",
+      "english": "The meeting has been postponed",
+      "vietnamese": "Cuộc họp đã bị hoãn lại",
+      "difficulty": "medium",
+      "category": "business",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-008",
+      "gameTemplateId": "game-001",
+      "english": "Practice makes perfect",
+      "vietnamese": "Có công mài sắt có ngày nên kim",
+      "difficulty": "medium",
+      "category": "proverbs",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-009",
+      "gameTemplateId": "game-003",
+      "english": "Despite the challenges, we managed to complete the project on time",
+      "vietnamese": "Mặc dù gặp nhiều thách thức, chúng tôi vẫn hoàn thành dự án đúng hạn",
+      "difficulty": "hard",
+      "category": "business",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-010",
+      "gameTemplateId": "game-003",
+      "english": "The advancement of technology has revolutionized our daily lives",
+      "vietnamese": "Sự tiến bộ của công nghệ đã cách mạng hóa cuộc sống hàng ngày của chúng ta",
+      "difficulty": "hard",
+      "category": "technology",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-011",
+      "gameTemplateId": "game-001",
+      "english": "Thank you very much",
+      "vietnamese": "Cảm ơn bạn rất nhiều",
+      "difficulty": "easy",
+      "category": "greetings",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-012",
+      "gameTemplateId": "game-001",
+      "english": "See you tomorrow",
+      "vietnamese": "Hẹn gặp lại ngày mai",
+      "difficulty": "easy",
+      "category": "greetings",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-013",
+      "gameTemplateId": "game-002",
+      "english": "This dish is delicious",
+      "vietnamese": "Món này ngon quá",
+      "difficulty": "easy",
+      "category": "food",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-014",
+      "gameTemplateId": "game-002",
+      "english": "Can I have the menu please?",
+      "vietnamese": "Cho tôi xem thực đơn được không?",
+      "difficulty": "easy",
+      "category": "food",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-015",
+      "gameTemplateId": "game-002",
+      "english": "I am allergic to peanuts",
+      "vietnamese": "Tôi bị dị ứng đậu phộng",
+      "difficulty": "medium",
+      "category": "food",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-016",
+      "gameTemplateId": "game-002",
+      "english": "The bill please",
+      "vietnamese": "Tính tiền giúp tôi",
+      "difficulty": "easy",
+      "category": "food",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-017",
+      "gameTemplateId": "game-002",
+      "english": "What do you recommend?",
+      "vietnamese": "Bạn gợi ý món gì?",
+      "difficulty": "medium",
+      "category": "food",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-018",
+      "gameTemplateId": "game-003",
+      "english": "I will send you the report by Friday",
+      "vietnamese": "Tôi sẽ gửi báo cáo cho bạn trước thứ Sáu",
+      "difficulty": "medium",
+      "category": "business",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-019",
+      "gameTemplateId": "game-003",
+      "english": "Let's schedule a meeting for next week",
+      "vietnamese": "Hãy lên lịch họp vào tuần sau",
+      "difficulty": "medium",
+      "category": "business",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    },
+    {
+      "id": "sent-020",
+      "gameTemplateId": "game-003",
+      "english": "I need to discuss the budget with the team",
+      "vietnamese": "Tôi cần thảo luận ngân sách với nhóm",
+      "difficulty": "medium",
+      "category": "business",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
     }
   ]
 }

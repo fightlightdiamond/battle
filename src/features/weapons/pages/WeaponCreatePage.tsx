@@ -16,6 +16,7 @@ export function WeaponCreatePage() {
   const handleSubmit = async (data: WeaponFormSchemaType) => {
     await createWeapon.mutateAsync({
       name: data.name,
+      weaponType: data.weaponType,
       image: data.image,
       atk: data.atk,
       critChance: data.critChance,

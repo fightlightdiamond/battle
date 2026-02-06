@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Hammer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AppLayout } from "@/components/layouts";
@@ -53,12 +53,20 @@ export function WeaponListPage() {
       width="full"
       title="Weapons"
       headerRight={
-        <Button asChild>
-          <Link to="/weapons/create">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Weapon
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild variant="outline">
+            <Link to="/weapons/enhance">
+              <Hammer className="h-4 w-4 mr-2" />
+              Đập Đồ
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link to="/weapons/create">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Weapon
+            </Link>
+          </Button>
+        </div>
       }
     >
       <div className="flex flex-col gap-6">

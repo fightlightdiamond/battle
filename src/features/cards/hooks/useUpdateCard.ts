@@ -11,6 +11,7 @@ import type { Card, CardFormInput } from "../types";
 import { cardKeys } from "./cardKeys";
 import { toCard, isOnline } from "./utils";
 import { DEFAULT_STATS } from "../types/constants";
+import { cardLogger } from "@/lib/logger";
 
 /**
  * Hook to update an existing card
@@ -25,7 +26,7 @@ export function useUpdateCard(
       { id: string; input: CardFormInput }
     >,
     "mutationFn"
-  >
+  >,
 ) {
   const queryClient = useQueryClient();
 
@@ -38,7 +39,7 @@ export function useUpdateCard(
       } catch (dbError) {
         console.error(
           "[useUpdateCard] Failed to get existing card from IndexedDB:",
-          dbError
+          dbError,
         );
       }
 
@@ -50,16 +51,10 @@ export function useUpdateCard(
             // Sync card from API to IndexedDB
             await CardService.createWithId(apiCard);
             existing = await toCard(apiCard);
-            console.log(
-              "[useUpdateCard] Synced card from API to IndexedDB:",
-              id
-            );
+            cardLogger.info("Synced card from API to IndexedDB:", id);
           }
         } catch (apiError) {
-          console.error(
-            "[useUpdateCard] Failed to fetch card from API:",
-            apiError
-          );
+          cardLogger.error("Failed to fetch card from API:", apiError);
         }
       }
 
@@ -79,7 +74,7 @@ export function useUpdateCard(
           // Save new image to OPFS
           imagePath = await saveImage(id, input.image);
         } catch (imageError) {
-          console.error("[useUpdateCard] Image update failed:", imageError);
+          cardLogger.error(" Image update failed:", imageError);
           // Continue with existing image path
         }
       }
@@ -89,7 +84,7 @@ export function useUpdateCard(
       try {
         updatedCard = await CardService.update(id, input);
       } catch (dbError) {
-        console.error("[useUpdateCard] IndexedDB update failed:", dbError);
+        cardLogger.error(" IndexedDB update failed:", dbError);
         throw new Error("Failed to update card in local storage");
       }
 
@@ -138,14 +133,14 @@ export function useUpdateCard(
           // API failed - queue for later sync
           console.warn(
             "[useUpdateCard] API sync failed, queuing for later:",
-            apiError instanceof Error ? apiError.message : apiError
+            apiError instanceof Error ? apiError.message : apiError,
           );
           await SyncQueue.queueUpdate(cardDataForSync);
         }
       } else {
         // Offline - queue for later sync
         await SyncQueue.queueUpdate(cardDataForSync);
-        console.log("[useUpdateCard] Offline, queued update for sync");
+        cardLogger.info(" Offline, queued update for sync");
       }
 
       return updatedCard;

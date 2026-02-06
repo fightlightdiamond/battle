@@ -9,6 +9,7 @@ import { SyncQueue } from "../services/syncQueue";
 import type { Card } from "../types";
 import { cardKeys } from "./cardKeys";
 import { isOnline } from "./utils";
+import { cardLogger } from "@/lib/logger";
 
 /**
  * Hook to delete a card
@@ -16,7 +17,7 @@ import { isOnline } from "./utils";
  * Flow: Delete from API (if online) or queue → Delete from IndexedDB (includes OPFS image)
  */
 export function useDeleteCard(
-  options?: Omit<UseMutationOptions<boolean, Error, string>, "mutationFn">
+  options?: Omit<UseMutationOptions<boolean, Error, string>, "mutationFn">,
 ) {
   const queryClient = useQueryClient();
 
@@ -30,14 +31,14 @@ export function useDeleteCard(
           // API failed - queue for later sync
           console.warn(
             "[useDeleteCard] API delete failed, queuing for later:",
-            apiError instanceof Error ? apiError.message : apiError
+            apiError instanceof Error ? apiError.message : apiError,
           );
           await SyncQueue.queueDelete(id);
         }
       } else {
         // Offline - queue for later sync
         await SyncQueue.queueDelete(id);
-        console.log("[useDeleteCard] Offline, queued delete for sync");
+        cardLogger.info(" Offline, queued delete for sync");
       }
 
       // Get existing card from IndexedDB to check for image cleanup
@@ -45,7 +46,7 @@ export function useDeleteCard(
       try {
         existing = await CardService.getById(id);
       } catch (dbError) {
-        console.error("[useDeleteCard] Failed to get existing card:", dbError);
+        cardLogger.error(" Failed to get existing card:", dbError);
       }
 
       // Delete from IndexedDB if exists (this also deletes the image from OPFS)
@@ -53,7 +54,7 @@ export function useDeleteCard(
         try {
           await CardService.delete(id);
         } catch (dbError) {
-          console.error("[useDeleteCard] IndexedDB delete failed:", dbError);
+          cardLogger.error(" IndexedDB delete failed:", dbError);
           throw new Error("Failed to delete card from local storage");
         }
       }

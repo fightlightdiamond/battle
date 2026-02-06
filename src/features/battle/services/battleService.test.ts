@@ -328,6 +328,7 @@ const weaponArb: fc.Arbitrary<Weapon> = fc.record({
   imageUrl: fc.option(fc.webUrl(), { nil: null }),
   createdAt: fc.integer({ min: 0, max: Date.now() }),
   updatedAt: fc.integer({ min: 0, max: Date.now() }),
+  weaponType: fc.constantFrom("bow", "spear", "sword_shield"),
 
   // Weapon stats
   atk: fc.integer({
@@ -350,6 +351,12 @@ const weaponArb: fc.Arbitrary<Weapon> = fc.record({
     min: WEAPON_STAT_RANGES.lifesteal.min,
     max: WEAPON_STAT_RANGES.lifesteal.max,
   }),
+  attackRange: fc.integer({
+    min: WEAPON_STAT_RANGES.attackRange.min,
+    max: WEAPON_STAT_RANGES.attackRange.max,
+  }),
+  enhanceLevel: fc.constant(0),
+  enhanceHistory: fc.constant([]),
 });
 
 /**

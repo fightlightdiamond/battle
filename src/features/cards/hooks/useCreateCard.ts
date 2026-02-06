@@ -11,6 +11,7 @@ import type { Card, CardFormInput } from "../types";
 import { cardKeys } from "./cardKeys";
 import { isOnline } from "./utils";
 import { DEFAULT_STATS } from "../types/constants";
+import { cardLogger } from "@/lib/logger";
 
 /**
  * Hook to create a new card
@@ -19,7 +20,7 @@ import { DEFAULT_STATS } from "../types/constants";
  * Both IndexedDB and API use the same ID for consistency
  */
 export function useCreateCard(
-  options?: Omit<UseMutationOptions<Card, Error, CardFormInput>, "mutationFn">
+  options?: Omit<UseMutationOptions<Card, Error, CardFormInput>, "mutationFn">,
 ) {
   const queryClient = useQueryClient();
 
@@ -35,7 +36,7 @@ export function useCreateCard(
         try {
           imagePath = await saveImage(id, input.image);
         } catch (imageError) {
-          console.error("[useCreateCard] Failed to save image:", imageError);
+          cardLogger.error(" Failed to save image:", imageError);
           // Continue without image
         }
       }
@@ -64,7 +65,7 @@ export function useCreateCard(
       try {
         await CardService.createWithId(cardData);
       } catch (dbError) {
-        console.error("[useCreateCard] IndexedDB save failed:", dbError);
+        cardLogger.error(" IndexedDB save failed:", dbError);
         throw new Error("Failed to save card to local storage");
       }
 
@@ -76,14 +77,14 @@ export function useCreateCard(
           // API failed - queue for later sync
           console.warn(
             "[useCreateCard] API sync failed, queuing for later:",
-            apiError instanceof Error ? apiError.message : apiError
+            apiError instanceof Error ? apiError.message : apiError,
           );
           await SyncQueue.queueCreate(cardData);
         }
       } else {
         // Offline - queue for later sync
         await SyncQueue.queueCreate(cardData);
-        console.log("[useCreateCard] Offline, queued create for sync");
+        cardLogger.info(" Offline, queued create for sync");
       }
 
       // Return card with imageUrl

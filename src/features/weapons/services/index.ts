@@ -14,3 +14,6 @@ export {
   serializeEquipment,
   deserializeEquipment,
 } from "./equipmentService";
+
+export { EnhancementService } from "./enhancementService";
+export { MaterialService } from "./materialService";

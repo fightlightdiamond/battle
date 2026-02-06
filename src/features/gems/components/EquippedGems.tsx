@@ -47,6 +47,46 @@ const SKILL_TYPE_CONFIG: Record<
     color: "text-yellow-500",
     bgColor: "bg-yellow-500",
   },
+  power_shot: {
+    label: "Power Shot",
+    color: "text-cyan-500",
+    bgColor: "bg-cyan-500",
+  },
+  evasive_shot: {
+    label: "Evasive Shot",
+    color: "text-pink-500",
+    bgColor: "bg-pink-500",
+  },
+  piercing_thrust: {
+    label: "Piercing Thrust",
+    color: "text-amber-500",
+    bgColor: "bg-amber-500",
+  },
+  whirlwind_charge: {
+    label: "Whirlwind Charge",
+    color: "text-teal-500",
+    bgColor: "bg-teal-500",
+  },
+  speed_boost: {
+    label: "Swift Advance",
+    color: "text-lime-500",
+    bgColor: "bg-lime-500",
+  },
+  damage_immunity: {
+    label: "Iron Guard",
+    color: "text-slate-500",
+    bgColor: "bg-slate-500",
+  },
+  stunning_slash: {
+    label: "Stunning Slash",
+    color: "text-rose-500",
+    bgColor: "bg-rose-500",
+  },
+  shield_bash: {
+    label: "Shield Bash",
+    color: "text-indigo-500",
+    bgColor: "bg-indigo-500",
+  },
 };
 
 interface EquippedGemsProps {

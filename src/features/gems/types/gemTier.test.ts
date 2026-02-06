@@ -84,6 +84,7 @@ const baseGemArb: fc.Arbitrary<Gem> = fc.record({
   activationChance: fc.integer({ min: 0, max: 100 }),
   cooldown: fc.integer({ min: 0, max: 10 }),
   effectParams: effectParamsArb,
+  tier: gemTierArb,
   imagePath: fc.option(fc.string({ minLength: 1, maxLength: 100 }), {
     nil: null,
   }),

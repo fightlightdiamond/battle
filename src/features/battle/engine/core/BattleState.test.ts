@@ -48,6 +48,7 @@ const combatantArb: fc.Arbitrary<Combatant> = fc.record({
   maxHp: fc.integer({ min: 1, max: 9999 }),
   buffs: fc.constant([]),
   isDefeated: fc.constant(false),
+  effectiveRange: fc.integer({ min: 1, max: 7 }),
 });
 
 const battleLogEntryArb: fc.Arbitrary<BattleLogEntry> = fc.record({
@@ -96,7 +97,7 @@ describe("BattleState", () => {
           expect(newState).not.toBe(originalState);
           expect(newState.challenger).not.toBe(originalState.challenger);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -110,7 +111,7 @@ describe("BattleState", () => {
           expect(newState).not.toBe(originalState);
           expect(newState.opponent).not.toBe(originalState.opponent);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -123,7 +124,7 @@ describe("BattleState", () => {
           expect(originalState).toEqual(originalClone);
           expect(newState).not.toBe(originalState);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -139,9 +140,9 @@ describe("BattleState", () => {
             expect(originalState).toEqual(originalClone);
             expect(newState).not.toBe(originalState);
             expect(newState.battleLog).not.toBe(originalState.battleLog);
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -156,9 +157,9 @@ describe("BattleState", () => {
 
             expect(originalState).toEqual(originalClone);
             expect(newState).not.toBe(originalState);
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -171,7 +172,7 @@ describe("BattleState", () => {
           expect(originalState).toEqual(originalClone);
           expect(newState).not.toBe(originalState);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -184,7 +185,7 @@ describe("BattleState", () => {
           expect(originalState).toEqual(originalClone);
           expect(newState).not.toBe(originalState);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -200,9 +201,9 @@ describe("BattleState", () => {
             expect(originalState).toEqual(originalClone);
             expect(newState).not.toBe(originalState);
             expect(newState.challenger).not.toBe(originalState.challenger);
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -222,9 +223,9 @@ describe("BattleState", () => {
             expect(originalState).toEqual(originalClone);
             expect(newState).not.toBe(originalState);
             expect(newState[role]).not.toBe(originalState[role]);
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
   });

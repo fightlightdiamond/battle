@@ -190,5 +190,17 @@ export const defaultSkillTreeConfig: SkillTreeConfig = {
     double_attack: { color: "#F59E0B", icon: "⚔️", label: "Double Attack" },
     execute: { color: "#7C3AED", icon: "💀", label: "Execute" },
     leap_strike: { color: "#EC4899", icon: "🦘", label: "Leap Strike" },
+    power_shot: { color: "#06B6D4", icon: "🏹", label: "Power Shot" },
+    evasive_shot: { color: "#F472B6", icon: "💨", label: "Evasive Shot" },
+    piercing_thrust: { color: "#F59E0B", icon: "🔱", label: "Piercing Thrust" },
+    whirlwind_charge: {
+      color: "#14B8A6",
+      icon: "🌀",
+      label: "Whirlwind Charge",
+    },
+    speed_boost: { color: "#84CC16", icon: "💨", label: "Swift Advance" },
+    damage_immunity: { color: "#64748B", icon: "🛡️", label: "Iron Guard" },
+    stunning_slash: { color: "#F43F5E", icon: "⚡", label: "Stunning Slash" },
+    shield_bash: { color: "#6366F1", icon: "🔰", label: "Shield Bash" },
   },
 };

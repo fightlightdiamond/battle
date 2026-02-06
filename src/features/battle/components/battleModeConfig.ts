@@ -3,7 +3,10 @@
  * Contains constants and utility functions for battle modes
  */
 
-export type BattleMode = "classic" | "arena";
+import type { BattleMode } from "../store/types";
+
+// Re-export BattleMode for backwards compatibility
+export type { BattleMode };
 
 export interface BattleModeOption {
   id: BattleMode;

@@ -4,12 +4,14 @@ import type {
   EntityDefinition,
   FieldDefinition,
 } from "../types/entityDefinition";
+import type { PresetType } from "../types/presets";
 import {
   saveEntity as persistEntity,
   loadEntity as loadPersistedEntity,
   deleteEntity as deletePersistedEntity,
   listEntities,
 } from "../services/entityStorage";
+import { applyPreset as applyPresetFields, getPreset } from "../presets";
 
 /**
  * Creates a new empty entity definition
@@ -39,6 +41,7 @@ function createEmptyField(): FieldDefinition {
 
 interface EntityState {
   currentEntity: EntityDefinition;
+  currentPreset: PresetType;
   savedEntities: EntityDefinition[];
   isLoading: boolean;
   error: string | null;
@@ -52,6 +55,10 @@ interface EntityActions {
   addField: () => void;
   updateField: (fieldId: string, updates: Partial<FieldDefinition>) => void;
   removeField: (fieldId: string) => void;
+
+  // Preset actions
+  applyPreset: (type: PresetType) => void;
+  clearPreset: () => void;
 
   // Persistence actions
   saveEntity: () => void;
@@ -68,6 +75,7 @@ export type EntityStore = EntityState & EntityActions;
 
 const initialState: EntityState = {
   currentEntity: createEmptyEntity(),
+  currentPreset: "none",
   savedEntities: [],
   isLoading: false,
   error: null,
@@ -140,6 +148,44 @@ export const useEntityStore = create<EntityStore>()(
           }),
           false,
           "removeField",
+        ),
+
+      // Apply a preset to the current entity
+      applyPreset: (type: PresetType) => {
+        const preset = getPreset(type);
+        const fields = applyPresetFields(type);
+
+        set(
+          (state) => ({
+            currentPreset: type,
+            currentEntity: {
+              ...state.currentEntity,
+              // Use preset's default name if current name is empty
+              name: state.currentEntity.name || preset?.defaultEntityName || "",
+              fields,
+              updatedAt: Date.now(),
+            },
+            error: null,
+          }),
+          false,
+          "applyPreset",
+        );
+      },
+
+      // Clear the current preset and reset fields
+      clearPreset: () =>
+        set(
+          (state) => ({
+            currentPreset: "none",
+            currentEntity: {
+              ...state.currentEntity,
+              fields: [],
+              updatedAt: Date.now(),
+            },
+            error: null,
+          }),
+          false,
+          "clearPreset",
         ),
 
       // Save current entity to localStorage
@@ -274,11 +320,12 @@ export const useEntityStore = create<EntityStore>()(
         }
       },
 
-      // Reset current entity to empty state
+      // Reset current entity to empty state and clear preset
       resetCurrentEntity: () =>
         set(
           {
             currentEntity: createEmptyEntity(),
+            currentPreset: "none",
             error: null,
           },
           false,
@@ -294,6 +341,7 @@ export const useEntityStore = create<EntityStore>()(
 
 // Selectors for optimized re-renders
 export const selectCurrentEntity = (state: EntityStore) => state.currentEntity;
+export const selectCurrentPreset = (state: EntityStore) => state.currentPreset;
 export const selectSavedEntities = (state: EntityStore) => state.savedEntities;
 export const selectIsLoading = (state: EntityStore) => state.isLoading;
 export const selectError = (state: EntityStore) => state.error;

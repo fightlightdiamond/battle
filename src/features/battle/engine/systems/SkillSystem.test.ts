@@ -12,11 +12,11 @@ import {
   clampPosition,
   getDirectionSign,
 } from "./SkillSystem";
-import type { Gem, SkillType, SkillTrigger } from "../../../gems/types/gem";
+import type { Gem, SkillType, SkillTrigger } from "@/features/gems/types/gem";
 import type {
   EquippedGemState,
   BattleCardGems,
-} from "../../../gems/types/equipment";
+} from "@/features/gems/types/equipment";
 import type { AttackResult } from "../core/types";
 
 // ============================================
@@ -53,6 +53,9 @@ const validIsoDateArb = fc
   })
   .map((ts) => new Date(ts).toISOString());
 
+// Valid gem tier
+const gemTierArb = fc.constantFrom("basic", "advanced", "master", "legendary");
+
 // Valid gem generator
 const gemArb: fc.Arbitrary<Gem> = fc.record({
   id: fc.uuid(),
@@ -76,6 +79,11 @@ const gemArb: fc.Arbitrary<Gem> = fc.record({
       nil: undefined,
     }),
   }),
+  tier: gemTierArb as fc.Arbitrary<
+    "basic" | "advanced" | "master" | "legendary"
+  >,
+  imagePath: fc.constant(null),
+  imageUrl: fc.constant(null),
   createdAt: validIsoDateArb,
   updatedAt: validIsoDateArb,
 });
@@ -648,6 +656,9 @@ describe("Property 11: Cooldown Blocks Activation", () => {
             cooldown: 3,
             effectParams: {},
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -742,6 +753,9 @@ describe("Property 6: Double Move Distance", () => {
             cooldown: 0,
             effectParams: { moveDistance: 2 },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -789,6 +803,9 @@ describe("Property 6: Double Move Distance", () => {
       cooldown: 0,
       effectParams: { moveDistance: 2 },
       createdAt: new Date().toISOString(),
+      tier: "basic",
+      imagePath: null,
+      imageUrl: null,
       updatedAt: new Date().toISOString(),
     };
 
@@ -843,6 +860,9 @@ describe("Property 6: Double Move Distance", () => {
             cooldown: 3,
             effectParams: { moveDistance: 2 },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -888,6 +908,9 @@ describe("Property 6: Double Move Distance", () => {
             cooldown: 0,
             effectParams: { moveDistance },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -951,6 +974,9 @@ describe("Property 9: Leap Strike Positioning", () => {
             cooldown: 0,
             effectParams: { leapRange: 2, leapKnockback: 2 },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1017,6 +1043,9 @@ describe("Property 9: Leap Strike Positioning", () => {
             cooldown: 0,
             effectParams: { leapRange: 2, leapKnockback: 2 },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1067,6 +1096,9 @@ describe("Property 9: Leap Strike Positioning", () => {
             cooldown: 3,
             effectParams: { leapRange: 2, leapKnockback: 2 },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1108,6 +1140,9 @@ describe("Property 9: Leap Strike Positioning", () => {
       cooldown: 0,
       effectParams: { leapRange: 3, leapKnockback: 2 },
       createdAt: new Date().toISOString(),
+      tier: "basic",
+      imagePath: null,
+      imageUrl: null,
       updatedAt: new Date().toISOString(),
     };
 
@@ -1166,6 +1201,9 @@ describe("Property 10: Leap Strike Knockback", () => {
             cooldown: 0,
             effectParams: { leapRange: 2, leapKnockback },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1228,6 +1266,9 @@ describe("Property 10: Leap Strike Knockback", () => {
       cooldown: 0,
       effectParams: { leapRange: 2, leapKnockback: 2 },
       createdAt: new Date().toISOString(),
+      tier: "basic",
+      imagePath: null,
+      imageUrl: null,
       updatedAt: new Date().toISOString(),
     };
 
@@ -1284,6 +1325,9 @@ describe("Property 10: Leap Strike Knockback", () => {
             cooldown: 0,
             effectParams: { leapRange: 2, leapKnockback },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1328,6 +1372,9 @@ describe("Property 10: Leap Strike Knockback", () => {
       cooldown: 0,
       effectParams: { leapRange: 2, leapKnockback: 2 },
       createdAt: new Date().toISOString(),
+      tier: "basic",
+      imagePath: null,
+      imageUrl: null,
       updatedAt: new Date().toISOString(),
     };
 
@@ -1439,6 +1486,9 @@ describe("Property 4: Knockback Position Change", () => {
             cooldown: 0,
             effectParams: { knockbackDistance: 1 },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1494,6 +1544,9 @@ describe("Property 4: Knockback Position Change", () => {
       cooldown: 0,
       effectParams: { knockbackDistance: 1 },
       createdAt: new Date().toISOString(),
+      tier: "basic",
+      imagePath: null,
+      imageUrl: null,
       updatedAt: new Date().toISOString(),
     };
 
@@ -1552,6 +1605,9 @@ describe("Property 4: Knockback Position Change", () => {
             cooldown: 3,
             effectParams: { knockbackDistance: 1 },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1595,6 +1651,9 @@ describe("Property 4: Knockback Position Change", () => {
             cooldown: 0,
             effectParams: { knockbackDistance },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1654,6 +1713,9 @@ describe("Property 5: Retreat Position Change", () => {
             cooldown: 0,
             effectParams: { knockbackDistance: 1 },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1709,6 +1771,9 @@ describe("Property 5: Retreat Position Change", () => {
       cooldown: 0,
       effectParams: { knockbackDistance: 1 },
       createdAt: new Date().toISOString(),
+      tier: "basic",
+      imagePath: null,
+      imageUrl: null,
       updatedAt: new Date().toISOString(),
     };
 
@@ -1769,6 +1834,9 @@ describe("Property 5: Retreat Position Change", () => {
             cooldown: 3,
             effectParams: { knockbackDistance: 1 },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1812,6 +1880,9 @@ describe("Property 5: Retreat Position Change", () => {
             cooldown: 0,
             effectParams: { knockbackDistance: retreatDistance },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1866,6 +1937,9 @@ describe("Property 7: Double Attack Count", () => {
             cooldown: 0,
             effectParams: { attackCount: 2 },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -1921,6 +1995,9 @@ describe("Property 7: Double Attack Count", () => {
       cooldown: 0,
       effectParams: { attackCount: 2 },
       createdAt: new Date().toISOString(),
+      tier: "basic",
+      imagePath: null,
+      imageUrl: null,
       updatedAt: new Date().toISOString(),
     };
 
@@ -1977,6 +2054,9 @@ describe("Property 7: Double Attack Count", () => {
           cooldown: 3,
           effectParams: { attackCount: 2 },
           createdAt: new Date().toISOString(),
+          tier: "basic",
+          imagePath: null,
+          imageUrl: null,
           updatedAt: new Date().toISOString(),
         };
 
@@ -2026,6 +2106,9 @@ describe("Property 7: Double Attack Count", () => {
       cooldown: 0,
       effectParams: { attackCount: 2 },
       createdAt: new Date().toISOString(),
+      tier: "basic",
+      imagePath: null,
+      imageUrl: null,
       updatedAt: new Date().toISOString(),
     };
 
@@ -2090,6 +2173,9 @@ describe("Property 8: Execute Threshold", () => {
             cooldown: 0,
             effectParams: { executeThreshold },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -2145,6 +2231,9 @@ describe("Property 8: Execute Threshold", () => {
             cooldown: 0,
             effectParams: { executeThreshold },
             createdAt: new Date().toISOString(),
+            tier: "basic",
+            imagePath: null,
+            imageUrl: null,
             updatedAt: new Date().toISOString(),
           };
 
@@ -2190,6 +2279,9 @@ describe("Property 8: Execute Threshold", () => {
       cooldown: 0,
       effectParams: { executeThreshold: 15 },
       createdAt: new Date().toISOString(),
+      tier: "basic",
+      imagePath: null,
+      imageUrl: null,
       updatedAt: new Date().toISOString(),
     };
 
@@ -2230,6 +2322,9 @@ describe("Property 8: Execute Threshold", () => {
           cooldown: 4,
           effectParams: { executeThreshold: 15 },
           createdAt: new Date().toISOString(),
+          tier: "basic",
+          imagePath: null,
+          imageUrl: null,
           updatedAt: new Date().toISOString(),
         };
 
@@ -2271,6 +2366,9 @@ describe("Property 8: Execute Threshold", () => {
       cooldown: 0,
       effectParams: {}, // No threshold specified
       createdAt: new Date().toISOString(),
+      tier: "basic",
+      imagePath: null,
+      imageUrl: null,
       updatedAt: new Date().toISOString(),
     };
 
@@ -2310,6 +2408,9 @@ describe("Property 8: Execute Threshold", () => {
       cooldown: 0,
       effectParams: { executeThreshold: 15 },
       createdAt: new Date().toISOString(),
+      tier: "basic",
+      imagePath: null,
+      imageUrl: null,
       updatedAt: new Date().toISOString(),
     };
 

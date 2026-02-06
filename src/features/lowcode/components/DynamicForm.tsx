@@ -1,5 +1,10 @@
 import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import type {
+  Control,
+  ControllerRenderProps,
+  FieldValues,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -137,8 +142,7 @@ export function DynamicForm({ entityDefinition, onSubmit }: DynamicFormProps) {
 
 interface DynamicFormFieldProps {
   field: FieldDefinition;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control: any;
+  control: Control<FieldValues>;
 }
 
 /**
@@ -166,8 +170,10 @@ function DynamicFormField({ field, control }: DynamicFormFieldProps) {
 /**
  * Renders the appropriate input component based on field type
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function renderFieldInput(field: FieldDefinition, formField: any) {
+function renderFieldInput(
+  field: FieldDefinition,
+  formField: ControllerRenderProps<FieldValues, string>,
+) {
   switch (field.type) {
     case "text":
       return (

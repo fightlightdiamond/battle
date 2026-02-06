@@ -161,6 +161,7 @@ describe("Weapon stat range validation", () => {
         const result = weaponFormSchema.safeParse({
           name: "Test Weapon",
           image: null,
+          weaponType: "sword_shield",
           ...stats,
         });
         expect(result.success).toBe(true);
@@ -241,6 +242,11 @@ describe("Complete weapon schema validation", () => {
     imageUrl: fc.option(fc.string(), { nil: null }),
     createdAt: fc.integer({ min: 0 }),
     updatedAt: fc.integer({ min: 0 }),
+    weaponType: fc.constantFrom(
+      "bow" as const,
+      "spear" as const,
+      "sword_shield" as const,
+    ),
     atk: fc.integer({
       min: WEAPON_STAT_RANGES.atk.min,
       max: WEAPON_STAT_RANGES.atk.max,
@@ -296,6 +302,11 @@ describe("Property 3: Weapon serialization round-trip", () => {
     imageUrl: fc.option(fc.string(), { nil: null }),
     createdAt: fc.integer({ min: 0 }),
     updatedAt: fc.integer({ min: 0 }),
+    weaponType: fc.constantFrom(
+      "bow" as const,
+      "spear" as const,
+      "sword_shield" as const,
+    ),
     atk: fc.integer({
       min: WEAPON_STAT_RANGES.atk.min,
       max: WEAPON_STAT_RANGES.atk.max,
@@ -343,6 +354,7 @@ describe("Property 3: Weapon serialization round-trip", () => {
           expect(result.data.imageUrl).toBe(weapon.imageUrl);
           expect(result.data.createdAt).toBe(weapon.createdAt);
           expect(result.data.updatedAt).toBe(weapon.updatedAt);
+          expect(result.data.weaponType).toBe(weapon.weaponType);
           expect(result.data.atk).toBe(weapon.atk);
           expect(result.data.critChance).toBe(weapon.critChance);
           expect(result.data.critDamage).toBe(weapon.critDamage);

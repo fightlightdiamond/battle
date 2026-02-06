@@ -2,12 +2,12 @@
 // SKILL SYSTEM
 // ============================================================================
 
-import type { CellIndex } from "../../../arena1d/types/arena";
-import type { SkillType, Gem } from "../../../gems/types/gem";
+import type { CellIndex } from "@/features/arena1d/types/arena";
+import type { SkillType, Gem } from "@/features/gems/types/gem";
 import type {
   BattleCardGems,
   EquippedGemState,
-} from "../../../gems/types/equipment";
+} from "@/features/gems/types/equipment";
 
 /**
  * Simplified attack result interface that works with both engine and battle service types
@@ -51,6 +51,12 @@ export interface CombatSkillResult {
   defenderNewHp: number;
   additionalAttacks: SkillAttackResult[];
   skillsActivated: ActivatedSkill[];
+  // Wall collision effects
+  wallCollision?: {
+    pushedToEdge: boolean; // Defender was pushed to arena edge (50% bonus damage)
+    wallSlam: boolean; // Defender was already at edge, couldn't be pushed (guaranteed crit)
+    bonusDamage: number; // Extra damage from wall effects
+  };
 }
 
 /**
@@ -155,6 +161,67 @@ export function getDirectionSign(from: number, to: number): number {
   if (to > from) return 1;
   if (to < from) return -1;
   return 0;
+}
+
+/**
+ * Check if a position is at the arena edge
+ */
+export function isAtEdge(position: number): boolean {
+  return position === MIN_POSITION || position === MAX_POSITION;
+}
+
+/**
+ * Wall collision result when knockback occurs
+ */
+export interface WallCollisionResult {
+  finalPosition: CellIndex;
+  pushedToEdge: boolean; // Was pushed to the edge (50% bonus damage)
+  wallSlam: boolean; // Was already at edge, couldn't move (guaranteed crit = 100% bonus)
+  bonusDamageMultiplier: number; // 0 = no bonus, 0.5 = 50% bonus, 1.0 = 100% bonus (crit)
+}
+
+/**
+ * Calculate knockback with wall collision effects
+ * - If pushed to arena edge: 50% bonus damage
+ * - If already at edge and can't be pushed: guaranteed crit (100% bonus damage)
+ */
+export function calculateKnockbackWithWallCollision(
+  currentPosition: number,
+  knockbackDirection: number,
+  knockbackDistance: number,
+): WallCollisionResult {
+  const targetPosition =
+    currentPosition + knockbackDirection * knockbackDistance;
+  const clampedPosition = clampPosition(targetPosition);
+
+  // Check if already at edge before knockback
+  const wasAtEdge = isAtEdge(currentPosition);
+  const wouldBePushedBeyondEdge = targetPosition !== clampedPosition;
+
+  // Wall slam: already at edge AND knockback direction would push further into wall
+  const wallSlam =
+    wasAtEdge &&
+    ((currentPosition === MIN_POSITION && knockbackDirection < 0) ||
+      (currentPosition === MAX_POSITION && knockbackDirection > 0));
+
+  // Pushed to edge: wasn't at edge, but now is at edge after knockback
+  const pushedToEdge =
+    !wasAtEdge && isAtEdge(clampedPosition) && wouldBePushedBeyondEdge;
+
+  // Calculate bonus damage multiplier
+  let bonusDamageMultiplier = 0;
+  if (wallSlam) {
+    bonusDamageMultiplier = 1.0; // 100% bonus (guaranteed crit)
+  } else if (pushedToEdge) {
+    bonusDamageMultiplier = 0.5; // 50% bonus
+  }
+
+  return {
+    finalPosition: clampedPosition,
+    pushedToEdge,
+    wallSlam,
+    bonusDamageMultiplier,
+  };
 }
 
 // ============================================================================
@@ -328,6 +395,21 @@ export function createSkillSystem(
             break;
           }
 
+          case "speed_boost": {
+            // Speed Boost (Sword & Shield Passive): Move extra 1 cell
+            // 50% chance to increase movement by 1 cell
+            const extraMove = gem.effectParams.moveDistance ?? 1;
+            const newPosition = targetPosition + moveDirection * extraMove;
+            finalPosition = clampPosition(newPosition);
+
+            skillsActivated.push({
+              skillType: gem.skillType,
+              gemId: gem.id,
+              gemName: gem.name,
+            });
+            break;
+          }
+
           default:
             // Other skill types are not movement skills
             break;
@@ -370,6 +452,16 @@ export function createSkillSystem(
       const additionalAttacks: SkillAttackResult[] = [];
       const skillsActivated: ActivatedSkill[] = [];
 
+      // Track wall collision for bonus damage
+      let wallCollisionResult:
+        | {
+            pushedToEdge: boolean;
+            wallSlam: boolean;
+            bonusDamage: number;
+          }
+        | undefined;
+      let totalWallBonusDamage = 0;
+
       // Process each equipped gem with combat trigger
       const updatedGems = attacker.equippedGems.map((gemState) => {
         const { gem } = gemState;
@@ -399,9 +491,31 @@ export function createSkillSystem(
               attackerPosition,
               defenderPosition,
             );
-            const newPosition =
-              defenderPosition + knockbackDirection * knockbackDistance;
-            newDefenderPosition = clampPosition(newPosition);
+
+            // Calculate knockback with wall collision
+            const wallResult = calculateKnockbackWithWallCollision(
+              defenderPosition,
+              knockbackDirection,
+              knockbackDistance,
+            );
+            newDefenderPosition = wallResult.finalPosition;
+
+            // Apply wall collision bonus damage
+            if (wallResult.bonusDamageMultiplier > 0) {
+              const baseDamage =
+                attackResult.defender.maxHp - attackResult.defenderNewHp;
+              const wallBonusDamage = Math.floor(
+                baseDamage * wallResult.bonusDamageMultiplier,
+              );
+              newDefenderHp = Math.max(0, newDefenderHp - wallBonusDamage);
+              totalWallBonusDamage += wallBonusDamage;
+
+              wallCollisionResult = {
+                pushedToEdge: wallResult.pushedToEdge,
+                wallSlam: wallResult.wallSlam,
+                bonusDamage: totalWallBonusDamage,
+              };
+            }
 
             skillsActivated.push({
               skillType: gem.skillType,
@@ -469,6 +583,274 @@ export function createSkillSystem(
             break;
           }
 
+          case "power_shot": {
+            // Power Shot (Bow): Deal bonus damage and knockback
+            // 150% damage + push enemy back 1 cell
+            const knockbackDistance = gem.effectParams.knockbackDistance ?? 1;
+            const knockbackDirection = getDirectionSign(
+              attackerPosition,
+              defenderPosition,
+            );
+
+            // Calculate knockback with wall collision
+            const wallResult = calculateKnockbackWithWallCollision(
+              defenderPosition,
+              knockbackDirection,
+              knockbackDistance,
+            );
+            newDefenderPosition = wallResult.finalPosition;
+
+            // Apply damage multiplier (150% = extra 50% damage)
+            const damageMultiplier = gem.effectParams.damageMultiplier ?? 150;
+            const bonusDamagePercent = (damageMultiplier - 100) / 100;
+            const baseDamage =
+              attackResult.defender.maxHp - attackResult.defenderNewHp;
+            let bonusDamage = Math.floor(baseDamage * bonusDamagePercent);
+
+            // Apply wall collision bonus damage
+            if (wallResult.bonusDamageMultiplier > 0) {
+              const wallBonusDamage = Math.floor(
+                baseDamage * wallResult.bonusDamageMultiplier,
+              );
+              bonusDamage += wallBonusDamage;
+              totalWallBonusDamage += wallBonusDamage;
+
+              wallCollisionResult = {
+                pushedToEdge: wallResult.pushedToEdge,
+                wallSlam: wallResult.wallSlam,
+                bonusDamage: totalWallBonusDamage,
+              };
+            }
+
+            newDefenderHp = Math.max(0, newDefenderHp - bonusDamage);
+
+            skillsActivated.push({
+              skillType: gem.skillType,
+              gemId: gem.id,
+              gemName: gem.name,
+            });
+            break;
+          }
+
+          case "evasive_shot": {
+            // Evasive Shot (Bow): Deal bonus damage and retreat
+            // 250% damage + jump back 1 cell
+            const retreatDistance = gem.effectParams.retreatDistance ?? 1;
+            const retreatDirection = getDirectionSign(
+              defenderPosition,
+              attackerPosition,
+            );
+            const newPosition =
+              attackerPosition + retreatDirection * retreatDistance;
+            newAttackerPosition = clampPosition(newPosition);
+
+            // Apply damage multiplier (250% = extra 150% damage)
+            const damageMultiplier = gem.effectParams.damageMultiplier ?? 250;
+            const bonusDamagePercent = (damageMultiplier - 100) / 100;
+            const baseDamage =
+              attackResult.defender.maxHp - attackResult.defenderNewHp;
+            const bonusDamage = Math.floor(baseDamage * bonusDamagePercent);
+            newDefenderHp = Math.max(0, newDefenderHp - bonusDamage);
+
+            skillsActivated.push({
+              skillType: gem.skillType,
+              gemId: gem.id,
+              gemName: gem.name,
+            });
+            break;
+          }
+
+          case "piercing_thrust": {
+            // Piercing Thrust (Spear): Deal bonus damage and pull enemy closer
+            // 170% damage + pull enemy 1 cell towards attacker
+            const pullDistance = gem.effectParams.pullDistance ?? 1;
+            // Pull direction is opposite of knockback - towards attacker
+            const pullDirection = getDirectionSign(
+              defenderPosition,
+              attackerPosition,
+            );
+            const newPosition = defenderPosition + pullDirection * pullDistance;
+            const clampedPos = clampPosition(newPosition);
+            // Ensure enemy stays at least 1 cell away from attacker
+            if (attackerPosition < defenderPosition) {
+              newDefenderPosition = Math.max(
+                attackerPosition + 1,
+                clampedPos,
+              ) as typeof clampedPos;
+            } else {
+              newDefenderPosition = Math.min(
+                attackerPosition - 1,
+                clampedPos,
+              ) as typeof clampedPos;
+            }
+
+            // Apply damage multiplier (170% = extra 70% damage)
+            const damageMultiplier = gem.effectParams.damageMultiplier ?? 170;
+            const bonusDamagePercent = (damageMultiplier - 100) / 100;
+            const baseDamage =
+              attackResult.defender.maxHp - attackResult.defenderNewHp;
+            const bonusDamage = Math.floor(baseDamage * bonusDamagePercent);
+            newDefenderHp = Math.max(0, newDefenderHp - bonusDamage);
+
+            skillsActivated.push({
+              skillType: gem.skillType,
+              gemId: gem.id,
+              gemName: gem.name,
+            });
+            break;
+          }
+
+          case "whirlwind_charge": {
+            // Whirlwind Charge (Spear): Leap to enemy position, spin and push back
+            // Only activates if enemy is in attack range (assumed already in range since combat)
+            // 200% damage + push enemy 2 cells back
+            const chargeKnockback = gem.effectParams.chargeKnockback ?? 2;
+
+            // Move attacker to position adjacent to where defender was
+            const directionToDefender = getDirectionSign(
+              attackerPosition,
+              defenderPosition,
+            );
+            const adjacentToDefender = defenderPosition - directionToDefender;
+            newAttackerPosition = clampPosition(adjacentToDefender);
+
+            // Push defender back 2 cells from new attacker position with wall collision
+            const knockbackDirection = getDirectionSign(
+              newAttackerPosition,
+              defenderPosition,
+            );
+
+            const wallResult = calculateKnockbackWithWallCollision(
+              defenderPosition,
+              knockbackDirection,
+              chargeKnockback,
+            );
+            newDefenderPosition = wallResult.finalPosition;
+
+            // Apply damage multiplier (200% = extra 100% damage)
+            const damageMultiplier = gem.effectParams.damageMultiplier ?? 200;
+            const bonusDamagePercent = (damageMultiplier - 100) / 100;
+            const baseDamage =
+              attackResult.defender.maxHp - attackResult.defenderNewHp;
+            let bonusDamage = Math.floor(baseDamage * bonusDamagePercent);
+
+            // Apply wall collision bonus damage
+            if (wallResult.bonusDamageMultiplier > 0) {
+              const wallBonusDamage = Math.floor(
+                baseDamage * wallResult.bonusDamageMultiplier,
+              );
+              bonusDamage += wallBonusDamage;
+              totalWallBonusDamage += wallBonusDamage;
+
+              wallCollisionResult = {
+                pushedToEdge: wallResult.pushedToEdge,
+                wallSlam: wallResult.wallSlam,
+                bonusDamage: totalWallBonusDamage,
+              };
+            }
+
+            newDefenderHp = Math.max(0, newDefenderHp - bonusDamage);
+
+            skillsActivated.push({
+              skillType: gem.skillType,
+              gemId: gem.id,
+              gemName: gem.name,
+            });
+            break;
+          }
+
+          case "stunning_slash": {
+            // Stunning Slash (Sword & Shield): 180% damage + 20% stun chance
+            // Apply damage multiplier (180% = extra 80% damage)
+            const damageMultiplier = gem.effectParams.damageMultiplier ?? 180;
+            const bonusDamagePercent = (damageMultiplier - 100) / 100;
+            const baseDamage =
+              attackResult.defender.maxHp - attackResult.defenderNewHp;
+            const bonusDamage = Math.floor(baseDamage * bonusDamagePercent);
+            newDefenderHp = Math.max(0, newDefenderHp - bonusDamage);
+
+            // Stun effect is handled by the battle system (future implementation)
+            // The stunChance and stunDuration are in effectParams for the battle system to use
+
+            skillsActivated.push({
+              skillType: gem.skillType,
+              gemId: gem.id,
+              gemName: gem.name,
+            });
+            break;
+          }
+
+          case "shield_bash": {
+            // Shield Bash (Sword & Shield): Push enemy 1 cell + follow + 120% damage
+            const knockbackDistance = gem.effectParams.knockbackDistance ?? 1;
+            const followPush = gem.effectParams.followPush ?? true;
+
+            // Push defender back with wall collision
+            const knockbackDirection = getDirectionSign(
+              attackerPosition,
+              defenderPosition,
+            );
+
+            const wallResult = calculateKnockbackWithWallCollision(
+              defenderPosition,
+              knockbackDirection,
+              knockbackDistance,
+            );
+            newDefenderPosition = wallResult.finalPosition;
+
+            // If followPush is true, attacker moves to defender's old position
+            if (followPush) {
+              newAttackerPosition =
+                defenderPosition as typeof newAttackerPosition;
+            }
+
+            // Apply damage multiplier (120% = extra 20% damage)
+            const damageMultiplier = gem.effectParams.damageMultiplier ?? 120;
+            const bonusDamagePercent = (damageMultiplier - 100) / 100;
+            const baseDamage =
+              attackResult.defender.maxHp - attackResult.defenderNewHp;
+            let bonusDamage = Math.floor(baseDamage * bonusDamagePercent);
+
+            // Apply wall collision bonus damage
+            if (wallResult.bonusDamageMultiplier > 0) {
+              const wallBonusDamage = Math.floor(
+                baseDamage * wallResult.bonusDamageMultiplier,
+              );
+              bonusDamage += wallBonusDamage;
+              totalWallBonusDamage += wallBonusDamage;
+
+              wallCollisionResult = {
+                pushedToEdge: wallResult.pushedToEdge,
+                wallSlam: wallResult.wallSlam,
+                bonusDamage: totalWallBonusDamage,
+              };
+            }
+
+            newDefenderHp = Math.max(0, newDefenderHp - bonusDamage);
+
+            skillsActivated.push({
+              skillType: gem.skillType,
+              gemId: gem.id,
+              gemName: gem.name,
+            });
+            break;
+          }
+
+          case "damage_immunity": {
+            // Damage Immunity (Sword & Shield Passive): Negate all damage
+            // This skill is a defensive skill - it should be processed on the defender side
+            // When this activates, the defender takes no damage from the attack
+            // Note: This skill is processed differently - it needs to be checked
+            // when the card is being attacked, not when attacking
+            // For now, log the activation (actual immunity handled by battle system)
+            skillsActivated.push({
+              skillType: gem.skillType,
+              gemId: gem.id,
+              gemName: gem.name,
+            });
+            break;
+          }
+
           default:
             // Other skill types are not combat skills (movement skills)
             break;
@@ -489,6 +871,7 @@ export function createSkillSystem(
         defenderNewHp: newDefenderHp,
         additionalAttacks,
         skillsActivated,
+        wallCollision: wallCollisionResult,
       };
     },
   };

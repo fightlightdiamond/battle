@@ -9,6 +9,8 @@ import { FieldEditor } from "../components/FieldEditor";
 import { CodePreview } from "../components/CodePreview";
 import { DynamicForm } from "../components/DynamicForm";
 import { SavedEntitiesList } from "../components/SavedEntitiesList";
+import { ExportPanel } from "../components/ExportPanel";
+import { PresetSelector } from "../components/PresetSelector";
 import {
   useEntityStore,
   selectCurrentEntity,
@@ -19,8 +21,8 @@ import {
 
 /**
  * EntityBuilderPage - Main page for the Low-Code Builder
- * Two-column layout: Editor (left) | Preview (right)
- * Requirements: 1.1, 1.2, 1.3, 1.4, 2.1, 2.2, 3.1, 4.1, 4.2
+ * Three-column layout on large screens: Editor (left) | Preview (center) | Export (right)
+ * Requirements: 1.1, 1.2, 1.3, 1.4, 2.1, 2.2, 3.1, 4.1, 4.2, 5.1, 5.2, 5.3
  */
 export function EntityBuilderPage() {
   const currentEntity = useEntityStore(selectCurrentEntity);
@@ -71,7 +73,7 @@ export function EntityBuilderPage() {
         </div>
       }
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Editor */}
         <div className="space-y-6">
           {/* Entity Name Input */}
@@ -94,6 +96,9 @@ export function EntityBuilderPage() {
                   </p>
                 )}
               </div>
+
+              {/* Preset Selector - Requirements: 1.1, 1.2 */}
+              <PresetSelector />
 
               {error && <p className="text-sm text-destructive">{error}</p>}
             </CardContent>
@@ -134,13 +139,15 @@ export function EntityBuilderPage() {
           <SavedEntitiesList />
         </div>
 
-        {/* Right Column - Preview */}
+        {/* Center Column - Code Preview */}
         <div className="space-y-6">
-          {/* Code Preview */}
           <CodePreview entityDefinition={currentEntity} />
-
-          {/* Form Preview */}
           <DynamicForm entityDefinition={currentEntity} />
+        </div>
+
+        {/* Right Column - Export */}
+        <div className="space-y-6">
+          <ExportPanel entityDefinition={currentEntity} />
         </div>
       </div>
     </AppLayout>

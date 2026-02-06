@@ -76,7 +76,7 @@ export function BattleReplayPage() {
 
   const handleReplayComplete = () => {
     // Optional: could show a modal or auto-navigate
-    console.log("Replay complete!");
+    // Replay complete - no action needed
   };
 
   return (

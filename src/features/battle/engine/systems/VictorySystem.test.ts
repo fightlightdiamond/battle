@@ -30,6 +30,7 @@ const combatantArb: fc.Arbitrary<Combatant> = fc
     maxHp: fc.integer({ min: 1, max: 9999 }),
     buffs: fc.constant([]),
     isDefeated: fc.boolean(),
+    effectiveRange: fc.integer({ min: 1, max: 7 }),
   })
   .map((c) => ({
     ...c,
@@ -48,7 +49,7 @@ const aliveCombatantArb: fc.Arbitrary<Combatant> = combatantArb
 // Battle state generator
 const battleStateArb = (
   challengerArb: fc.Arbitrary<Combatant>,
-  opponentArb: fc.Arbitrary<Combatant>
+  opponentArb: fc.Arbitrary<Combatant>,
 ): fc.Arbitrary<BattleState> =>
   fc.record({
     phase: fc.constant("fighting" as const),
@@ -90,12 +91,13 @@ describe("VictorySystem", () => {
             maxHp: 100,
             buffs: [],
             isDefeated: false,
+            effectiveRange: 1,
           };
 
           expect(victorySystem.isDefeated(combatant)).toBe(true);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -117,12 +119,13 @@ describe("VictorySystem", () => {
             maxHp: Math.max(hp, 100),
             buffs: [],
             isDefeated: false,
+            effectiveRange: 1,
           };
 
           expect(victorySystem.isDefeated(combatant)).toBe(false);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -159,6 +162,7 @@ describe("VictorySystem", () => {
             maxHp: 100,
             buffs: [],
             isDefeated: true,
+            effectiveRange: 1,
           };
 
           const state: BattleState = {
@@ -178,9 +182,9 @@ describe("VictorySystem", () => {
           expect(result!.winner).toBe("opponent");
           expect(result!.winnerName).toBe(opponent.name);
           expect(result!.totalTurns).toBe(turn);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -208,6 +212,7 @@ describe("VictorySystem", () => {
             maxHp: 100,
             buffs: [],
             isDefeated: true,
+            effectiveRange: 1,
           };
 
           const state: BattleState = {
@@ -227,9 +232,9 @@ describe("VictorySystem", () => {
           expect(result!.winner).toBe("challenger");
           expect(result!.winnerName).toBe(challenger.name);
           expect(result!.totalTurns).toBe(turn);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -243,9 +248,9 @@ describe("VictorySystem", () => {
         (state) => {
           const result = victorySystem.checkVictory(state);
           expect(result).toBeNull();
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -271,6 +276,7 @@ describe("VictorySystem", () => {
       maxHp: 100,
       buffs: [],
       isDefeated: false,
+      effectiveRange: 1,
     };
 
     it("returns true when HP is 0", () => {
@@ -311,6 +317,7 @@ describe("VictorySystem", () => {
       maxHp: 100,
       buffs: [],
       isDefeated: false,
+      effectiveRange: 1,
     };
 
     const opponent: Combatant = {
@@ -330,6 +337,7 @@ describe("VictorySystem", () => {
       maxHp: 100,
       buffs: [],
       isDefeated: false,
+      effectiveRange: 1,
     };
 
     const baseState: BattleState = {

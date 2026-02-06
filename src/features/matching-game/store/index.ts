@@ -1,0 +1,1 @@
+export { useMatchingGameStore } from "./matchingGameStore";

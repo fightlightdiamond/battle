@@ -25,6 +25,7 @@ export function WeaponEditPage() {
       id,
       input: {
         name: data.name,
+        weaponType: data.weaponType,
         image: data.image,
         atk: data.atk,
         critChance: data.critChance,

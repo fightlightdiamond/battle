@@ -43,6 +43,7 @@ const combatantArb: fc.Arbitrary<Combatant> = fc
     maxHp: fc.integer({ min: 1, max: 500 }),
     buffs: fc.constant([] as const),
     isDefeated: fc.constant(false),
+    effectiveRange: fc.integer({ min: 1, max: 7 }),
   })
   .map((c) => ({
     ...c,
@@ -100,7 +101,7 @@ describe("BattleEngine", () => {
           const stateAfterAttack = JSON.stringify(engine.getState());
           expect(stateAfterAttack).toBe(stateBeforeAttack);
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -121,7 +122,7 @@ describe("BattleEngine", () => {
           // Should return null since not in fighting phase
           expect(result).toBeNull();
         }),
-        { numRuns: 100 }
+        { numRuns: 100 },
       );
     });
 
@@ -358,17 +359,17 @@ describe("BattleEngine", () => {
       expect(restoredState.phase).toBe(originalState?.phase);
       expect(restoredState.turn).toBe(originalState?.turn);
       expect(restoredState.challenger.currentHp).toBe(
-        originalState?.challenger.currentHp
+        originalState?.challenger.currentHp,
       );
       expect(restoredState.opponent.currentHp).toBe(
-        originalState?.opponent.currentHp
+        originalState?.opponent.currentHp,
       );
     });
 
     it("throws error when serializing without initialized battle", () => {
       const newEngine = new BattleEngine();
       expect(() => newEngine.serialize()).toThrow(
-        "No battle state to serialize"
+        "No battle state to serialize",
       );
     });
   });

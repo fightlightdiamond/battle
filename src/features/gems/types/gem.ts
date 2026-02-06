@@ -16,7 +16,17 @@ export type SkillType =
   | "double_move" // Move 2 cells instead of 1
   | "double_attack" // Attack twice
   | "execute" // Kill if HP below threshold
-  | "leap_strike"; // Jump to enemy and knockback 2
+  | "leap_strike" // Jump to enemy and knockback 2
+  // Weapon-specific skills
+  | "power_shot" // Bow: 150% damage + knockback
+  | "evasive_shot" // Bow: 250% damage + retreat
+  | "piercing_thrust" // Spear: 170% damage + pull enemy 1 cell
+  | "whirlwind_charge" // Spear: leap to enemy + 200% damage + push 2 cells
+  // Sword & Shield skills
+  | "speed_boost" // Passive: 50% chance to move extra 1 cell
+  | "damage_immunity" // Passive: 20% chance to negate all damage
+  | "stunning_slash" // 180% damage + 20% stun 1 turn
+  | "shield_bash"; // Push enemy 1 cell + follow + 120% damage
 
 /**
  * Gem tier enumeration - progression levels for gems
@@ -40,6 +50,14 @@ export interface SkillEffectParams {
   executeThreshold?: number; // HP % for execute (0-100, default: 15)
   leapRange?: number; // Detection range for leap (default: 2)
   leapKnockback?: number; // Knockback distance after leap (default: 2)
+  damageMultiplier?: number; // For power_shot/evasive_shot/piercing_thrust/whirlwind_charge
+  retreatDistance?: number; // For evasive_shot (default: 1)
+  pullDistance?: number; // For piercing_thrust - pull enemy towards attacker (default: 1)
+  chargeKnockback?: number; // For whirlwind_charge - push distance after charge (default: 2)
+  // Sword & Shield params
+  stunDuration?: number; // For stunning_slash - stun duration in turns (default: 1)
+  stunChance?: number; // For stunning_slash - chance to stun (0-100, default: 20)
+  followPush?: boolean; // For shield_bash - attacker follows the push (default: true)
 }
 
 /**

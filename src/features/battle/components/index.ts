@@ -35,9 +35,9 @@ export type { ReplayControlsProps } from "./ReplayControls";
 export { BattleModeSelector } from "./BattleModeSelector";
 export type {
   BattleModeSelectorProps,
-  BattleMode,
   BattleModeOption,
 } from "./BattleModeSelector";
+// Note: BattleMode type is exported from store/types.ts to avoid duplicate exports
 export { getBattleModeRoute, BATTLE_MODE_ROUTES } from "./battleModeConfig";
 
 export { VictoryParticles } from "./VictoryParticles";

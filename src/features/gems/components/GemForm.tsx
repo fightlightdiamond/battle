@@ -84,6 +84,54 @@ const SKILL_TYPE_OPTIONS: {
     description: "Jump to enemy and knockback 2 cells",
     trigger: "movement",
   },
+  {
+    value: "power_shot",
+    label: "Power Shot",
+    description: "150% damage + knockback (Bow)",
+    trigger: "combat",
+  },
+  {
+    value: "evasive_shot",
+    label: "Evasive Shot",
+    description: "250% damage + retreat (Bow)",
+    trigger: "combat",
+  },
+  {
+    value: "piercing_thrust",
+    label: "Piercing Thrust",
+    description: "170% damage + pull enemy (Spear)",
+    trigger: "combat",
+  },
+  {
+    value: "whirlwind_charge",
+    label: "Whirlwind Charge",
+    description: "200% damage + charge + push 2 (Spear)",
+    trigger: "combat",
+  },
+  {
+    value: "speed_boost",
+    label: "Swift Advance",
+    description: "50% chance extra movement (Sword & Shield)",
+    trigger: "movement",
+  },
+  {
+    value: "damage_immunity",
+    label: "Iron Guard",
+    description: "20% negate all damage (Sword & Shield)",
+    trigger: "combat",
+  },
+  {
+    value: "stunning_slash",
+    label: "Stunning Slash",
+    description: "180% damage + 20% stun (Sword & Shield)",
+    trigger: "combat",
+  },
+  {
+    value: "shield_bash",
+    label: "Shield Bash",
+    description: "Push + follow + 120% damage (Sword & Shield)",
+    trigger: "combat",
+  },
 ];
 
 /**
@@ -102,6 +150,22 @@ function getDefaultEffectParams(skillType: SkillType) {
       return { executeThreshold: 15 };
     case "leap_strike":
       return { leapRange: 2, leapKnockback: 2 };
+    case "power_shot":
+      return { damageMultiplier: 150, knockbackDistance: 1 };
+    case "evasive_shot":
+      return { damageMultiplier: 250, retreatDistance: 1 };
+    case "piercing_thrust":
+      return { damageMultiplier: 170, pullDistance: 1 };
+    case "whirlwind_charge":
+      return { damageMultiplier: 200, chargeKnockback: 2 };
+    case "speed_boost":
+      return { moveDistance: 1 };
+    case "damage_immunity":
+      return {};
+    case "stunning_slash":
+      return { damageMultiplier: 180, stunChance: 20, stunDuration: 1 };
+    case "shield_bash":
+      return { damageMultiplier: 120, knockbackDistance: 1, followPush: true };
     default:
       return {};
   }

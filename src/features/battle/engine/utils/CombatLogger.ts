@@ -6,7 +6,7 @@ import type {
 } from "../core/types";
 import { LOG_ENTRY_TYPES } from "../core/types";
 import { type CombatConfig, DEFAULT_COMBAT_CONFIG } from "../core/config";
-import type { SkillType } from "../../../gems/types/gem";
+import type { SkillType } from "@/features/gems/types/gem";
 
 /**
  * Generates a unique ID for log entries.
@@ -51,6 +51,14 @@ export function getSkillEffectDescription(skillType: SkillType): string {
     double_attack: "attacked twice",
     execute: "executed low HP enemy",
     leap_strike: "leaped to enemy and knocked back",
+    power_shot: "fired power shot with knockback",
+    evasive_shot: "fired evasive shot and retreated",
+    piercing_thrust: "thrust spear and pulled enemy closer",
+    whirlwind_charge: "charged and spun spear, pushing enemy back",
+    speed_boost: "gained extra movement speed",
+    damage_immunity: "blocked all incoming damage",
+    stunning_slash: "slashed and stunned enemy",
+    shield_bash: "bashed with shield and pushed forward",
   };
   return effectDescriptions[skillType] ?? "activated skill";
 }

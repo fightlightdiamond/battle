@@ -8,26 +8,46 @@ import {
   generateInterface,
   generateZodSchema,
 } from "../services/codeGenerator";
+import {
+  generateFormComponent,
+  generateCardComponent,
+  generateListComponent,
+} from "../services/componentGenerator";
+import { generateListPage } from "../services/pageGenerator";
+import { generateService } from "../services/serviceGenerator";
+
+type TabType =
+  | "interface"
+  | "schema"
+  | "form"
+  | "card"
+  | "list"
+  | "listPage"
+  | "service";
 
 interface CodePreviewProps {
   entityDefinition: EntityDefinition;
 }
 
 /**
- * CodePreview component displays generated TypeScript interface and Zod schema code
- * Provides tabs for switching between Interface and Schema views
+ * CodePreview component displays generated TypeScript code
+ * Provides tabs for: Interface, Schema, Form, Card, List, ListPage, Service
  * Includes copy to clipboard functionality
- * Requirements: 2.1, 2.2, 2.4
+ * Requirements: 5.1, 5.2, 5.3
  */
 export function CodePreview({ entityDefinition }: CodePreviewProps) {
-  const [copiedTab, setCopiedTab] = useState<"interface" | "schema" | null>(
-    null,
-  );
+  const [copiedTab, setCopiedTab] = useState<TabType | null>(null);
 
+  // Generate all code types
   const interfaceCode = generateInterface(entityDefinition);
   const schemaCode = generateZodSchema(entityDefinition);
+  const formCode = generateFormComponent(entityDefinition);
+  const cardCode = generateCardComponent(entityDefinition);
+  const listCode = generateListComponent(entityDefinition);
+  const listPageCode = generateListPage(entityDefinition);
+  const serviceCode = generateService(entityDefinition);
 
-  const copyToClipboard = async (code: string, tab: "interface" | "schema") => {
+  const copyToClipboard = async (code: string, tab: TabType) => {
     try {
       await navigator.clipboard.writeText(code);
       setCopiedTab(tab);
@@ -37,6 +57,16 @@ export function CodePreview({ entityDefinition }: CodePreviewProps) {
     }
   };
 
+  const tabs: { value: TabType; label: string; code: string }[] = [
+    { value: "interface", label: "Interface", code: interfaceCode },
+    { value: "schema", label: "Schema", code: schemaCode },
+    { value: "form", label: "Form", code: formCode },
+    { value: "card", label: "Card", code: cardCode },
+    { value: "list", label: "List", code: listCode },
+    { value: "listPage", label: "ListPage", code: listPageCode },
+    { value: "service", label: "Service", code: serviceCode },
+  ];
+
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -44,56 +74,42 @@ export function CodePreview({ entityDefinition }: CodePreviewProps) {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="interface">
-          <TabsList className="mb-4">
-            <TabsTrigger value="interface">Interface</TabsTrigger>
-            <TabsTrigger value="schema">Schema</TabsTrigger>
+          <TabsList className="mb-4 flex-wrap h-auto gap-1">
+            {tabs.map((tab) => (
+              <TabsTrigger key={tab.value} value={tab.value}>
+                {tab.label}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
-          <TabsContent value="interface" className="space-y-2">
-            <div className="flex justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => copyToClipboard(interfaceCode, "interface")}
-              >
-                {copiedTab === "interface" ? (
-                  <>
-                    <Check className="h-4 w-4 mr-1" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4 mr-1" />
-                    Copy
-                  </>
-                )}
-              </Button>
-            </div>
-            <CodeBlock code={interfaceCode} language="typescript" />
-          </TabsContent>
-
-          <TabsContent value="schema" className="space-y-2">
-            <div className="flex justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => copyToClipboard(schemaCode, "schema")}
-              >
-                {copiedTab === "schema" ? (
-                  <>
-                    <Check className="h-4 w-4 mr-1" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4 mr-1" />
-                    Copy
-                  </>
-                )}
-              </Button>
-            </div>
-            <CodeBlock code={schemaCode} language="typescript" />
-          </TabsContent>
+          {tabs.map((tab) => (
+            <TabsContent
+              key={tab.value}
+              value={tab.value}
+              className="space-y-2"
+            >
+              <div className="flex justify-end">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard(tab.code, tab.value)}
+                >
+                  {copiedTab === tab.value ? (
+                    <>
+                      <Check className="h-4 w-4 mr-1" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4 mr-1" />
+                      Copy
+                    </>
+                  )}
+                </Button>
+              </div>
+              <CodeBlock code={tab.code} language="typescript" />
+            </TabsContent>
+          ))}
         </Tabs>
       </CardContent>
     </Card>
@@ -110,7 +126,7 @@ interface CodeBlockProps {
  */
 function CodeBlock({ code }: CodeBlockProps) {
   return (
-    <pre className="bg-muted rounded-md p-4 overflow-x-auto text-sm">
+    <pre className="bg-muted rounded-md p-4 overflow-x-auto text-sm max-h-96">
       <code className="text-foreground font-mono whitespace-pre">{code}</code>
     </pre>
   );

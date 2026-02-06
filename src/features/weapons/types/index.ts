@@ -13,11 +13,25 @@ export {
   applyDefaultWeaponStats,
 } from "./weapon";
 
+// Weapon type definitions
+export type { WeaponType, WeaponTypeConfig } from "./weaponType";
+
+export {
+  WEAPON_TYPES,
+  WEAPON_TYPE_CONFIGS,
+  getWeaponTypeConfig,
+  getAllWeaponTypes,
+  isValidWeaponType,
+  getWeaponTypeName,
+  getWeaponTypeIcon,
+} from "./weaponType";
+
 // Schemas and validation
 export {
   weaponSchema,
   weaponFormSchema,
   weaponStatsSchema,
+  weaponTypeSchema,
   imageSchema,
   validateWeaponName,
   ALLOWED_IMAGE_TYPES,
@@ -38,3 +52,16 @@ export type {
   EffectiveCardStats,
   WeaponBonusStats,
 } from "./equipment";
+
+// Enhancement types
+export type {
+  EnhanceLevel,
+  EnhanceResult,
+  EnhanceAttempt,
+  EnhanceMaterial,
+  EnhanceMaterialType,
+  EnhanceTierConfig,
+  EnhancePreview,
+} from "./enhancement";
+
+export { MAX_ENHANCE_LEVEL, MATERIAL_INFO } from "./enhancement";

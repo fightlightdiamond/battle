@@ -2,6 +2,9 @@
 // WEAPON TYPES
 // ============================================================================
 
+import type { EnhanceLevel, EnhanceAttempt } from "./enhancement";
+import type { WeaponType } from "./weaponType";
+
 /**
  * Offensive stats that weapons can provide
  */
@@ -20,18 +23,24 @@ export interface WeaponStats {
 export interface Weapon extends WeaponStats {
   id: string;
   name: string;
+  weaponType: WeaponType; // Fixed weapon type: bow, spear, sword_shield
   imagePath: string | null;
   imageUrl: string | null;
+  // Enhancement fields
+  enhanceLevel: EnhanceLevel;
+  enhanceHistory: EnhanceAttempt[];
+  // Timestamps
   createdAt: number;
   updatedAt: number;
 }
 
 /**
  * Form input for creating/editing weapons
- * Stats are optional - defaults will be applied by WeaponService
+ * Stats are optional - defaults will be applied based on weapon type
  */
 export interface WeaponFormInput {
   name: string;
+  weaponType: WeaponType;
   image: File | null;
   atk?: number;
   critChance?: number;

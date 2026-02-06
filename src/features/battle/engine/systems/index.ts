@@ -13,14 +13,19 @@ export {
   type VictorySystem,
 } from "./VictorySystem";
 
+// Use the new refactored SkillSystem with Strategy Pattern
 export {
   createSkillSystem,
   skillSystem,
   clampPosition,
   getDirectionSign,
+  isAtEdge,
+  calculateKnockbackWithWallCollision,
   type SkillSystem,
   type ActivatedSkill,
   type MovementSkillResult,
   type CombatSkillResult,
   type SkillActivationResult,
-} from "./SkillSystem";
+  type SkillAttackResult,
+  type WallCollisionResult,
+} from "./SkillSystemNew";

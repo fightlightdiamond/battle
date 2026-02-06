@@ -52,6 +52,24 @@ const validWeaponStatsArb = fc.record({
   }),
 });
 
+// Weapon type generator
+const weaponTypeArb = fc.constantFrom(
+  "bow",
+  "spear",
+  "sword_shield",
+) as fc.Arbitrary<"bow" | "spear" | "sword_shield">;
+
+// Valid weapon form input generator (for create/update)
+const createWeaponFormInput = (
+  name: string,
+  stats: typeof validWeaponStatsArb extends fc.Arbitrary<infer T> ? T : never,
+) => ({
+  name,
+  weaponType: "sword_shield" as const,
+  image: null,
+  ...stats,
+});
+
 /**
  * Integration tests for WeaponService with IndexedDB
  */
@@ -69,6 +87,7 @@ describe("WeaponService - IndexedDB Integration", () => {
       const input: WeaponFormInput = {
         name: "Test Sword",
         image: null,
+        weaponType: "sword_shield",
         atk: 50,
         critChance: 10,
       };
@@ -83,19 +102,22 @@ describe("WeaponService - IndexedDB Integration", () => {
       expect(weapon.updatedAt).toBeDefined();
     });
 
-    it("should apply default stats when not provided", async () => {
+    it("should apply base stats from weapon type when not provided", async () => {
+      // sword_shield base stats: atk: 120, critChance: 10, critDamage: 150, armorPen: 15, lifesteal: 15
       const input: WeaponFormInput = {
         name: "Basic Weapon",
         image: null,
+        weaponType: "sword_shield",
       };
 
       const weapon = await WeaponService.create(input);
 
-      expect(weapon.atk).toBe(0);
-      expect(weapon.critChance).toBe(0);
-      expect(weapon.critDamage).toBe(0);
-      expect(weapon.armorPen).toBe(0);
-      expect(weapon.lifesteal).toBe(0);
+      // Should have sword_shield base stats
+      expect(weapon.atk).toBe(120);
+      expect(weapon.critChance).toBe(10);
+      expect(weapon.critDamage).toBe(150);
+      expect(weapon.armorPen).toBe(15);
+      expect(weapon.lifesteal).toBe(15);
     });
   });
 
@@ -106,9 +128,21 @@ describe("WeaponService - IndexedDB Integration", () => {
     });
 
     it("should return all weapons", async () => {
-      await WeaponService.create({ name: "Weapon 1", image: null });
-      await WeaponService.create({ name: "Weapon 2", image: null });
-      await WeaponService.create({ name: "Weapon 3", image: null });
+      await WeaponService.create({
+        name: "Weapon 1",
+        image: null,
+        weaponType: "sword_shield",
+      });
+      await WeaponService.create({
+        name: "Weapon 2",
+        image: null,
+        weaponType: "sword_shield",
+      });
+      await WeaponService.create({
+        name: "Weapon 3",
+        image: null,
+        weaponType: "sword_shield",
+      });
 
       const weapons = await WeaponService.getAll();
       expect(weapons).toHaveLength(3);
@@ -125,6 +159,7 @@ describe("WeaponService - IndexedDB Integration", () => {
       const created = await WeaponService.create({
         name: "Find Me",
         image: null,
+        weaponType: "sword_shield",
         atk: 100,
       });
 
@@ -140,12 +175,14 @@ describe("WeaponService - IndexedDB Integration", () => {
       const created = await WeaponService.create({
         name: "Original Name",
         image: null,
+        weaponType: "sword_shield",
         atk: 100,
       });
 
       const updated = await WeaponService.update(created.id, {
         name: "Updated Name",
         image: null,
+        weaponType: "sword_shield",
         atk: 200,
       });
 
@@ -159,6 +196,7 @@ describe("WeaponService - IndexedDB Integration", () => {
       const result = await WeaponService.update("non-existent", {
         name: "Test",
         image: null,
+        weaponType: "sword_shield",
       });
       expect(result).toBeNull();
     });
@@ -169,6 +207,7 @@ describe("WeaponService - IndexedDB Integration", () => {
       const created = await WeaponService.create({
         name: "To Delete",
         image: null,
+        weaponType: "sword_shield",
       });
 
       const deleted = await WeaponService.delete(created.id);
@@ -186,8 +225,16 @@ describe("WeaponService - IndexedDB Integration", () => {
 
   describe("clear", () => {
     it("should remove all weapons", async () => {
-      await WeaponService.create({ name: "Weapon 1", image: null });
-      await WeaponService.create({ name: "Weapon 2", image: null });
+      await WeaponService.create({
+        name: "Weapon 1",
+        image: null,
+        weaponType: "sword_shield",
+      });
+      await WeaponService.create({
+        name: "Weapon 2",
+        image: null,
+        weaponType: "sword_shield",
+      });
 
       await WeaponService.clear();
 
@@ -223,7 +270,11 @@ describe("Property 4: Unique IDs for all weapons", () => {
           // Create weapons with the generated names
           const weapons: Weapon[] = [];
           for (const name of names) {
-            const weapon = await WeaponService.create({ name, image: null });
+            const weapon = await WeaponService.create({
+              name,
+              image: null,
+              weaponType: "sword_shield",
+            });
             weapons.push(weapon);
           }
 
@@ -258,11 +309,9 @@ describe("Property 4: Unique IDs for all weapons", () => {
           // Create multiple weapons with identical data
           const weapons: Weapon[] = [];
           for (let i = 0; i < count; i++) {
-            const weapon = await WeaponService.create({
-              name,
-              image: null,
-              ...stats,
-            });
+            const weapon = await WeaponService.create(
+              createWeaponFormInput(name, stats),
+            );
             weapons.push(weapon);
           }
 
@@ -304,21 +353,18 @@ describe("Property 5: Weapon update persists changes with new timestamp", () => 
           await WeaponService.clear();
 
           // Create original weapon
-          const original = await WeaponService.create({
-            name: originalName,
-            image: null,
-            ...originalStats,
-          });
+          const original = await WeaponService.create(
+            createWeaponFormInput(originalName, originalStats),
+          );
 
           // Small delay to ensure timestamp difference
           await new Promise((resolve) => setTimeout(resolve, 5));
 
           // Update the weapon
-          const updated = await WeaponService.update(original.id, {
-            name: newName,
-            image: null,
-            ...newStats,
-          });
+          const updated = await WeaponService.update(
+            original.id,
+            createWeaponFormInput(newName, newStats),
+          );
 
           expect(updated).not.toBeNull();
 
@@ -360,17 +406,16 @@ describe("Property 5: Weapon update persists changes with new timestamp", () => 
           await WeaponService.clear();
 
           // Create original weapon with all stats
-          const original = await WeaponService.create({
-            name: originalName,
-            image: null,
-            ...originalStats,
-          });
+          const original = await WeaponService.create(
+            createWeaponFormInput(originalName, originalStats),
+          );
 
           await new Promise((resolve) => setTimeout(resolve, 5));
 
           // Update only the name (no stats specified)
           const updated = await WeaponService.update(original.id, {
             name: newName,
+            weaponType: "sword_shield",
             image: null,
           });
 
@@ -431,6 +476,13 @@ describe("Property 11: Weapon serialization round-trip", () => {
       min: WEAPON_STAT_RANGES.lifesteal.min,
       max: WEAPON_STAT_RANGES.lifesteal.max,
     }),
+    attackRange: fc.integer({
+      min: WEAPON_STAT_RANGES.attackRange.min,
+      max: WEAPON_STAT_RANGES.attackRange.max,
+    }),
+    weaponType: weaponTypeArb,
+    enhanceLevel: fc.constant(0),
+    enhanceHistory: fc.constant([]),
   });
 
   it("property: serialize then deserialize produces equivalent weapon", () => {
@@ -531,11 +583,9 @@ describe("Property 6: Deleting equipped weapon unequips from card", () => {
           await EquipmentService.clear();
 
           // Create a weapon
-          const weapon = await WeaponService.create({
-            name: weaponName,
-            image: null,
-            ...weaponStats,
-          });
+          const weapon = await WeaponService.create(
+            createWeaponFormInput(weaponName, weaponStats),
+          );
 
           // Generate a card ID
           const cardId = crypto.randomUUID();
@@ -569,7 +619,9 @@ describe("Property 6: Deleting equipped weapon unequips from card", () => {
       fc.asyncProperty(
         validWeaponNameArb,
         validWeaponNameArb,
-        async (weaponName1, weaponName2) => {
+        weaponTypeArb,
+        weaponTypeArb,
+        async (weaponName1, weaponName2, type1, type2) => {
           await WeaponService.clear();
           await EquipmentService.clear();
 
@@ -577,10 +629,12 @@ describe("Property 6: Deleting equipped weapon unequips from card", () => {
           const weapon1 = await WeaponService.create({
             name: weaponName1,
             image: null,
+            weaponType: type1,
           });
           const weapon2 = await WeaponService.create({
             name: weaponName2,
             image: null,
+            weaponType: type2,
           });
 
           // Generate two card IDs
@@ -612,7 +666,9 @@ describe("Property 6: Deleting equipped weapon unequips from card", () => {
       fc.asyncProperty(
         validWeaponNameArb,
         validWeaponNameArb,
-        async (weaponName1, weaponName2) => {
+        weaponTypeArb,
+        weaponTypeArb,
+        async (weaponName1, weaponName2, type1, type2) => {
           await WeaponService.clear();
           await EquipmentService.clear();
 
@@ -620,10 +676,12 @@ describe("Property 6: Deleting equipped weapon unequips from card", () => {
           const weapon1 = await WeaponService.create({
             name: weaponName1,
             image: null,
+            weaponType: type1,
           });
           const weapon2 = await WeaponService.create({
             name: weaponName2,
             image: null,
+            weaponType: type2,
           });
 
           // Generate a card ID

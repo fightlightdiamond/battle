@@ -56,6 +56,46 @@ const SKILL_TYPE_CONFIG: Record<
     color: "bg-yellow-500",
     description: "Jump and knockback",
   },
+  power_shot: {
+    label: "Power Shot",
+    color: "bg-cyan-500",
+    description: "150% damage + knockback",
+  },
+  evasive_shot: {
+    label: "Evasive Shot",
+    color: "bg-pink-500",
+    description: "250% damage + retreat",
+  },
+  piercing_thrust: {
+    label: "Piercing Thrust",
+    color: "bg-amber-500",
+    description: "170% damage + pull enemy",
+  },
+  whirlwind_charge: {
+    label: "Whirlwind Charge",
+    color: "bg-teal-500",
+    description: "200% damage + charge + push",
+  },
+  speed_boost: {
+    label: "Swift Advance",
+    color: "bg-lime-500",
+    description: "50% extra movement",
+  },
+  damage_immunity: {
+    label: "Iron Guard",
+    color: "bg-slate-500",
+    description: "20% negate all damage",
+  },
+  stunning_slash: {
+    label: "Stunning Slash",
+    color: "bg-rose-500",
+    description: "180% damage + stun",
+  },
+  shield_bash: {
+    label: "Shield Bash",
+    color: "bg-indigo-500",
+    description: "Push + follow + 120% damage",
+  },
 };
 
 /**

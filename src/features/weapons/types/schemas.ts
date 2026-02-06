@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { WEAPON_STAT_RANGES } from "./weapon";
+import { WEAPON_TYPES } from "./weaponType";
 
 // ============================================
 // Image validation constants
@@ -146,9 +147,13 @@ export const weaponStatsSchema = z.object({
   attackRange: attackRangeSchema,
 });
 
+// Weapon type schema
+export const weaponTypeSchema = z.enum(WEAPON_TYPES);
+
 // Weapon form schema for create/edit (without id and timestamps)
 export const weaponFormSchema = z.object({
   name: nameSchema,
+  weaponType: weaponTypeSchema,
   image: imageSchema.nullable(),
   atk: atkSchema.optional(),
   critChance: critChanceSchema.optional(),
@@ -162,6 +167,7 @@ export const weaponFormSchema = z.object({
 export const weaponSchema = z.object({
   id: z.string().uuid(),
   name: nameSchema,
+  weaponType: weaponTypeSchema,
   imagePath: z.string().nullable(),
   imageUrl: z.string().nullable(),
   createdAt: z.number(),

@@ -4,14 +4,14 @@
  * Requirements: 1.1, 7.1-7.6, 4.1-4.6 (weapon bonuses), 2.2 (effective range)
  */
 
-import type { Card } from "../../../cards/types";
-import type { Weapon } from "../../../weapons/types/weapon";
-import type { EffectiveCardStats } from "../../../weapons/types/equipment";
+import type { Card } from "@/features/cards/types";
+import type { Weapon } from "@/features/weapons/types/weapon";
+import type { EffectiveCardStats } from "@/features/weapons/types/equipment";
 import {
   calculateEffectiveStats,
   calculateEffectiveRange,
   DEFAULT_ATTACK_RANGE,
-} from "../../../weapons/services/equipmentService";
+} from "@/features/weapons/services/equipmentService";
 import type { Combatant, CombatantStats } from "../core/types";
 
 /**

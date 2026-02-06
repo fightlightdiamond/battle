@@ -6,6 +6,7 @@ import { SyncQueue, type SyncQueueResult } from "../services/syncQueue";
 import { cardKeys } from "./cardKeys";
 import { useOnlineStatus } from "./useOnlineStatus";
 import { isOnline } from "./utils";
+import { syncLogger } from "@/lib/logger";
 
 /**
  * Sync Strategy:
@@ -29,7 +30,7 @@ export async function syncCards(): Promise<SyncResult> {
   };
 
   if (!isOnline()) {
-    console.log("[syncCards] Offline, skipping sync");
+    syncLogger.info(" Offline, skipping sync");
     return result;
   }
 
@@ -51,12 +52,12 @@ export async function syncCards(): Promise<SyncResult> {
         try {
           await CardService.upsert(apiCard);
           result.syncedToLocal++;
-          console.log("[syncCards] API → Local:", apiCard.id, apiCard.name);
+          syncLogger.info(" API → Local:", apiCard.id, apiCard.name);
         } catch (err) {
           console.error(
             "[syncCards] Failed to sync to local:",
             apiCard.id,
-            err
+            err,
           );
           result.conflicts.push(apiCard.id);
         }
@@ -71,12 +72,12 @@ export async function syncCards(): Promise<SyncResult> {
             };
             await CardService.upsert(updatedData);
             result.updated++;
-            console.log("[syncCards] Updated local (API newer):", apiCard.id);
+            syncLogger.info(" Updated local (API newer):", apiCard.id);
           } catch (err) {
             console.error(
               "[syncCards] Failed to update local:",
               apiCard.id,
-              err
+              err,
             );
             result.conflicts.push(apiCard.id);
           }
@@ -90,12 +91,12 @@ export async function syncCards(): Promise<SyncResult> {
               imagePath: localCard.imagePath,
             });
             result.updated++;
-            console.log("[syncCards] Updated API (local newer):", localCard.id);
+            syncLogger.info(" Updated API (local newer):", localCard.id);
           } catch (err) {
             console.error(
               "[syncCards] Failed to update API:",
               localCard.id,
-              err
+              err,
             );
             result.conflicts.push(localCard.id);
           }
@@ -121,10 +122,7 @@ export async function syncCards(): Promise<SyncResult> {
                 imagePath: localCard.imagePath,
               });
               result.updated++;
-              console.log(
-                "[syncCards] Updated API (local newer):",
-                localCard.id
-              );
+              syncLogger.info("Updated API (local newer):", localCard.id);
             }
           } else {
             await cardApi.createWithId({
@@ -137,29 +135,21 @@ export async function syncCards(): Promise<SyncResult> {
               updatedAt: localCard.updatedAt,
             });
             result.syncedToApi++;
-            console.log(
-              "[syncCards] Local → API:",
-              localCard.id,
-              localCard.name
-            );
+            syncLogger.info("Local → API:", localCard.id, localCard.name);
           }
         } catch (err) {
-          console.error(
-            "[syncCards] Failed to sync to API:",
-            localCard.id,
-            err
-          );
+          syncLogger.error("Failed to sync to API:", localCard.id, err);
           result.conflicts.push(localCard.id);
         }
       }
     }
 
-    console.log(
-      `[syncCards] Complete: ${result.syncedToLocal} to local, ${result.syncedToApi} to API, ${result.updated} updated, ${result.conflicts.length} conflicts`
+    syncLogger.info(
+      `Complete: ${result.syncedToLocal} to local, ${result.syncedToApi} to API, ${result.updated} updated, ${result.conflicts.length} conflicts`,
     );
     return result;
   } catch (error) {
-    console.error("[syncCards] Sync failed:", error);
+    syncLogger.error(" Sync failed:", error);
     throw error;
   }
 }

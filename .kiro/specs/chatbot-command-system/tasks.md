@@ -1,0 +1,320 @@
+# Implementation Plan: Chatbot Command System
+
+## Overview
+
+This implementation plan breaks down the chatbot command system into incremental coding tasks. The approach follows a bottom-up strategy: build core utilities first (normalization, pattern matching, entity resolution), then command execution layer, then UI integration. Each task builds on previous work and includes testing to validate functionality early.
+
+## Tasks
+
+- [ ] 1. Set up chatbot feature structure and core types
+  - Create directory structure: `src/features/chatbot/`
+  - Define TypeScript interfaces for all core types (CommandType, CommandPattern, MatchResult, ParsedCommand, ExecutionResult, ChatMessage, etc.)
+  - Set up barrel exports in `index.ts`
+  - _Requirements: 1.1, 2.1, 12.1_
+
+- [ ] 2. Implement Input Normalizer
+  - [ ] 2.1 Create InputNormalizer class with normalize method
+    - Implement lowercase conversion and whitespace trimming
+    - Implement language detection (Vietnamese vs English vs mixed)
+    - Implement tokenization by whitespace
+    - Preserve Vietnamese diacritics during normalization
+    - _Requirements: 1.1, 1.2, 1.3_
+  - [ ]\* 2.2 Write property test for Input Normalizer
+    - **Property 1: Input Normalization Preserves Content**
+    - **Validates: Requirements 1.1, 1.2, 1.3**
+  - [ ]\* 2.3 Write unit tests for Input Normalizer edge cases
+    - Test empty input handling
+    - Test whitespace-only input
+    - Test Vietnamese diacritics preservation
+    - Test language detection accuracy
+    - _Requirements: 1.4_
+  - [ ]\* 2.4 Write property test for input length validation
+    - **Property 2: Input Length Validation**
+    - **Validates: Requirements 1.5**
+
+- [ ] 3. Implement Pattern Matcher with command registry
+  - [ ] 3.1 Create CommandPattern registry
+    - Define all command patterns with regex and priorities
+    - Include Vietnamese and English keyword variants
+    - Register patterns for: create_card, list_cards, show_card, delete_card, start_battle, battle_history, replay_battle, equip_weapon, unequip_weapon, equip_gem, unequip_gem, list_weapons, list_gems, show_stats, help, help_category
+    - _Requirements: 2.1, 2.3, 11.1, 11.2_
+  - [ ] 3.2 Create PatternMatcher class with match method
+    - Implement pattern matching against all registered patterns
+    - Implement priority-based selection for multiple matches
+    - Extract parameters using regex capture groups
+    - Handle command synonyms (create/make/add, delete/remove, etc.)
+    - _Requirements: 2.1, 2.2, 2.3, 2.4_
+  - [ ]\* 3.3 Write property test for pattern matching
+    - **Property 3: Pattern Matching Extracts Command Type**
+    - **Validates: Requirements 2.1, 2.2**
+  - [ ]\* 3.4 Write property test for command synonyms
+    - **Property 4: Command Synonyms Are Equivalent**
+    - **Validates: Requirements 2.3**
+  - [ ]\* 3.5 Write unit tests for pattern matching edge cases
+    - Test unrecognized commands
+    - Test commands with extra words ("please", "can you")
+    - Test ambiguous patterns
+    - _Requirements: 2.4, 2.5_
+
+- [ ] 4. Checkpoint - Ensure normalization and pattern matching tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 5. Implement Entity Resolver with fuzzy matching
+  - [ ] 5.1 Install and configure Fuse.js
+    - Add Fuse.js dependency to package.json
+    - Configure Fuse options (threshold: 0.3, keys: ['name'], includeScore: true)
+    - _Requirements: 3.1_
+  - [ ] 5.2 Create EntityCache for caching entity lists
+    - Implement cache with TTL (1 minute)
+    - Implement refresh method to load from services
+    - Implement isStale check
+    - Cache cards, weapons, and gems separately
+    - _Requirements: 3.1_
+  - [ ] 5.3 Create EntityResolver class
+    - Implement resolveCard method with exact match first, then fuzzy
+    - Implement resolveWeapon method with exact match first, then fuzzy
+    - Implement resolveGem method with exact match first, then fuzzy
+    - Return ResolveResult with status (exact/fuzzy/multiple/none)
+    - Handle multiple matches above threshold
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
+  - [ ]\* 5.4 Write property test for entity resolution
+    - **Property 5: Entity Resolution with Fuzzy Matching**
+    - **Validates: Requirements 3.1, 3.2**
+  - [ ]\* 5.5 Write unit tests for entity resolution edge cases
+    - Test exact match prioritization
+    - Test multiple fuzzy matches
+    - Test no matches found
+    - Test ambiguous entity names
+    - _Requirements: 3.3, 3.4, 3.5_
+
+- [ ] 6. Implement Command Context store
+  - [ ] 6.1 Create CommandContext Zustand store
+    - Define state: lastCard, lastWeapon, lastGem, lastBattle, language
+    - Implement setLastCard, setLastWeapon, setLastGem, setLastBattle actions
+    - Implement setLanguage action
+    - Implement clear action
+    - _Requirements: 8.1, 8.5_
+  - [ ]\* 6.2 Write property test for context tracking
+    - **Property 12: Context Tracking**
+    - **Validates: Requirements 8.1, 8.2, 8.3**
+  - [ ]\* 6.3 Write property test for context clearing
+    - **Property 13: Context Clearing on Category Switch**
+    - **Validates: Requirements 8.5**
+
+- [ ] 7. Checkpoint - Ensure entity resolution and context tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 8. Implement Response Formatter
+  - [ ] 8.1 Create message templates for all command types
+    - Define success templates (Vietnamese and English)
+    - Define error templates (Vietnamese and English)
+    - Define help templates (Vietnamese and English)
+    - Include parameter interpolation support
+    - _Requirements: 10.1, 10.2, 11.3, 11.4_
+  - [ ] 8.2 Create ResponseFormatter class
+    - Implement formatSuccess method with template interpolation
+    - Implement formatError method with suggestions
+    - Implement formatHelp method with examples in both languages
+    - Implement formatEntityList method with pagination
+    - Detect language from input and format response accordingly
+    - _Requirements: 10.1, 10.2, 11.3, 11.4, 9.5_
+  - [ ]\* 8.3 Write property test for success response formatting
+    - **Property 7: Success Response Contains Details**
+    - **Validates: Requirements 4.5, 10.1**
+  - [ ]\* 8.4 Write property test for bilingual help
+    - **Property 14: Bilingual Help Examples**
+    - **Validates: Requirements 9.5**
+  - [ ]\* 8.5 Write property test for language-matched responses
+    - **Property 17: Language-Matched Responses**
+    - **Validates: Requirements 11.3, 11.4**
+  - [ ]\* 8.6 Write unit tests for response formatting
+    - Test error message formatting
+    - Test entity list pagination
+    - Test help category display
+    - _Requirements: 7.5, 9.1, 9.2, 9.3, 9.4_
+
+- [ ] 9. Implement Command Executor with handlers
+  - [ ] 9.1 Create command handler functions for card commands
+    - Implement createCardHandler (calls CardService.create)
+    - Implement listCardsHandler (calls CardService.getAll)
+    - Implement showCardHandler (resolves card, displays details)
+    - Implement deleteCardHandler (resolves card, calls CardService.delete)
+    - Update context with referenced cards
+    - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
+  - [ ] 9.2 Create command handler functions for battle commands
+    - Implement startBattleHandler (resolves two cards, calls battleService)
+    - Implement battleHistoryHandler (calls battle history service)
+    - Implement replayBattleHandler (navigates to replay page)
+    - Update context with battle reference
+    - _Requirements: 5.1, 5.2, 5.3_
+  - [ ] 9.3 Create command handler functions for equipment commands
+    - Implement equipWeaponHandler (resolves weapon and card, calls EquipmentService.equipWeapon)
+    - Implement unequipWeaponHandler (resolves card, calls EquipmentService.unequipWeapon)
+    - Implement equipGemHandler (resolves gem and card, calls GemEquipmentService.equipGem)
+    - Implement unequipGemHandler (resolves card, calls GemEquipmentService.unequipGem)
+    - Update context with equipment references
+    - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
+  - [ ] 9.4 Create command handler functions for query commands
+    - Implement showCardWithEquipmentHandler (resolves card, loads equipment, displays all)
+    - Implement listWeaponsHandler (calls WeaponService.getAll)
+    - Implement listGemsHandler (calls GemService.getAll)
+    - Implement showStatsHandler (counts all entities)
+    - _Requirements: 7.1, 7.2, 7.3, 7.4_
+  - [ ] 9.5 Create command handler functions for help commands
+    - Implement helpHandler (displays all categories)
+    - Implement helpCategoryHandler (displays category-specific commands)
+    - _Requirements: 9.1, 9.2, 9.3, 9.4_
+  - [ ] 9.6 Create CommandExecutor class
+    - Map command types to handler functions
+    - Implement execute method that calls appropriate handler
+    - Handle service errors and format error responses
+    - Pass context to all handlers
+    - _Requirements: 4.1, 5.1, 6.1, 10.2_
+  - [ ]\* 9.7 Write property test for card command execution
+    - **Property 6: Card Command Execution**
+    - **Validates: Requirements 4.1, 4.3, 4.4**
+  - [ ]\* 9.8 Write property test for battle command execution
+    - **Property 8: Battle Command Execution**
+    - **Validates: Requirements 5.1**
+  - [ ]\* 9.9 Write property test for equipment command execution
+    - **Property 9: Equipment Command Execution**
+    - **Validates: Requirements 6.1, 6.2, 6.3, 6.4, 6.5**
+  - [ ]\* 9.10 Write property test for show command with equipment
+    - **Property 10: Show Command Includes Equipment**
+    - **Validates: Requirements 7.1**
+  - [ ]\* 9.11 Write property test for service error propagation
+    - **Property 15: Service Error Propagation**
+    - **Validates: Requirements 10.2**
+
+- [ ] 10. Checkpoint - Ensure command execution tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 11. Implement Command Parser pipeline
+  - [ ] 11.1 Create CommandParser class
+    - Implement processCommand method that orchestrates the pipeline
+    - Step 1: Call InputNormalizer.normalize
+    - Step 2: Call PatternMatcher.match
+    - Step 3: Call EntityResolver for each entity parameter
+    - Step 4: Call CommandExecutor.execute
+    - Step 5: Call ResponseFormatter to format result
+    - Handle errors at each step with appropriate error messages
+    - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
+  - [ ]\* 11.2 Write integration tests for command pipeline
+    - Test end-to-end card creation command
+    - Test end-to-end battle command
+    - Test end-to-end equipment command
+    - Test error handling at each pipeline stage
+    - _Requirements: 4.1, 5.1, 6.1_
+
+- [ ] 12. Implement Chatbot Zustand store
+  - [ ] 12.1 Create ChatbotStore with Zustand
+    - Define state: messages (ChatMessage[]), isProcessing (boolean)
+    - Implement addMessage action
+    - Implement processCommand action (calls CommandParser)
+    - Implement clearMessages action
+    - Integrate with CommandContext store
+    - _Requirements: 8.1, 10.1_
+  - [ ]\* 12.2 Write unit tests for chatbot store
+    - Test message addition
+    - Test command processing flow
+    - Test message clearing
+    - Test processing state management
+    - _Requirements: 8.1_
+
+- [ ] 13. Implement Chatbot UI component
+  - [ ] 13.1 Create ChatMessage component
+    - Display message content with role-based styling
+    - Display timestamp
+    - Support rich data display (entity cards, lists)
+    - Handle long messages with scrolling
+    - _Requirements: 10.1_
+  - [ ] 13.2 Create Chatbot main component
+    - Implement message history display with auto-scroll
+    - Implement input field with submit button
+    - Implement form submission handler
+    - Disable input during processing
+    - Add loading indicator during processing
+    - Add keyboard shortcuts (Enter to send, Esc to close)
+    - _Requirements: 1.1, 10.1_
+  - [ ] 13.3 Style Chatbot component
+    - Create CSS for chatbot container (fixed position, collapsible)
+    - Style message bubbles (user vs assistant)
+    - Style input field and button
+    - Add animations for message appearance
+    - Ensure responsive design
+    - _Requirements: 1.1_
+  - [ ]\* 13.4 Write unit tests for Chatbot UI
+    - Test message rendering
+    - Test input submission
+    - Test keyboard shortcuts
+    - Test loading state display
+    - _Requirements: 1.1_
+
+- [ ] 14. Integrate Chatbot into AppLayout
+  - [ ] 14.1 Add Chatbot component to AppLayout
+    - Import Chatbot component
+    - Add chatbot toggle button to layout
+    - Position chatbot in bottom-right corner
+    - Implement open/close state management
+    - _Requirements: 1.1_
+  - [ ]\* 14.2 Write integration test for chatbot in layout
+    - Test chatbot visibility toggle
+    - Test chatbot positioning
+    - Test chatbot doesn't interfere with other UI
+    - _Requirements: 1.1_
+
+- [ ] 15. Implement property tests for bilingual support
+  - [ ]\* 15.1 Write property test for bilingual pattern recognition
+    - **Property 16: Bilingual Pattern Recognition**
+    - **Validates: Requirements 11.1, 11.2**
+  - [ ]\* 15.2 Write property test for mixed language support
+    - **Property 18: Mixed Language Support**
+    - **Validates: Requirements 11.5**
+
+- [ ] 16. Implement property test for list pagination
+  - [ ]\* 16.1 Write property test for list pagination
+    - **Property 11: List Pagination**
+    - **Validates: Requirements 7.5**
+
+- [ ] 17. Add error handling and edge case tests
+  - [ ]\* 17.1 Write unit tests for all error conditions
+    - Test empty input error
+    - Test input too long error
+    - Test no pattern match error
+    - Test entity not found error
+    - Test multiple exact matches error
+    - Test service call failure error
+    - Test insufficient context error
+    - _Requirements: 1.4, 1.5, 2.5, 3.3, 3.4, 3.5, 8.4, 10.2, 10.3, 10.4, 10.5_
+
+- [ ] 18. Final checkpoint - End-to-end testing
+  - [ ]\* 18.1 Write end-to-end integration tests
+    - Test complete conversation flow (create card → equip weapon → start battle)
+    - Test context tracking across multiple commands
+    - Test bilingual command switching
+    - Test error recovery and help usage
+    - _Requirements: 8.1, 8.2, 8.3, 11.5_
+  - [ ] 18.2 Manual testing checklist
+    - Test all command types in English
+    - Test all command types in Vietnamese
+    - Test fuzzy matching with typos
+    - Test context-aware follow-up commands
+    - Test help system
+    - Test error messages and suggestions
+    - Test UI responsiveness and animations
+
+- [ ] 19. Final checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+## Notes
+
+- Tasks marked with `*` are optional testing tasks and can be skipped for faster MVP
+- Each task references specific requirements for traceability
+- Checkpoints ensure incremental validation at key milestones
+- Property tests validate universal correctness properties (18 properties total)
+- Unit tests validate specific examples, edge cases, and error conditions
+- Integration tests validate end-to-end command flows
+- The implementation follows a bottom-up approach: utilities → execution → UI
+- All service integrations reuse existing game services without modification
+- Fuse.js is used for fuzzy matching (lightweight, no dependencies)
+- fast-check is used for property-based testing (minimum 100 iterations per test)

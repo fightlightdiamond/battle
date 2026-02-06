@@ -27,6 +27,7 @@ const combatantArb: fc.Arbitrary<Combatant> = fc
     maxHp: fc.integer({ min: 1, max: 9999 }),
     buffs: fc.constant([]),
     isDefeated: fc.constant(false),
+    effectiveRange: fc.integer({ min: 1, max: 7 }),
   })
   .map((c) => ({
     ...c,
@@ -114,6 +115,7 @@ describe("CombatSystem", () => {
         maxHp: fc.integer({ min: 1, max: 1000 }),
         buffs: fc.constant([]),
         isDefeated: fc.constant(false),
+        effectiveRange: fc.integer({ min: 1, max: 7 }),
       })
       .map((c) => ({
         ...c,
@@ -139,6 +141,7 @@ describe("CombatSystem", () => {
         maxHp: fc.integer({ min: 1, max: 9999 }),
         buffs: fc.constant([]),
         isDefeated: fc.constant(false),
+        effectiveRange: fc.integer({ min: 1, max: 7 }),
       })
       .map((c) => ({
         ...c,
@@ -199,6 +202,7 @@ describe("CombatSystem", () => {
       maxHp: 100,
       buffs: [],
       isDefeated: false,
+      effectiveRange: 1,
     };
 
     it("reduces HP by damage amount", () => {
@@ -246,6 +250,7 @@ describe("CombatSystem", () => {
       maxHp: 100,
       buffs: [],
       isDefeated: false,
+      effectiveRange: 1,
     };
 
     const defender: Combatant = {
@@ -265,6 +270,7 @@ describe("CombatSystem", () => {
       maxHp: 100,
       buffs: [],
       isDefeated: false,
+      effectiveRange: 1,
     };
 
     it("returns AttackResult with correct damage", () => {

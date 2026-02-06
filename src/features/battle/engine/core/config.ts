@@ -83,9 +83,9 @@ export interface BattleEngineConfig {
  */
 export const DEFAULT_COMBAT_CONFIG: CombatConfig = {
   minDamage: 1,
-  defScalingFactor: 100,
+  defScalingFactor: 200, // Higher = DEF reduces damage less
   criticalDamageThreshold: 0.3,
-  useDefense: false, // Current simple mode: damage = ATK
+  useDefense: true, // Enable defense calculation for balanced 15-20 turn battles
 };
 
 /**
@@ -103,7 +103,7 @@ export const DEFAULT_STAGE_SCALING_CONFIG: StageScalingConfig = {
 export const DEFAULT_STATS_CONFIG: DefaultStatsConfig = {
   // Core Stats (Tier 1)
   atk: 100,
-  def: 50,
+  def: 75,
   spd: 100,
 
   // Combat Stats (Tier 2)
@@ -170,7 +170,7 @@ export const EASY_MODE_CONFIG: BattleEngineConfig = {
  * Merge partial config with defaults
  */
 export function createConfig(
-  partial?: Partial<BattleEngineConfig>
+  partial?: Partial<BattleEngineConfig>,
 ): BattleEngineConfig {
   if (!partial) return DEFAULT_BATTLE_CONFIG;
 

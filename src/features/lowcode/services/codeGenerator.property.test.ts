@@ -559,7 +559,7 @@ describe("Property 6: Schema Round-Trip Validation", () => {
         fc.record({
           id: fc.uuid(),
           name: fc.constant("TestEntity"),
-          fields: fc.constant([field]),
+          fields: fc.constant([field] as FieldDefinition[]),
           createdAt: fc.constant(Date.now()),
           updatedAt: fc.constant(Date.now()),
         }),
@@ -606,7 +606,7 @@ describe("Property 6: Schema Round-Trip Validation", () => {
         fc.record({
           id: fc.uuid(),
           name: fc.constant("TestEntity"),
-          fields: fc.constant([field]),
+          fields: fc.constant([field] as FieldDefinition[]),
           createdAt: fc.constant(Date.now()),
           updatedAt: fc.constant(Date.now()),
         }),
@@ -643,18 +643,20 @@ describe("Property 6: Schema Round-Trip Validation", () => {
         choices: [
           { value: "active", label: "Active" },
           { value: "inactive", label: "Inactive" },
-        ],
+        ] as SelectChoice[],
       }),
     });
 
     const entityWithSelectArb = selectFieldArb.chain((field) =>
-      fc.record({
-        id: fc.uuid(),
-        name: fc.constant("TestEntity"),
-        fields: fc.constant([field]),
-        createdAt: fc.constant(Date.now()),
-        updatedAt: fc.constant(Date.now()),
-      }),
+      fc
+        .record({
+          id: fc.uuid(),
+          name: fc.constant("TestEntity"),
+          fields: fc.constant([field]),
+          createdAt: fc.constant(Date.now()),
+          updatedAt: fc.constant(Date.now()),
+        })
+        .map((e) => ({ ...e, fields: [...e.fields] as FieldDefinition[] })),
     );
 
     fc.assert(

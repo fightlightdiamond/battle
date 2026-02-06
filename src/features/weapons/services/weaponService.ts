@@ -6,10 +6,12 @@ import {
 } from "../../cards/services/imageStorage";
 import type { Weapon, WeaponFormInput } from "../types/weapon";
 import { applyDefaultWeaponStats } from "../types/weapon";
+import { WEAPON_TYPE_CONFIGS } from "../types/weaponType";
 import { EquipmentService } from "./equipmentService";
 
 /**
  * Convert a stored weapon to a Weapon with imageUrl
+ * Ensures enhanceLevel and enhanceHistory have default values
  */
 async function toWeapon(stored: StoredWeapon): Promise<Weapon> {
   const imageUrl = stored.imagePath
@@ -18,6 +20,9 @@ async function toWeapon(stored: StoredWeapon): Promise<Weapon> {
   return {
     ...stored,
     imageUrl,
+    // Ensure enhancement fields have defaults for old data
+    enhanceLevel: stored.enhanceLevel ?? 0,
+    enhanceHistory: stored.enhanceHistory ?? [],
   };
 }
 
@@ -107,21 +112,28 @@ export const WeaponService = {
       imagePath = await saveImage(id, input.image);
     }
 
-    // Apply default stats for any missing values (Requirement 1.3)
+    // Get base stats from weapon type config
+    const weaponTypeConfig = WEAPON_TYPE_CONFIGS[input.weaponType];
+    const baseStats = weaponTypeConfig.baseStats;
+
+    // Apply default stats based on weapon type, override with user input if provided
     const stats = applyDefaultWeaponStats({
-      atk: input.atk,
-      critChance: input.critChance,
-      critDamage: input.critDamage,
-      armorPen: input.armorPen,
-      lifesteal: input.lifesteal,
-      attackRange: input.attackRange,
+      atk: input.atk ?? baseStats.atk,
+      critChance: input.critChance ?? baseStats.critChance,
+      critDamage: input.critDamage ?? baseStats.critDamage,
+      armorPen: input.armorPen ?? baseStats.armorPen,
+      lifesteal: input.lifesteal ?? baseStats.lifesteal,
+      attackRange: input.attackRange ?? baseStats.attackRange,
     });
 
     const storedWeapon: StoredWeapon = {
       id,
       name: input.name,
+      weaponType: input.weaponType,
       ...stats,
       imagePath,
+      enhanceLevel: 0,
+      enhanceHistory: [],
       createdAt: now,
       updatedAt: now,
     };
@@ -170,6 +182,7 @@ export const WeaponService = {
     const updatedWeapon: StoredWeapon = {
       ...existing,
       name: input.name,
+      weaponType: input.weaponType,
       ...stats,
       imagePath,
       updatedAt: now,
@@ -223,5 +236,61 @@ export const WeaponService = {
     );
 
     await db.clear("weapons");
+  },
+
+  /**
+   * Enhance a weapon
+   * Updates the weapon's enhancement level and history
+   */
+  async enhance(
+    id: string,
+    newEnhanceLevel: number,
+    attempt: {
+      fromLevel: number;
+      toLevel: number;
+      success: boolean;
+      timestamp: number;
+      materialId: string | null;
+      protectionUsed: boolean;
+    },
+  ): Promise<Weapon | null> {
+    const db = await getDB();
+    const existing = await db.get("weapons", id);
+
+    if (!existing) {
+      return null;
+    }
+
+    const updatedWeapon: StoredWeapon = {
+      ...existing,
+      enhanceLevel: newEnhanceLevel,
+      enhanceHistory: [...(existing.enhanceHistory || []), attempt],
+      updatedAt: Date.now(),
+    };
+
+    await db.put("weapons", updatedWeapon);
+    return toWeapon(updatedWeapon);
+  },
+
+  /**
+   * Reset weapon enhancement (for testing or special items)
+   */
+  async resetEnhancement(id: string): Promise<Weapon | null> {
+    const db = await getDB();
+    const existing = await db.get("weapons", id);
+
+    if (!existing) {
+      return null;
+    }
+
+    const updatedWeapon: StoredWeapon = {
+      ...existing,
+      enhanceLevel: 0,
+      enhanceHistory: [],
+      updatedAt: Date.now(),
+    };
+
+    await db.put("weapons", updatedWeapon);
+    return toWeapon(updatedWeapon);
   },
 };

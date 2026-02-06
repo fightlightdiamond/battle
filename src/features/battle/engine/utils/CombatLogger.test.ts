@@ -11,7 +11,7 @@ import type {
   AttackLogData,
   GemSkillLogData,
 } from "../core/types";
-import type { SkillType } from "../../../gems/types/gem";
+import type { SkillType } from "@/features/gems/types/gem";
 
 // ============================================================================
 // ARBITRARIES (Generators for property-based testing)
@@ -134,6 +134,7 @@ describe("CombatLogger", () => {
         maxHp: 100,
         buffs: [],
         isDefeated: false,
+        effectiveRange: 1,
       };
 
       const defender: Combatant = {
@@ -145,6 +146,7 @@ describe("CombatLogger", () => {
         maxHp: 100,
         buffs: [],
         isDefeated: false,
+        effectiveRange: 1,
       };
 
       const log1 = CombatLogger.logAttack(attacker, defender, 50, 50);
@@ -163,6 +165,7 @@ describe("CombatLogger", () => {
         maxHp: 100,
         buffs: [],
         isDefeated: false,
+        effectiveRange: 1,
       };
 
       const defender: Combatant = {
@@ -174,6 +177,7 @@ describe("CombatLogger", () => {
         maxHp: 100,
         buffs: [],
         isDefeated: false,
+        effectiveRange: 1,
       };
 
       // Damage > 30% of maxHp (100 * 0.3 = 30)
@@ -195,6 +199,7 @@ describe("CombatLogger", () => {
         maxHp: 100,
         buffs: [],
         isDefeated: false,
+        effectiveRange: 1,
       };
 
       const defender: Combatant = {
@@ -206,6 +211,7 @@ describe("CombatLogger", () => {
         maxHp: 100,
         buffs: [],
         isDefeated: false,
+        effectiveRange: 1,
       };
 
       const log = CombatLogger.logAttack(attacker, defender, 50, 50);

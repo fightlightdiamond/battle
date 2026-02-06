@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDropArea } from "react-use";
 import { X, ImageOff } from "lucide-react";
@@ -14,10 +14,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { NumericFormat } from "react-number-format";
 import { weaponFormSchema, type WeaponFormSchemaType } from "../types/schemas";
 import type { Weapon } from "../types/weapon";
 import { WEAPON_STAT_RANGES } from "../types/weapon";
+import {
+  WEAPON_TYPES,
+  WEAPON_TYPE_CONFIGS,
+  type WeaponType,
+} from "../types/weaponType";
 
 interface WeaponFormProps {
   mode: "create" | "edit";
@@ -63,15 +69,37 @@ export function WeaponForm({
     resolver: zodResolver(weaponFormSchema),
     defaultValues: {
       name: initialData?.name || "",
+      weaponType: initialData?.weaponType || "sword_shield",
       image: null,
-      atk: initialData?.atk ?? 0,
-      critChance: initialData?.critChance ?? 0,
-      critDamage: initialData?.critDamage ?? 0,
-      armorPen: initialData?.armorPen ?? 0,
-      lifesteal: initialData?.lifesteal ?? 0,
-      attackRange: initialData?.attackRange ?? 0,
+      atk: initialData?.atk ?? undefined,
+      critChance: initialData?.critChance ?? undefined,
+      critDamage: initialData?.critDamage ?? undefined,
+      armorPen: initialData?.armorPen ?? undefined,
+      lifesteal: initialData?.lifesteal ?? undefined,
+      attackRange: initialData?.attackRange ?? undefined,
     },
   });
+
+  // Watch weapon type to update stats when type changes
+  const selectedWeaponType = useWatch({
+    control: form.control,
+    name: "weaponType",
+  });
+
+  // Update stats when weapon type changes (only in create mode)
+  useEffect(() => {
+    if (mode === "create" && selectedWeaponType) {
+      const config = WEAPON_TYPE_CONFIGS[selectedWeaponType as WeaponType];
+      if (config) {
+        form.setValue("atk", config.baseStats.atk);
+        form.setValue("critChance", config.baseStats.critChance);
+        form.setValue("critDamage", config.baseStats.critDamage);
+        form.setValue("armorPen", config.baseStats.armorPen);
+        form.setValue("lifesteal", config.baseStats.lifesteal);
+        form.setValue("attackRange", config.baseStats.attackRange);
+      }
+    }
+  }, [selectedWeaponType, mode, form]);
 
   const handleImageChange = useCallback(
     (file: File | null) => {
@@ -188,6 +216,72 @@ export function WeaponForm({
                 <Input placeholder="Enter weapon name" {...field} />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Weapon Type Selection */}
+        <FormField
+          control={form.control}
+          name="weaponType"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>Weapon Type</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="grid grid-cols-3 gap-4"
+                >
+                  {WEAPON_TYPES.map((type) => {
+                    const config = WEAPON_TYPE_CONFIGS[type];
+                    const isSelected = field.value === type;
+                    return (
+                      <FormItem key={type}>
+                        <FormControl>
+                          <RadioGroupItem
+                            value={type}
+                            id={type}
+                            className="peer sr-only"
+                          />
+                        </FormControl>
+                        <label
+                          htmlFor={type}
+                          className={`flex flex-col items-center justify-between rounded-md border-2 p-4 cursor-pointer transition-all hover:bg-accent hover:text-accent-foreground ${
+                            isSelected
+                              ? "border-primary bg-primary/5"
+                              : "border-muted"
+                          }`}
+                        >
+                          <span className="text-3xl mb-2">{config.icon}</span>
+                          <span className="font-semibold">{config.name}</span>
+                          <span className="text-xs text-muted-foreground text-center mt-1">
+                            {config.characteristics.playstyle.split(" - ")[0]}
+                          </span>
+                        </label>
+                      </FormItem>
+                    );
+                  })}
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+              {/* Show weapon type description */}
+              {selectedWeaponType && (
+                <div className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
+                  <p className="font-medium">
+                    {
+                      WEAPON_TYPE_CONFIGS[selectedWeaponType as WeaponType]
+                        ?.description
+                    }
+                  </p>
+                  <p className="text-xs mt-1">
+                    {
+                      WEAPON_TYPE_CONFIGS[selectedWeaponType as WeaponType]
+                        ?.characteristics.playstyle
+                    }
+                  </p>
+                </div>
+              )}
             </FormItem>
           )}
         />

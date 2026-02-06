@@ -27,6 +27,7 @@ const combatantArb: fc.Arbitrary<Combatant> = fc
     maxHp: fc.integer({ min: 1, max: 9999 }),
     buffs: fc.constant([]),
     isDefeated: fc.constant(false),
+    effectiveRange: fc.integer({ min: 1, max: 7 }),
   })
   .map((c) => ({
     ...c,
@@ -76,7 +77,7 @@ describe("TurnSystem", () => {
           expect(nextAttacker).toBe("challenger");
         }
       }),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -103,7 +104,7 @@ describe("TurnSystem", () => {
           expect(newState.currentAttacker).toBe("challenger");
         }
       }),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -134,9 +135,9 @@ describe("TurnSystem", () => {
 
           // Verify turn count
           expect(state.turn).toBe(initialState.turn + numTurns);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -167,14 +168,14 @@ describe("TurnSystem", () => {
 
           const firstAttacker = turnSystem.determineFirstAttacker(
             challenger,
-            opponent
+            opponent,
           );
 
           // Challenger has higher speed, so challenger should attack first
           expect(firstAttacker).toBe("challenger");
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -205,14 +206,14 @@ describe("TurnSystem", () => {
 
           const firstAttacker = turnSystem.determineFirstAttacker(
             challenger,
-            opponent
+            opponent,
           );
 
           // Opponent has higher speed, so opponent should attack first
           expect(firstAttacker).toBe("opponent");
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
@@ -248,6 +249,7 @@ describe("TurnSystem", () => {
       maxHp: 100,
       buffs: [],
       isDefeated: false,
+      effectiveRange: 1,
     };
 
     const baseState: BattleState = {

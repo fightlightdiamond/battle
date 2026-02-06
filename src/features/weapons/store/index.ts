@@ -33,3 +33,6 @@ export {
   selectError as selectEquipmentError,
   selectIsAnyLoading as selectEquipmentIsAnyLoading,
 } from "./equipmentStore";
+
+// Enhancement store exports
+export { useEnhancementStore } from "./enhancementStore";

@@ -93,6 +93,7 @@ function battleCardToCombatant(card: BattleCardType): Combatant {
     maxHp: card.maxHp,
     buffs: [],
     isDefeated: false,
+    effectiveRange: card.effectiveRange,
   };
 }
 
