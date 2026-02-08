@@ -13,6 +13,7 @@ import { WeaponService } from "@/features/weapons/services/weaponService";
 import { GemService } from "@/features/gems/services/gemService";
 import { EquipmentService } from "@/features/weapons/services/equipmentService";
 import { GemEquipmentService } from "@/features/gems/services/gemEquipmentService";
+import { getImageUrl } from "@/features/cards/services/imageStorage";
 import { useBattleStore } from "@/features/battle/store/battleStore";
 import type { Card } from "@/features/cards/types/card";
 import type { Weapon } from "@/features/weapons/types/weapon";
@@ -145,6 +146,16 @@ export const showCardHandler: CommandHandler = async (params, context) => {
       };
     }
 
+    // Refresh imageUrl from OPFS (blob URLs from previous sessions are invalid)
+    let freshImageUrl: string | null = null;
+    if (card.imagePath) {
+      freshImageUrl = await getImageUrl(card.imagePath);
+    }
+    const cardWithFreshImage: Card = {
+      ...card,
+      imageUrl: freshImageUrl ?? card.imageUrl,
+    };
+
     // Load equipment for the card
     const equipment = await EquipmentService.getEquipment(card.id);
     let weapon: Weapon | null = null;
@@ -166,20 +177,20 @@ export const showCardHandler: CommandHandler = async (params, context) => {
     }
 
     // Update context
-    context.setLastCard(card);
+    context.setLastCard(cardWithFreshImage);
 
     return {
       success: true,
-      message: `Card: ${card.name}`,
+      message: `Card: ${cardWithFreshImage.name}`,
       data: {
         commandType: "show_card",
-        name: card.name,
-        id: card.id,
-        hp: card.hp,
-        atk: card.atk,
-        def: card.def,
-        spd: card.spd,
-        card,
+        name: cardWithFreshImage.name,
+        id: cardWithFreshImage.id,
+        hp: cardWithFreshImage.hp,
+        atk: cardWithFreshImage.atk,
+        def: cardWithFreshImage.def,
+        spd: cardWithFreshImage.spd,
+        card: cardWithFreshImage,
         weapon,
         gems,
       },
