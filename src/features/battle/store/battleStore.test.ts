@@ -218,17 +218,41 @@ describe("battleStore", () => {
     it("phase transitions to 'finished' when a card's HP reaches zero", async () => {
       await fc.assert(
         fc.asyncProperty(
-          twoDistinctCardsArb.filter(
-            ([c1, c2]) => c1.atk >= c2.hp || c2.atk >= c1.hp,
-          ),
+          twoDistinctCardsArb.filter(([c1, c2]) => {
+            // Calculate actual damage with defense formula: ATK × (1 - DEF/(DEF + 200))
+            const c1DamageToC2 = Math.max(
+              1,
+              Math.floor(c1.atk * (1 - c2.def / (c2.def + 200))),
+            );
+            const c2DamageToC1 = Math.max(
+              1,
+              Math.floor(c2.atk * (1 - c1.def / (c1.def + 200))),
+            );
+
+            // Calculate lifesteal healing
+            const c1Healing = Math.floor((c1DamageToC2 * c1.lifesteal) / 100);
+            const c2Healing = Math.floor((c2DamageToC1 * c2.lifesteal) / 100);
+
+            // Net damage per round (2 turns: attacker attacks, then defender attacks)
+            // Attacker's net HP change: healing - damage taken
+            const c1NetHpChange = c1Healing - c2DamageToC1;
+            const c2NetHpChange = c2Healing - c1DamageToC2;
+
+            // Ensure at least one card can be defeated within 200 turns
+            // A card can be defeated if its net HP change is negative
+            return (
+              (c1NetHpChange < 0 && Math.abs(c1NetHpChange) * 200 >= c1.hp) ||
+              (c2NetHpChange < 0 && Math.abs(c2NetHpChange) * 200 >= c2.hp)
+            );
+          }),
           async ([challengerCard, opponentCard]) => {
             useBattleStore.getState().resetBattle();
             await useBattleStore.getState().selectChallenger(challengerCard);
             await useBattleStore.getState().selectOpponent(opponentCard);
             useBattleStore.getState().startBattle();
 
-            // Execute attacks until battle ends
-            let maxIterations = 100;
+            // Execute attacks until battle ends (increased to 200 for high-HP scenarios)
+            let maxIterations = 200;
             while (
               useBattleStore.getState().phase === BATTLE_PHASES.FIGHTING &&
               maxIterations > 0

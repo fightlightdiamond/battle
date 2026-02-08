@@ -275,14 +275,15 @@ describe("CombatSystem", () => {
 
     it("returns AttackResult with correct damage", () => {
       const result = combatSystem.calculateAttack(attacker, defender);
-      // Damage should equal attacker's ATK (50) when useDefense is false and no crit
-      expect(result.damage).toBe(50);
+      // With useDefense=true and defScalingFactor=200:
+      // ATK=50, DEF=40: 50 × (1 - 40/(40+200)) = 50 × 0.833 = 41.67 → 41
+      expect(result.damage).toBe(41);
     });
 
     it("calculates correct defenderNewHp", () => {
       const result = combatSystem.calculateAttack(attacker, defender);
-      // 100 - 50 = 50
-      expect(result.defenderNewHp).toBe(50);
+      // 100 - 41 = 59
+      expect(result.defenderNewHp).toBe(59);
     });
 
     it("marks knockout when damage exceeds defender HP", () => {
@@ -293,7 +294,7 @@ describe("CombatSystem", () => {
     });
 
     it("marks critical when damage exceeds 30% of maxHp", () => {
-      // 50 damage > 100 * 0.3 = 30, so should be critical (based on damage threshold)
+      // 41 damage > 100 * 0.3 = 30, so should be critical (based on damage threshold)
       // Note: isCritical is true if damage > 30% of maxHp OR if crit was rolled
       const result = combatSystem.calculateAttack(attacker, defender);
       expect(result.isCritical).toBe(true);
@@ -311,7 +312,7 @@ describe("CombatSystem", () => {
 
     it("returns updated defender in result", () => {
       const result = combatSystem.calculateAttack(attacker, defender);
-      expect(result.defender.currentHp).toBe(50);
+      expect(result.defender.currentHp).toBe(59);
       expect(result.defender.isDefeated).toBe(false);
     });
   });

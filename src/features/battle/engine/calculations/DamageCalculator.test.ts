@@ -12,7 +12,7 @@ describe("DamageCalculator", () => {
    * **Feature: tier-stat-system, Property 1: Defense Reduction Formula**
    *
    * For any attacker ATK value A and defender DEF value D,
-   * the damage after defense reduction SHALL equal A × (1 - D/(D + 100)).
+   * the damage after defense reduction SHALL equal A × (1 - D/(D + defScalingFactor)).
    *
    * **Validates: Requirements 1.4, 4.3**
    */
@@ -22,8 +22,9 @@ describe("DamageCalculator", () => {
         fc.integer({ min: 1, max: 9999 }), // ATK
         fc.integer({ min: 0, max: 9999 }), // DEF
         (atk, def) => {
-          // Calculate expected damage using the formula
-          const defReduction = def / (def + 100);
+          // Calculate expected damage using the formula with defScalingFactor=200
+          const defScalingFactor = 200;
+          const defReduction = def / (def + defScalingFactor);
           const expectedDamage = Math.max(
             1,
             Math.floor(atk * (1 - defReduction)),
@@ -130,9 +131,10 @@ describe("DamageCalculator", () => {
   });
 
   /**
-   * **Feature: battle-engine-refactor, Property: Attack Damage Equals ATK**
+   * **Feature: battle-engine-refactor, Property: Attack Damage with Defense**
    *
-   * For any attack where attacker has ATK value A, the damage dealt SHALL equal A.
+   * For any attack where attacker has ATK value A and defender has DEF value D,
+   * the damage dealt SHALL equal A × (1 - D/(D + defScalingFactor)).
    *
    * **Validates: Requirements 2.3**
    */
@@ -148,8 +150,15 @@ describe("DamageCalculator", () => {
           };
           const damage = damageCalculator.calculate(input);
 
-          // Basic damage should equal ATK (floored, minimum 1)
-          expect(damage).toBe(Math.max(1, Math.floor(atk)));
+          // With useDefense=true, damage uses defense formula
+          const defScalingFactor = 200;
+          const defReduction = def / (def + defScalingFactor);
+          const expectedDamage = Math.max(
+            1,
+            Math.floor(atk * (1 - defReduction)),
+          );
+
+          expect(damage).toBe(expectedDamage);
         },
       ),
       { numRuns: 100 },
@@ -316,12 +325,14 @@ describe("DamageCalculator", () => {
   // ============================================================================
 
   describe("calculate()", () => {
-    it("returns ATK value as damage", () => {
+    it("returns damage with defense reduction", () => {
       const input: DamageCalculationInput = {
         attackerAtk: 100,
         defenderDef: 50,
       };
-      expect(damageCalculator.calculate(input)).toBe(100);
+      // With useDefense=true and defScalingFactor=200:
+      // 100 × (1 - 50/(50+200)) = 100 × (1 - 0.2) = 80
+      expect(damageCalculator.calculate(input)).toBe(80);
     });
 
     it("ensures minimum damage of 1", () => {
@@ -335,13 +346,14 @@ describe("DamageCalculator", () => {
 
   describe("calculateWithDef()", () => {
     it("applies defense reduction formula", () => {
-      // ATK × (1 - DEF/(DEF + 100))
-      // 100 × (1 - 100/(100 + 100)) = 100 × 0.5 = 50
-      expect(damageCalculator.calculateWithDef(100, 100)).toBe(50);
+      // ATK × (1 - DEF/(DEF + defScalingFactor))
+      // With defScalingFactor=200:
+      // 100 × (1 - 100/(100 + 200)) = 100 × (1 - 0.333) = 66.67 → 66
+      expect(damageCalculator.calculateWithDef(100, 100)).toBe(66);
     });
 
     it("returns full damage when DEF is 0", () => {
-      // 100 × (1 - 0/(0 + 100)) = 100 × 1 = 100
+      // 100 × (1 - 0/(0 + 200)) = 100 × 1 = 100
       expect(damageCalculator.calculateWithDef(100, 0)).toBe(100);
     });
 

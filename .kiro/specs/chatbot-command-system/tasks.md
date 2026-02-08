@@ -6,14 +6,14 @@ This implementation plan breaks down the chatbot command system into incremental
 
 ## Tasks
 
-- [ ] 1. Set up chatbot feature structure and core types
+- [x] 1. Set up chatbot feature structure and core types
   - Create directory structure: `src/features/chatbot/`
   - Define TypeScript interfaces for all core types (CommandType, CommandPattern, MatchResult, ParsedCommand, ExecutionResult, ChatMessage, etc.)
   - Set up barrel exports in `index.ts`
   - _Requirements: 1.1, 2.1, 12.1_
 
 - [ ] 2. Implement Input Normalizer
-  - [ ] 2.1 Create InputNormalizer class with normalize method
+  - [x] 2.1 Create InputNormalizer class with normalize method
     - Implement lowercase conversion and whitespace trimming
     - Implement language detection (Vietnamese vs English vs mixed)
     - Implement tokenization by whitespace
@@ -33,12 +33,12 @@ This implementation plan breaks down the chatbot command system into incremental
     - **Validates: Requirements 1.5**
 
 - [ ] 3. Implement Pattern Matcher with command registry
-  - [ ] 3.1 Create CommandPattern registry
+  - [x] 3.1 Create CommandPattern registry
     - Define all command patterns with regex and priorities
     - Include Vietnamese and English keyword variants
     - Register patterns for: create_card, list_cards, show_card, delete_card, start_battle, battle_history, replay_battle, equip_weapon, unequip_weapon, equip_gem, unequip_gem, list_weapons, list_gems, show_stats, help, help_category
     - _Requirements: 2.1, 2.3, 11.1, 11.2_
-  - [ ] 3.2 Create PatternMatcher class with match method
+  - [x] 3.2 Create PatternMatcher class with match method
     - Implement pattern matching against all registered patterns
     - Implement priority-based selection for multiple matches
     - Extract parameters using regex capture groups
@@ -56,21 +56,21 @@ This implementation plan breaks down the chatbot command system into incremental
     - Test ambiguous patterns
     - _Requirements: 2.4, 2.5_
 
-- [ ] 4. Checkpoint - Ensure normalization and pattern matching tests pass
+- [x] 4. Checkpoint - Ensure normalization and pattern matching tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 5. Implement Entity Resolver with fuzzy matching
-  - [ ] 5.1 Install and configure Fuse.js
+  - [x] 5.1 Install and configure Fuse.js
     - Add Fuse.js dependency to package.json
     - Configure Fuse options (threshold: 0.3, keys: ['name'], includeScore: true)
     - _Requirements: 3.1_
-  - [ ] 5.2 Create EntityCache for caching entity lists
+  - [x] 5.2 Create EntityCache for caching entity lists
     - Implement cache with TTL (1 minute)
     - Implement refresh method to load from services
     - Implement isStale check
     - Cache cards, weapons, and gems separately
     - _Requirements: 3.1_
-  - [ ] 5.3 Create EntityResolver class
+  - [x] 5.3 Create EntityResolver class
     - Implement resolveCard method with exact match first, then fuzzy
     - Implement resolveWeapon method with exact match first, then fuzzy
     - Implement resolveGem method with exact match first, then fuzzy
@@ -88,7 +88,7 @@ This implementation plan breaks down the chatbot command system into incremental
     - _Requirements: 3.3, 3.4, 3.5_
 
 - [ ] 6. Implement Command Context store
-  - [ ] 6.1 Create CommandContext Zustand store
+  - [x] 6.1 Create CommandContext Zustand store
     - Define state: lastCard, lastWeapon, lastGem, lastBattle, language
     - Implement setLastCard, setLastWeapon, setLastGem, setLastBattle actions
     - Implement setLanguage action
@@ -101,17 +101,17 @@ This implementation plan breaks down the chatbot command system into incremental
     - **Property 13: Context Clearing on Category Switch**
     - **Validates: Requirements 8.5**
 
-- [ ] 7. Checkpoint - Ensure entity resolution and context tests pass
+- [x] 7. Checkpoint - Ensure entity resolution and context tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 8. Implement Response Formatter
-  - [ ] 8.1 Create message templates for all command types
+  - [x] 8.1 Create message templates for all command types
     - Define success templates (Vietnamese and English)
     - Define error templates (Vietnamese and English)
     - Define help templates (Vietnamese and English)
     - Include parameter interpolation support
     - _Requirements: 10.1, 10.2, 11.3, 11.4_
-  - [ ] 8.2 Create ResponseFormatter class
+  - [x] 8.2 Create ResponseFormatter class
     - Implement formatSuccess method with template interpolation
     - Implement formatError method with suggestions
     - Implement formatHelp method with examples in both languages
@@ -134,37 +134,37 @@ This implementation plan breaks down the chatbot command system into incremental
     - _Requirements: 7.5, 9.1, 9.2, 9.3, 9.4_
 
 - [ ] 9. Implement Command Executor with handlers
-  - [ ] 9.1 Create command handler functions for card commands
+  - [x] 9.1 Create command handler functions for card commands
     - Implement createCardHandler (calls CardService.create)
     - Implement listCardsHandler (calls CardService.getAll)
     - Implement showCardHandler (resolves card, displays details)
     - Implement deleteCardHandler (resolves card, calls CardService.delete)
     - Update context with referenced cards
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
-  - [ ] 9.2 Create command handler functions for battle commands
+  - [x] 9.2 Create command handler functions for battle commands
     - Implement startBattleHandler (resolves two cards, calls battleService)
     - Implement battleHistoryHandler (calls battle history service)
     - Implement replayBattleHandler (navigates to replay page)
     - Update context with battle reference
     - _Requirements: 5.1, 5.2, 5.3_
-  - [ ] 9.3 Create command handler functions for equipment commands
+  - [x] 9.3 Create command handler functions for equipment commands
     - Implement equipWeaponHandler (resolves weapon and card, calls EquipmentService.equipWeapon)
     - Implement unequipWeaponHandler (resolves card, calls EquipmentService.unequipWeapon)
     - Implement equipGemHandler (resolves gem and card, calls GemEquipmentService.equipGem)
     - Implement unequipGemHandler (resolves card, calls GemEquipmentService.unequipGem)
     - Update context with equipment references
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
-  - [ ] 9.4 Create command handler functions for query commands
+  - [x] 9.4 Create command handler functions for query commands
     - Implement showCardWithEquipmentHandler (resolves card, loads equipment, displays all)
     - Implement listWeaponsHandler (calls WeaponService.getAll)
     - Implement listGemsHandler (calls GemService.getAll)
     - Implement showStatsHandler (counts all entities)
     - _Requirements: 7.1, 7.2, 7.3, 7.4_
-  - [ ] 9.5 Create command handler functions for help commands
+  - [x] 9.5 Create command handler functions for help commands
     - Implement helpHandler (displays all categories)
     - Implement helpCategoryHandler (displays category-specific commands)
     - _Requirements: 9.1, 9.2, 9.3, 9.4_
-  - [ ] 9.6 Create CommandExecutor class
+  - [x] 9.6 Create CommandExecutor class
     - Map command types to handler functions
     - Implement execute method that calls appropriate handler
     - Handle service errors and format error responses
@@ -186,11 +186,11 @@ This implementation plan breaks down the chatbot command system into incremental
     - **Property 15: Service Error Propagation**
     - **Validates: Requirements 10.2**
 
-- [ ] 10. Checkpoint - Ensure command execution tests pass
+- [x] 10. Checkpoint - Ensure command execution tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 11. Implement Command Parser pipeline
-  - [ ] 11.1 Create CommandParser class
+  - [x] 11.1 Create CommandParser class
     - Implement processCommand method that orchestrates the pipeline
     - Step 1: Call InputNormalizer.normalize
     - Step 2: Call PatternMatcher.match
@@ -207,7 +207,7 @@ This implementation plan breaks down the chatbot command system into incremental
     - _Requirements: 4.1, 5.1, 6.1_
 
 - [ ] 12. Implement Chatbot Zustand store
-  - [ ] 12.1 Create ChatbotStore with Zustand
+  - [x] 12.1 Create ChatbotStore with Zustand
     - Define state: messages (ChatMessage[]), isProcessing (boolean)
     - Implement addMessage action
     - Implement processCommand action (calls CommandParser)
@@ -222,13 +222,13 @@ This implementation plan breaks down the chatbot command system into incremental
     - _Requirements: 8.1_
 
 - [ ] 13. Implement Chatbot UI component
-  - [ ] 13.1 Create ChatMessage component
+  - [x] 13.1 Create ChatMessage component
     - Display message content with role-based styling
     - Display timestamp
     - Support rich data display (entity cards, lists)
     - Handle long messages with scrolling
     - _Requirements: 10.1_
-  - [ ] 13.2 Create Chatbot main component
+  - [x] 13.2 Create Chatbot main component
     - Implement message history display with auto-scroll
     - Implement input field with submit button
     - Implement form submission handler
@@ -236,7 +236,7 @@ This implementation plan breaks down the chatbot command system into incremental
     - Add loading indicator during processing
     - Add keyboard shortcuts (Enter to send, Esc to close)
     - _Requirements: 1.1, 10.1_
-  - [ ] 13.3 Style Chatbot component
+  - [x] 13.3 Style Chatbot component
     - Create CSS for chatbot container (fixed position, collapsible)
     - Style message bubbles (user vs assistant)
     - Style input field and button
@@ -251,7 +251,7 @@ This implementation plan breaks down the chatbot command system into incremental
     - _Requirements: 1.1_
 
 - [ ] 14. Integrate Chatbot into AppLayout
-  - [ ] 14.1 Add Chatbot component to AppLayout
+  - [x] 14.1 Add Chatbot component to AppLayout
     - Import Chatbot component
     - Add chatbot toggle button to layout
     - Position chatbot in bottom-right corner
@@ -294,7 +294,7 @@ This implementation plan breaks down the chatbot command system into incremental
     - Test bilingual command switching
     - Test error recovery and help usage
     - _Requirements: 8.1, 8.2, 8.3, 11.5_
-  - [ ] 18.2 Manual testing checklist
+  - [x] 18.2 Manual testing checklist
     - Test all command types in English
     - Test all command types in Vietnamese
     - Test fuzzy matching with typos
@@ -303,7 +303,7 @@ This implementation plan breaks down the chatbot command system into incremental
     - Test error messages and suggestions
     - Test UI responsiveness and animations
 
-- [ ] 19. Final checkpoint - Ensure all tests pass
+- [x] 19. Final checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

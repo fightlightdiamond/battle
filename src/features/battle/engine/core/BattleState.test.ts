@@ -259,7 +259,7 @@ describe("BattleState", () => {
 
       // Core Stats (Tier 1)
       expect(combatant.baseStats.atk).toBe(100);
-      expect(combatant.baseStats.def).toBe(50);
+      expect(combatant.baseStats.def).toBe(75); // Updated default from 50 to 75
       expect(combatant.baseStats.spd).toBe(100);
 
       // Combat Stats (Tier 2)
