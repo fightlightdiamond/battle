@@ -14,6 +14,8 @@ import type { ChatMessage, ChatbotStore } from "../types";
 import { commandParser } from "../services/CommandParser";
 import { useCommandContextStore } from "./commandContextStore";
 import { chatMessageService } from "../services/chatMessageService";
+import { getImageUrl } from "@/features/cards/services/imageStorage";
+import type { Card } from "@/features/cards/types/card";
 
 /**
  * Generate unique message ID
@@ -69,7 +71,36 @@ export const useChatbotStore = create<ChatbotStore>()(
         try {
           const messages = await chatMessageService.getRecent(100);
           if (messages.length > 0) {
-            set({ messages });
+            // Refresh imageUrl for cards in messages (blob URLs from old sessions are invalid)
+            const refreshedMessages = await Promise.all(
+              messages.map(async (msg) => {
+                if (
+                  msg.data &&
+                  typeof msg.data === "object" &&
+                  "commandType" in msg.data &&
+                  (msg.data as { commandType: string }).commandType ===
+                    "show_card" &&
+                  "card" in msg.data
+                ) {
+                  const card = (msg.data as { card: Card }).card;
+                  if (card.imagePath) {
+                    const freshImageUrl = await getImageUrl(card.imagePath);
+                    return {
+                      ...msg,
+                      data: {
+                        ...msg.data,
+                        card: {
+                          ...card,
+                          imageUrl: freshImageUrl ?? card.imageUrl,
+                        },
+                      },
+                    };
+                  }
+                }
+                return msg;
+              }),
+            );
+            set({ messages: refreshedMessages });
           } else {
             // No history, show welcome message
             set({ messages: [createWelcomeMessage()] });
