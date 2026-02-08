@@ -8,3 +8,5 @@ export { DeleteConfirmDialog } from "./DeleteConfirmDialog";
 export { StatFormField } from "./StatFormField";
 export { StatDisplay } from "./StatDisplay";
 export { StatIcon } from "./StatIcon";
+export { CardPreview } from "./CardPreview";
+export type { CardPreviewProps } from "./CardPreview";
