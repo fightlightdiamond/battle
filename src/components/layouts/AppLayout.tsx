@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { StatusBar } from "@/components/StatusBar";
 import { shouldShowStatusBar } from "@/components/statusBarUtils";
+import { Chatbot } from "@/features/chatbot/components";
 
 export type AppLayoutVariant = "game" | "menu";
 export type AppLayoutWidth = "full" | "wide" | "default" | "narrow";
@@ -65,7 +66,7 @@ export function AppLayout({
         "min-h-screen overflow-auto",
         isGame
           ? "bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900"
-          : "bg-background"
+          : "bg-background",
       )}
     >
       {/* Status Bar - fixed at top (Requirements: 4.2, 4.3) */}
@@ -81,7 +82,7 @@ export function AppLayout({
         className={cn(
           "relative z-10 flex flex-col min-h-screen",
           showStatusBar && "pt-12", // 48px padding for status bar
-          className
+          className,
         )}
       >
         {/* Header */}
@@ -89,7 +90,7 @@ export function AppLayout({
           <header
             className={cn(
               "flex items-center justify-between px-4 py-4 md:px-6",
-              isGame ? "text-white" : ""
+              isGame ? "text-white" : "",
             )}
           >
             <div className="flex items-center gap-4">
@@ -111,7 +112,7 @@ export function AppLayout({
                   <h1
                     className={cn(
                       "text-xl md:text-2xl font-bold",
-                      isGame ? "text-white" : ""
+                      isGame ? "text-white" : "",
                     )}
                   >
                     {title}
@@ -134,12 +135,15 @@ export function AppLayout({
         <main
           className={cn(
             "flex-1 flex flex-col px-4 py-4 md:px-6",
-            widthStyles[width]
+            widthStyles[width],
           )}
         >
           {children}
         </main>
       </div>
+
+      {/* Global Chatbot - accessible from any page */}
+      <Chatbot />
     </div>
   );
 }

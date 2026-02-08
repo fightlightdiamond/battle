@@ -113,6 +113,15 @@
       "critDamage": 250,
       "armorPen": 80,
       "lifesteal": 30
+    },
+    {
+      "id": "c80d037a-568b-4737-9259-900d1bfd49a0",
+      "name": "Dragon",
+      "atk": 100,
+      "hp": 1500,
+      "imagePath": null,
+      "createdAt": 1770519696983,
+      "updatedAt": 1770519696983
     }
   ],
   "battleHistory": [
@@ -1864,6 +1873,112 @@
       "category": "business",
       "createdAt": 1700000000000,
       "updatedAt": 1700000000000
+    }
+  ],
+  "chatMessages": [
+    {
+      "id": "msg-1770521197422-t1lpz7mnh",
+      "role": "user",
+      "content": "card",
+      "timestamp": 1770521197422
+    },
+    {
+      "id": "msg-1770521197426-oanlyun97",
+      "role": "assistant",
+      "content": "❓ I didn't understand that command.\n\n**Did you mean:**",
+      "timestamp": 1770521197426,
+      "suggestions": [
+        {
+          "label": "list cards",
+          "command": "list cards"
+        },
+        {
+          "label": "create card Dragon",
+          "command": "create card Dragon"
+        },
+        {
+          "label": "show card Dragon",
+          "command": "show card Dragon"
+        }
+      ]
+    },
+    {
+      "id": "msg-1770521208029-ftevme5y7",
+      "role": "user",
+      "content": "show card Dragon",
+      "timestamp": 1770521208029
+    },
+    {
+      "id": "msg-1770521208059-3j9h46j14",
+      "role": "assistant",
+      "content": "Card: Dragon (ID: c80d037a-568b-4737-9259-900d1bfd49a0)\nHP: 1500 | ATK: 100 | DEF: 75 | SPD: 100",
+      "timestamp": 1770521208059,
+      "data": {
+        "commandType": "show_card",
+        "name": "Dragon",
+        "id": "c80d037a-568b-4737-9259-900d1bfd49a0",
+        "hp": 1500,
+        "atk": 100,
+        "def": 75,
+        "spd": 100,
+        "card": {
+          "id": "c80d037a-568b-4737-9259-900d1bfd49a0",
+          "name": "Dragon",
+          "hp": 1500,
+          "atk": 100,
+          "def": 75,
+          "spd": 100,
+          "critChance": 5,
+          "critDamage": 150,
+          "armorPen": 0,
+          "lifesteal": 0,
+          "imagePath": null,
+          "createdAt": 1770519696983,
+          "updatedAt": 1770519696983,
+          "imageUrl": null
+        },
+        "weapon": null,
+        "gems": []
+      }
+    },
+    {
+      "id": "msg-1770521657418-tzhjqdbwx",
+      "role": "user",
+      "content": "show card Education",
+      "timestamp": 1770521657418
+    },
+    {
+      "id": "msg-1770521657451-ipcf821t5",
+      "role": "assistant",
+      "content": "Card: Education (ID: 2bd03d48-8bc4-438e-9314-de6851113ccb)\nHP: 1900 | ATK: 800 | DEF: 75 | SPD: 100",
+      "timestamp": 1770521657451,
+      "data": {
+        "commandType": "show_card",
+        "name": "Education",
+        "id": "2bd03d48-8bc4-438e-9314-de6851113ccb",
+        "hp": 1900,
+        "atk": 800,
+        "def": 75,
+        "spd": 100,
+        "card": {
+          "id": "2bd03d48-8bc4-438e-9314-de6851113ccb",
+          "name": "Education",
+          "hp": 1900,
+          "atk": 800,
+          "def": 75,
+          "spd": 100,
+          "critChance": 5,
+          "critDamage": 150,
+          "armorPen": 0,
+          "lifesteal": 0,
+          "imagePath": "2bd03d48-8bc4-438e-9314-de6851113ccb.png",
+          "createdAt": 1765420354441,
+          "updatedAt": 1770333376462,
+          "imageUrl": "blob:http://localhost:5173/14b6bc09-2bee-456a-a153-a5a7e35fea8c"
+        },
+        "weapon": null,
+        "gems": []
+      }
     }
   ]
 }
