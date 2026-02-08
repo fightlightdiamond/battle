@@ -5,6 +5,7 @@
  * Reuses styling from the cards feature for consistency
  */
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ImageOff, Eye, Sword, Shield, Zap, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,6 +32,11 @@ export function ChatCardPreview({
   gems = [],
   compact = false,
 }: ChatCardPreviewProps) {
+  const [imageError, setImageError] = useState(false);
+
+  // Check if imageUrl is valid (blob URLs from old sessions won't work)
+  const hasValidImage = card.imageUrl && !imageError;
+
   return (
     <Card
       className={cn(
@@ -45,11 +51,12 @@ export function ChatCardPreview({
           compact ? "aspect-4/3" : "aspect-3/4",
         )}
       >
-        {card.imageUrl ? (
+        {hasValidImage ? (
           <img
-            src={card.imageUrl}
+            src={card.imageUrl!}
             alt={card.name}
             className="h-full w-full object-cover"
+            onError={() => setImageError(true)}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
