@@ -1,0 +1,15 @@
+@startuml
+!include style.iuml
+abstract class Animal {
+  -name: String
+  -id: Integer
+  -age: Integer
+  +eat(): void
+}
+class Tortoise
+class Otter
+class SlowLoris
+Animal <|-- Tortoise
+Animal <|-- Otter
+Animal <|-- SlowLoris
+@enduml

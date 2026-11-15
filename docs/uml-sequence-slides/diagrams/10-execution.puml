@@ -1,0 +1,14 @@
+@startuml
+!include style.iuml
+actor Customer
+participant ATM
+participant "Bank Server" as Bank
+Customer -> ATM : insertCard()
+activate ATM
+ATM -> Bank : verifyCard(cardData)
+activate Bank
+Bank -->> ATM : cardValid
+deactivate Bank
+ATM -> Customer : requestPIN()
+deactivate ATM
+@enduml

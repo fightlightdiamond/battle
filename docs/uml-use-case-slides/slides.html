@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UML Use Case Diagrams — Banking App</title>
+    <style>/*__CSS__*/</style>
+  </head>
+  <body class="bg-stone-100 font-sans text-stone-900 antialiased">
+    <div id="progress" class="fixed inset-x-0 top-0 z-30 h-1 origin-left bg-teal-700"></div>
+
+    <main id="deck">
+      <section class="slide slide-dark relative overflow-hidden bg-stone-950 text-stone-50" data-title="Title" data-section="Opening">
+        <img src="photos/customer.jpg" alt="" class="pointer-events-none absolute inset-0 h-full w-full object-cover" style="object-position: center 62%" />
+        <div class="absolute inset-0 bg-gradient-to-r from-stone-950 from-10% via-stone-950/80 via-46% to-transparent"></div>
+        <div class="relative flex flex-1 flex-col justify-center px-16">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-teal-300">Teaching deck</p>
+          <h1 class="mt-6 max-w-5xl text-6xl font-semibold tracking-tight">UML Use Case Diagrams</h1>
+          <p class="mt-6 max-w-3xl text-3xl text-stone-300">One Banking App example, from the system boundary to generalization.</p>
+          <p class="mt-10 text-2xl text-stone-300">Prepared by <span class="font-semibold text-stone-50">Vincent</span></p>
+          <p class="mt-4 text-lg text-stone-400">Arrow keys move · F fullscreen · O slide list</p>
+          <p class="mt-8 text-xs text-stone-400">Photo: Tokota, CC BY 3.0</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Objectives" data-section="Opening">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Opening</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">After this session</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-x-12 gap-y-5 px-14 pb-20 text-2xl leading-snug grid-cols-2">
+          <li>Explain what a Use Case Diagram is for, and what it leaves out.</li>
+          <li>Draw a system boundary and keep actors outside it.</li>
+          <li>Name actors as roles and use cases as goals.</li>
+          <li>Choose association, «include», «extend», or generalization.</li>
+          <li>Point each arrow the right way.</li>
+          <li>Review a small Banking App diagram and spot the usual mistakes.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Agenda" data-section="Opening">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Opening</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">How the session runs</h2>
+        </header>
+        <div class="mx-14 mt-8 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>Purpose, limits, and scope</span><span class="text-stone-500">10 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>System and actor</span><span class="text-stone-500">15 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>Use case goals and naming</span><span class="text-stone-500">15 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>Association</span><span class="text-stone-500">10 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>«include» and «extend»</span><span class="text-stone-500">25 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>Generalization and extension points</span><span class="text-stone-500">15 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>Build the Banking App diagram</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Practice and review</span><span>20 min</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="What it is" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A map of external behavior</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_440px] items-center gap-10 px-14 pb-8">
+          <div>
+            <p class="text-2xl leading-snug text-stone-700">A Use Case Diagram shows the system under discussion, who is outside it, the goals they achieve, and how those pieces are related.</p>
+            <p class="mt-8 text-2xl leading-snug">It helps when an idea is clear to its author and unclear to everyone else.</p>
+          </div>
+          <figure>
+            <img src="photos/bank.jpg" alt="A bank branch" class="h-72 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-xs text-stone-400">Harrison Keely, CC BY 4.0</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Four questions" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Four questions</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-5 px-14 pb-20 text-3xl">
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="mr-4 font-semibold text-teal-800">1</span>System — what are we modeling?</li>
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="mr-4 font-semibold text-teal-800">2</span>Actors — who or what interacts with it?</li>
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="mr-4 font-semibold text-teal-800">3</span>Use cases — what goals do they achieve?</li>
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="mr-4 font-semibold text-teal-800">4</span>Relationships — how are they connected?</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Limits" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Leave these off the diagram</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-4 px-14 pb-20 text-2xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-6 py-5">Step-by-step execution order</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Algorithms and internal design</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Classes, tables, and screens</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Every error and alternative flow</li>
+        </ul>
+        <p class="px-14 pb-16 text-xl text-stone-600">Those belong in a Use Case Specification, or in an activity, sequence, or class diagram.</p>
+      </section>
+
+      <section class="slide" data-title="System boundary" data-section="System">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">System</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Use cases inside, actors outside</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:01-boundary-->
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">The rectangle is the Banking App. Customer and Bank are outside it.</p>
+      </section>
+
+      <section class="slide" data-title="Scope check" data-section="System">
+        <div class="flex flex-1 flex-col justify-center px-16 pb-16">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">System</p>
+          <p class="mt-8 max-w-5xl text-5xl font-semibold leading-tight tracking-tight">Is this behavior the Banking App’s job, or does it belong outside?</p>
+          <p class="mt-8 max-w-3xl text-2xl text-stone-600">Inside the boundary, it can be a use case. Outside, and interacting with the app, it can be an actor.</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Actor" data-section="Actor">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Actor</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">An actor is an external role</h2>
+        </header>
+        <div class="grid grid-cols-2 gap-4 px-14 pt-4">
+          <figure>
+            <img src="photos/customer.jpg" alt="A customer using an ATM, seen from behind" class="h-40 w-full rounded-2xl object-cover" style="object-position: center 62%" />
+            <figcaption class="mt-1 text-center text-sm font-semibold">Customer</figcaption>
+          </figure>
+          <figure>
+            <img src="photos/bank.jpg" alt="A bank branch" class="h-40 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-1 text-center text-sm font-semibold">Bank</figcaption>
+          </figure>
+        </div>
+        <div class="grid flex-1 content-center gap-4 px-14 pt-3 grid-cols-2">
+          <div class="rounded-2xl bg-white px-6 py-4">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal-800">Can be</p>
+            <ul class="mt-2 space-y-1 text-xl">
+              <li>A person</li>
+              <li>An organization</li>
+              <li>Another system</li>
+              <li>An external device</li>
+            </ul>
+          </div>
+          <div class="rounded-2xl bg-white px-6 py-4">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal-800">In this example</p>
+            <p class="mt-2 text-xl leading-snug"><span class="font-semibold">Customer</span> logs in, checks a balance, transfers funds, and pays.</p>
+            <p class="mt-2 text-xl leading-snug"><span class="font-semibold">Bank</span> supplies account information and supports the transactions.</p>
+          </div>
+        </div>
+        <p class="px-14 pb-1 text-center text-xs text-stone-400">Tokota, CC BY 3.0 · Harrison Keely, CC BY 4.0</p>
+      </section>
+
+      <section class="slide" data-title="Role, not a person" data-section="Actor">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Actor</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Name the role, not the individual</h2>
+        </header>
+        <div class="mx-14 mt-8 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-2 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Avoid</span><span>Prefer</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>John</span><span>Customer</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Chase Bank</span><span>Bank</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Alice from Accounting</span><span>Accountant</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Device SN-0841</span><span>Payment Terminal</span></div>
+        </div>
+        <p class="px-14 pt-6 text-xl text-stone-600">One person may play several roles. Several people may play one role.</p>
+      </section>
+
+      <section class="slide" data-title="Primary and supporting" data-section="Actor">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Actor</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Who starts, and who supports</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:02-primary-->
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Customer initiates the goal. Bank provides information the app needs. Left and right is a reading habit, not a UML rule.</p>
+      </section>
+
+      <section class="slide" data-title="Finding actors" data-section="Actor">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Actor</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Ask before you add one</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-4 px-14 pb-20 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-4">Who initiates a goal through the system?</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Who receives value from it?</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Which external systems or devices exchange information with it?</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Who administers or supports it?</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Use case" data-section="Use case">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Use case</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A goal the system provides</h2>
+        </header>
+        <div class="flex flex-1 flex-col justify-center px-14 pb-20">
+          <p class="max-w-4xl text-3xl leading-snug">Drawn as an ellipse inside the boundary.</p>
+          <ul class="mt-8 grid max-w-3xl gap-3 text-2xl">
+            <li>Start the name with a verb.</li>
+            <li>Say the result, not the screen.</li>
+            <li>Stay specific, and keep the vocabulary consistent.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Main goals" data-section="Use case">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Use case</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Four goals in the Banking App</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:03-goals-->
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Bank participates in balance, transfer, and payment. Bank does not participate in Log In.</p>
+      </section>
+
+      <section class="slide" data-title="Naming" data-section="Use case">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Use case</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Rename the weak ones</h2>
+        </header>
+        <div class="mx-14 mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-3 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Weak</span><span>Problem</span><span>Better</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span>Transfer</span><span>Too vague</span><span>Transfer Funds</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span>Balance</span><span>Noun only</span><span>Check Balance</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span>Payment Screen</span><span>Describes UI</span><span>Make Payment</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span>User Data</span><span>No goal</span><span>Update Profile</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Goal level" data-section="Use case">
+        <header class="px-14 pt-9">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Use case</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Not every step is a use case</h2>
+          <p class="mt-3 max-w-5xl text-xl leading-snug text-stone-600">Only a result someone outside the system can recognize belongs on the diagram. The same story, “move money,” has three different levels.</p>
+        </header>
+        <div class="grid min-h-0 flex-1 content-start gap-5 px-14 pt-6 grid-cols-3">
+          <div class="rounded-2xl bg-white p-6">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">Actor goal</p>
+            <p class="mt-2 text-2xl font-semibold leading-tight">Transfer Funds</p>
+            <p class="mt-4 text-lg leading-snug text-stone-700">The customer opens the app to move money. When it finishes, they know the goal is done. Draw this as a primary use case: an ellipse inside the system boundary.</p>
+          </div>
+          <div class="rounded-2xl bg-white p-6">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">Shared behavior</p>
+            <p class="mt-2 text-2xl font-semibold leading-tight">Verify Sufficient Funds</p>
+            <p class="mt-4 text-lg leading-snug text-stone-700">The customer does not open the app just to check that enough money is there. Transfer Funds and Make Payment both need this step, so extract it and connect it with «include».</p>
+          </div>
+          <div class="rounded-2xl bg-white p-6">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-stone-500">Not a use case</p>
+            <p class="mt-2 text-2xl font-semibold leading-tight">Read an internal variable</p>
+            <p class="mt-4 text-lg leading-snug text-stone-700">Reading a field, calling a private function, or querying the database is an implementation detail. The customer never sees it. Record it in the specification or the code, not as an ellipse.</p>
+          </div>
+        </div>
+        <p class="px-14 py-4 text-lg leading-snug text-stone-600">Where an ellipse sits is not the order it runs. Log In drawn above Transfer Funds is only to keep the page readable. If login must happen first, write that precondition in the use case specification.</p>
+      </section>
+
+      <section class="slide" data-title="Four relationships" data-section="Relationships">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Relationships</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Four kinds of line</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-2 gap-4 px-14 pb-4 pt-4">
+          <div class="flex min-h-0 flex-col rounded-2xl bg-white px-5 pt-4 pb-3">
+            <p class="text-xl font-semibold">Association</p>
+            <svg viewBox="0 0 500 150" class="mt-1 min-h-0 w-full flex-1" role="img" aria-label="Customer joined to Log In by a solid line with no arrowhead">
+              <g fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round">
+                <circle cx="48" cy="46" r="13" fill="#F5F5F4"/>
+                <path d="M48 59 V90 M30 71 H66 M48 90 L33 112 M48 90 L63 112"/>
+              </g>
+              <text x="48" y="136" text-anchor="middle" font-size="16" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Customer</text>
+              <line x1="82" y1="96" x2="312" y2="74" stroke="#1C1917" stroke-width="1.6"/>
+              <ellipse cx="392" cy="70" rx="78" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="392" y="75" text-anchor="middle" font-size="16" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Log In</text>
+            </svg>
+            <p class="text-lg leading-snug text-stone-600">Solid line, no arrowhead. The actor participates.</p>
+          </div>
+          <div class="flex min-h-0 flex-col rounded-2xl bg-white px-5 pt-4 pb-3">
+            <p class="text-xl font-semibold">«include»</p>
+            <svg viewBox="0 0 520 150" class="mt-1 min-h-0 w-full flex-1" role="img" aria-label="Dashed arrow from Log In to Verify Password labeled include">
+              <ellipse cx="108" cy="82" rx="78" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="108" y="87" text-anchor="middle" font-size="16" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Log In</text>
+              <line x1="186" y1="82" x2="296" y2="82" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="8 6"/>
+              <polyline points="296,74 312,82 296,90" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+              <text x="248" y="64" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">«include»</text>
+              <ellipse cx="412" cy="82" rx="100" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="412" y="87" text-anchor="middle" font-size="16" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Verify Password</text>
+            </svg>
+            <p class="text-lg leading-snug text-stone-600">Dashed arrow, from the base to the included behavior.</p>
+          </div>
+          <div class="flex min-h-0 flex-col rounded-2xl bg-white px-5 pt-4 pb-3">
+            <p class="text-xl font-semibold">«extend»</p>
+            <svg viewBox="0 0 520 150" class="mt-1 min-h-0 w-full flex-1" role="img" aria-label="Dashed arrow from Display Login Error to Log In labeled extend">
+              <ellipse cx="118" cy="82" rx="108" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="118" y="78" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Display</text>
+              <text x="118" y="96" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Login Error</text>
+              <line x1="226" y1="82" x2="342" y2="82" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="8 6"/>
+              <polyline points="342,74 358,82 342,90" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+              <text x="288" y="64" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">«extend»</text>
+              <ellipse cx="430" cy="82" rx="72" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="430" y="87" text-anchor="middle" font-size="16" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Log In</text>
+            </svg>
+            <p class="text-lg leading-snug text-stone-600">Dashed arrow, from the extension back to the base.</p>
+          </div>
+          <div class="flex min-h-0 flex-col rounded-2xl bg-white px-5 pt-4 pb-3">
+            <p class="text-xl font-semibold">Generalization</p>
+            <svg viewBox="0 0 520 150" class="mt-1 min-h-0 w-full flex-1" role="img" aria-label="Solid line from Pay from Checking to Make Payment with a hollow triangle on Make Payment">
+              <ellipse cx="118" cy="82" rx="108" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="118" y="78" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Pay from</text>
+              <text x="118" y="96" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Checking</text>
+              <line x1="226" y1="82" x2="312" y2="82" stroke="#1C1917" stroke-width="1.6"/>
+              <polygon points="336,82 312,72 312,92" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+              <ellipse cx="424" cy="82" rx="88" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="424" y="78" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Make</text>
+              <text x="424" y="96" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Payment</text>
+            </svg>
+            <p class="text-lg leading-snug text-stone-600">Solid line. The hollow triangle sits on the general element.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Association" data-section="Relationships">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Association</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Only a real participation</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:03-goals-->
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Does this actor actually communicate with this use case? If not, do not draw the line.</p>
+      </section>
+
+      <section class="slide" data-title="Include" data-section="Include">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«include»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">The base pulls in required behavior</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_380px] items-center gap-8 px-14 pb-6">
+          <div>
+            <p class="text-3xl leading-snug">Use it for behavior that is required, shared, or worth extracting so it is not copied.</p>
+            <p class="mt-6 rounded-2xl bg-stone-900 px-6 py-5 text-3xl text-stone-50">Arrow: base use case → included use case</p>
+          </div>
+          <figure>
+            <img src="photos/pin.jpg" alt="An ATM keypad used to enter a PIN" class="h-80 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-xs text-stone-400">Santeri Viinamäki, CC BY-SA 4.0</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Include example" data-section="Include">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«include»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Log In includes Verify Password</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:04-include-->
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">The dashed arrow points at the behavior being included.</p>
+      </section>
+
+      <section class="slide" data-title="Shared include" data-section="Include">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«include»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">One included use case, two bases</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:05-include-shared-->
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Transfer Funds and Make Payment both include Verify Sufficient Funds. Do not draw that check twice.</p>
+      </section>
+
+      <section class="slide" data-title="Extend" data-section="Extend">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«extend»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Added only when a condition holds</h2>
+        </header>
+        <div class="flex flex-1 flex-col justify-center gap-6 px-14 pb-20">
+          <p class="max-w-4xl text-3xl leading-snug">The base use case must still make sense without the extension.</p>
+          <p class="max-w-4xl rounded-2xl bg-stone-900 px-6 py-5 text-3xl text-stone-50">Arrow: extending use case → base use case</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Extend example" data-section="Extend">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«extend»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A bad password extends Log In</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:06-extend-->
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">The error is not shown on every attempt. The arrow points at the use case being extended.</p>
+      </section>
+
+      <section class="slide" data-title="Compare" data-section="Include and extend">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«include» and «extend»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Purpose, then direction</h2>
+        </header>
+        <div class="mx-14 mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white text-xl">
+          <div class="grid grid-cols-3 bg-stone-900 px-5 py-4 font-semibold text-stone-50"><span></span><span>«include»</span><span>«extend»</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-4"><span class="font-semibold">Purpose</span><span>Reuse required or shared behavior</span><span>Add conditional behavior</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-4"><span class="font-semibold">Base</span><span>Incorporates the included behavior</span><span>Stands alone without the extension</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-4"><span class="font-semibold">Arrow</span><span>Base → included</span><span>Extending → base</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-4"><span class="font-semibold">Example</span><span>Log In → Verify Password</span><span>Display Login Error → Log In</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Both arrows" data-section="Include and extend">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«include» and «extend»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Same base, two different arrows</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:07-compare-->
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Include points away from Log In. Extend points back at Log In.</p>
+      </section>
+
+      <section class="slide" data-title="Which relationship" data-section="Include and extend">
+        <div class="flex flex-1 flex-col justify-center gap-8 px-16 pb-16">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Check</p>
+          <p class="max-w-5xl text-4xl font-semibold leading-tight">Are we extracting required behavior, or adding something the base does not need?</p>
+          <p class="max-w-3xl text-2xl text-stone-600">“Include always, extend sometimes” is only a hint. Ask about the base first.</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Generalization" data-section="Generalization">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A specialized element is a kind of the general one</h2>
+        </header>
+        <div class="flex flex-1 flex-col justify-center gap-6 px-14 pb-20">
+          <p class="max-w-4xl text-3xl leading-snug">It inherits the relevant behavior and relationships, and may add its own.</p>
+          <p class="max-w-4xl rounded-2xl bg-stone-900 px-6 py-5 text-3xl text-stone-50">Solid line. Hollow triangle points at the general element.</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Use case generalization" data-section="Generalization">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Two ways to make a payment</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:08-generalization-usecase-->
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">The hollow triangles sit on Make Payment. Pay from Checking and Pay from Savings inherit its associations.</p>
+      </section>
+
+      <section class="slide" data-title="Actor generalization" data-section="Generalization">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">New and returning customers are customers</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:09-generalization-actor-->
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">The triangles point at Customer. The specialized actors inherit the association with Make Payment.</p>
+      </section>
+
+      <section class="slide" data-title="Extension points" data-section="Extension point">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Extension point</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Name the place where behavior may be inserted</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:10-extension-points-->
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Add an extension point only when the insertion location helps the reader.</p>
+      </section>
+
+      <section class="slide" data-title="Build steps" data-section="Complete model">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Building the diagram</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Eight passes, in this order</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-3 px-14 pb-20 text-xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">1.</span> Name the system and draw the boundary.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">2.</span> Place Customer and Bank outside it.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">3.</span> Add the four customer goals inside.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">4.</span> Associate actors only where they participate.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">5.</span> Include Verify Password and Verify Sufficient Funds.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">6.</span> Extend Log In with Display Login Error.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">7.</span> Specialize Make Payment into checking and savings.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">8.</span> Remove crossings, UI details, and unused actors.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Complete diagram" data-section="Complete model">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Banking App</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The whole model</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <!--svg:11-complete-->
+        </div>
+      </section>
+
+      <section class="slide" data-title="How to read it" data-section="Complete model">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Banking App</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Read the lines, not the layout</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[300px_1fr] gap-6 px-14 pb-4">
+          <figure class="flex min-h-0 flex-col">
+            <img src="photos/terminal.jpg" alt="A card payment terminal" class="min-h-0 w-full flex-1 rounded-2xl object-cover" />
+            <figcaption class="pt-2 text-center text-xs text-stone-400">Daylon124, CC0</figcaption>
+          </figure>
+          <ul class="flex flex-col justify-center gap-3 text-xl">
+            <li class="rounded-2xl bg-white px-6 py-3">Customer starts the business goals. Bank supports balance and money movement.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">Log In includes password verification.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">A login error extends Log In only when the password is incorrect.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">Transfer and payment both include the funds check.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">Checking and savings payments specialize Make Payment.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Mistakes" data-section="Review">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Mistakes that show up early</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-4 px-14 pb-20 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-4">Naming an actor after a person, or placing an actor inside the boundary.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Using a noun, or a screen, as a use case name.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Treating vertical position as the order of execution.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Giving every error its own «extend», or connecting every actor to every use case.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Drawing a database inside the scope as an actor.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Arrow directions" data-section="Review">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Where the marker sits</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-4 px-14 pb-20 text-2xl">
+          <div class="rounded-2xl bg-white px-6 py-5">«include» — base → included</div>
+          <div class="rounded-2xl bg-white px-6 py-5">«extend» — extending → base</div>
+          <div class="rounded-2xl bg-white px-6 py-5">Generalization — specialized → general, hollow triangle on the general element</div>
+          <div class="rounded-2xl bg-white px-6 py-5">Association — solid line, no arrowhead</div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Checklist" data-section="Review">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Before you keep the diagram</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-3 px-14 pb-20 text-xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-4">The boundary matches the scope you mean.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">Actor names are roles. Each one participates.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">Use case names are verb phrases at one level.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">«include» points at the included use case.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">«extend» points at a base that still stands alone.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">Generalization is a true general–specialized pair.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">A reader can see the goals without a long explanation.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">Flow detail has moved to the specification.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 1" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 1 · classify</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">System, actor, or use case?</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-4 px-14 pb-20 text-3xl">
+          <li>Customer</li>
+          <li>Banking App</li>
+          <li>Transfer Funds</li>
+          <li>Bank</li>
+          <li>Verify Password</li>
+        </ol>
+        <p class="px-14 pb-16 text-xl text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 1 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 1</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-3 px-14 pb-20 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Customer — Actor</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Banking App — System</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Transfer Funds — Use Case</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Bank — Actor</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Verify Password — Use Case</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 2" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 2 · rename</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Rewrite these use case names</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-4 px-14 pb-20 text-3xl">
+          <li>Payment</li>
+          <li>Account</li>
+          <li>Transfer</li>
+          <li>Login Screen</li>
+          <li>Customer Information</li>
+        </ol>
+        <p class="px-14 pb-16 text-xl text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 2 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 2</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-3 px-14 pb-20 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Make Payment</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">View Account Details, or Manage Account</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Transfer Funds</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Log In</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Update Customer Information</li>
+        </ul>
+        <p class="px-14 pb-16 text-xl text-stone-600">The right name is the actor’s actual goal.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 3" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 3 · choose the relationship</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Association, include, extend, or generalization?</h2>
+        </header>
+        <ol class="flex flex-1 flex-col justify-center gap-4 px-14 pb-20 text-2xl">
+          <li>Customer performs Check Balance.</li>
+          <li>Log In uses Verify Password as required shared behavior.</li>
+          <li>Display Login Error occurs when the password is incorrect.</li>
+          <li>Pay from Savings is a specialized form of Make Payment.</li>
+          <li>Transfer Funds and Make Payment both use Verify Sufficient Funds.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Exercise 3 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 3</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-3 px-14 pb-20 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Association</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">«include»</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">«extend»</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Generalization</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">«include»</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 4" data-section="Practice">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 4 · draw</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Draw one use case diagram</h2>
+        </header>
+        <div class="px-14 pt-3">
+          <img src="photos/pin.jpg" alt="An ATM keypad used to enter a PIN" class="h-32 w-full rounded-2xl object-cover" />
+        </div>
+        <p class="px-14 pt-2 text-xs text-stone-400">Santeri Viinamäki, CC BY-SA 4.0</p>
+        <p class="px-14 pt-2 text-xl text-stone-600">One Banking App diagram. Every fact below has to appear on it.</p>
+        <ul class="mt-3 flex flex-1 flex-col justify-center gap-2 px-14 text-xl">
+          <li class="rounded-2xl bg-white px-6 py-3">Customer logs in and makes a payment.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Logging in always verifies the password.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">A login error appears only when the password is incorrect.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Paying from checking is one way to make a payment.</li>
+        </ul>
+        <p class="px-14 py-3 text-lg text-stone-500">A suggested diagram is on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 4 answers" data-section="Practice">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">One diagram, three relationships</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <!--svg:13-exercise-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Include points at Verify Password. Extend points at Log In. The hollow triangle sits on Make Payment.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 5" data-section="Practice">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 5 · Library System</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">Find the mistakes and redraw it</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <!--svg:12-library-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Several rules from this session are broken. A repaired diagram is on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 5 answers" data-section="Practice">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested repair</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">The Library System, corrected</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <!--svg:14-library-fixed-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg leading-snug text-stone-600">Member is the role, and Librarian stays outside. The database is not an actor. The goal is Manage Catalog. Include points at Check Availability. Extend points at Return Book. Associations have no arrowhead.</p>
+      </section>
+
+      <section class="slide" data-title="Takeaways" data-section="Close">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Close</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Keep these ten</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-2 px-14 pb-16 text-lg leading-snug grid-cols-2">
+          <li>The diagram is the external view of goals and interactions.</li>
+          <li>The system boundary is the scope decision.</li>
+          <li>An actor is a role, not a named person.</li>
+          <li>A use case name is a verb phrase for a goal.</li>
+          <li>Association means participation, and has no arrowhead.</li>
+          <li>«include» points from the base to the included use case.</li>
+          <li>«extend» points from the extension to the base.</li>
+          <li>Generalization points from the specialized element to the general one.</li>
+          <li>The diagram stays simple and does not replace the specification.</li>
+          <li>When it gets crowded, split it or move detail elsewhere.</li>
+        </ol>
+      </section>
+
+      <section class="slide slide-dark bg-stone-950 text-stone-50" data-title="Prompts" data-section="Close">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-300">Ask the room</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Questions that keep the model honest</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-4 px-14 pb-20 text-2xl text-stone-200">
+          <li>What goal is the actor trying to achieve?</li>
+          <li>Is this responsibility inside the boundary or outside it?</li>
+          <li>Does this name express a goal, or is it only a noun?</li>
+          <li>Is the base use case meaningful without the extension?</li>
+          <li>Should this arrow point at the included behavior or at the base?</li>
+          <li>Does this detail belong on the diagram or in the specification?</li>
+        </ul>
+      </section>
+      <footer id="chrome" class="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex items-center justify-between px-8 py-3 text-sm text-stone-500">
+        <span id="section-label"></span>
+        <span id="counter"></span>
+        <span>← → · F · O</span>
+      </footer>
+    </main>
+
+    <div id="overview" class="fixed inset-0 z-40 hidden overflow-auto bg-stone-950/95 p-8 text-stone-50">
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-2xl font-semibold">Slides</h2>
+        <p class="text-stone-400">Click a slide, or press O or Esc</p>
+      </div>
+      <div id="overview-grid" class="grid grid-cols-2 gap-3 md:grid-cols-4"></div>
+    </div>
+
+    <script>
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const progress = document.getElementById("progress");
+      const counter = document.getElementById("counter");
+      const sectionLabel = document.getElementById("section-label");
+      const overview = document.getElementById("overview");
+      const overviewGrid = document.getElementById("overview-grid");
+      let index = 0;
+
+      slides.forEach((slide, slideIndex) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "rounded-xl bg-stone-800 px-4 py-3 text-left text-sm hover:bg-stone-700";
+        button.textContent = `${slideIndex + 1}. ${slide.dataset.title}`;
+        button.addEventListener("click", () => {
+          show(slideIndex);
+          closeOverview();
+        });
+        overviewGrid.appendChild(button);
+      });
+
+      function show(next) {
+        index = Math.max(0, Math.min(slides.length - 1, next));
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("is-active", slideIndex === index);
+        });
+        const current = slides[index];
+        document.body.classList.toggle("is-dark", current.classList.contains("slide-dark"));
+        sectionLabel.textContent = current.dataset.section || "";
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        progress.style.transform = `scaleX(${(index + 1) / slides.length})`;
+        document.title = `${current.dataset.title} — UML Use Case Diagrams`;
+      }
+
+      function openOverview() {
+        overview.classList.remove("hidden");
+      }
+
+      function closeOverview() {
+        overview.classList.add("hidden");
+      }
+
+      document.addEventListener("keydown", (event) => {
+        const overviewOpen = !overview.classList.contains("hidden");
+        if (event.key === "o" || event.key === "O") {
+          overviewOpen ? closeOverview() : openOverview();
+          return;
+        }
+        if (event.key === "Escape") {
+          closeOverview();
+          return;
+        }
+        if (overviewOpen) return;
+        if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(event.key)) {
+          event.preventDefault();
+          show(index + 1);
+        } else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(event.key)) {
+          event.preventDefault();
+          show(index - 1);
+        } else if (event.key === "Home") {
+          show(0);
+        } else if (event.key === "End") {
+          show(slides.length - 1);
+        } else if (event.key === "f" || event.key === "F") {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else document.documentElement.requestFullscreen();
+        }
+      });
+
+      document.getElementById("deck").addEventListener("click", (event) => {
+        if (event.target.closest("a, button")) return;
+        const x = event.clientX / window.innerWidth;
+        if (x > 0.78) show(index + 1);
+        else if (x < 0.22) show(index - 1);
+      });
+
+      function fit() {
+        const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+        document.getElementById("deck").style.transform = `translate(-50%, -50%) scale(${scale})`;
+      }
+
+      window.addEventListener("resize", fit);
+      fit();
+      show(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,2286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UML Use Case Diagrams — Banking App</title>
+    <style>/*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com */
+@layer properties;
+@layer theme, base, components, utilities;
+@layer theme {
+  :root, :host {
+    --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+    --color-teal-300: oklch(85.5% 0.138 181.071);
+    --color-teal-700: oklch(51.1% 0.096 186.391);
+    --color-teal-800: oklch(43.7% 0.078 188.216);
+    --color-stone-50: oklch(98.5% 0.001 106.423);
+    --color-stone-100: oklch(97% 0.001 106.424);
+    --color-stone-200: oklch(92.3% 0.003 48.717);
+    --color-stone-300: oklch(86.9% 0.005 56.366);
+    --color-stone-400: oklch(70.9% 0.01 56.259);
+    --color-stone-500: oklch(55.3% 0.013 58.071);
+    --color-stone-600: oklch(44.4% 0.011 73.639);
+    --color-stone-700: oklch(37.4% 0.01 67.558);
+    --color-stone-800: oklch(26.8% 0.007 34.298);
+    --color-stone-900: oklch(21.6% 0.006 56.043);
+    --color-stone-950: oklch(14.7% 0.004 49.25);
+    --color-white: #fff;
+    --spacing: 0.25rem;
+    --container-3xl: 48rem;
+    --container-4xl: 56rem;
+    --container-5xl: 64rem;
+    --text-xs: 0.75rem;
+    --text-xs--line-height: calc(1 / 0.75);
+    --text-sm: 0.875rem;
+    --text-sm--line-height: calc(1.25 / 0.875);
+    --text-lg: 1.125rem;
+    --text-lg--line-height: calc(1.75 / 1.125);
+    --text-xl: 1.25rem;
+    --text-xl--line-height: calc(1.75 / 1.25);
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: calc(2 / 1.5);
+    --text-3xl: 1.875rem;
+    --text-3xl--line-height: calc(2.25 / 1.875);
+    --text-4xl: 2.25rem;
+    --text-4xl--line-height: calc(2.5 / 2.25);
+    --text-5xl: 3rem;
+    --text-5xl--line-height: 1;
+    --text-6xl: 3.75rem;
+    --text-6xl--line-height: 1;
+    --font-weight-semibold: 600;
+    --tracking-tight: -0.025em;
+    --leading-tight: 1.25;
+    --leading-snug: 1.375;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --default-font-family: var(--font-sans);
+    --default-mono-font-family: var(--font-mono);
+  }
+}
+@layer base {
+  *, ::after, ::before, ::backdrop, ::file-selector-button {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+  html, :host {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+    font-feature-settings: var(--default-font-feature-settings, normal);
+    font-variation-settings: var(--default-font-variation-settings, normal);
+    -webkit-tap-highlight-color: transparent;
+  }
+  hr {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+  }
+  abbr:where([title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  a {
+    color: inherit;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+  }
+  b, strong {
+    font-weight: bolder;
+  }
+  code, kbd, samp, pre {
+    font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-feature-settings: var(--default-mono-font-feature-settings, normal);
+    font-variation-settings: var(--default-mono-font-variation-settings, normal);
+    font-size: 1em;
+  }
+  small {
+    font-size: 80%;
+  }
+  sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+  sub {
+    bottom: -0.25em;
+  }
+  sup {
+    top: -0.5em;
+  }
+  table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+  :-moz-focusring {
+    outline: auto;
+  }
+  progress {
+    vertical-align: baseline;
+  }
+  summary {
+    display: list-item;
+  }
+  ol, ul, menu {
+    list-style: none;
+  }
+  img, svg, video, canvas, audio, iframe, embed, object {
+    display: block;
+    vertical-align: middle;
+  }
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+  button, input, select, optgroup, textarea, ::file-selector-button {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    border-radius: 0;
+    background-color: transparent;
+    opacity: 1;
+  }
+  :where(select:is([multiple], [size])) optgroup {
+    font-weight: bolder;
+  }
+  :where(select:is([multiple], [size])) optgroup option {
+    padding-inline-start: 20px;
+  }
+  ::file-selector-button {
+    margin-inline-end: 4px;
+  }
+  ::placeholder {
+    opacity: 1;
+  }
+  @supports (not (-webkit-appearance: -apple-pay-button))  or (contain-intrinsic-size: 1px) {
+    ::placeholder {
+      color: currentcolor;
+      @supports (color: color-mix(in lab, red, red)) {
+        color: color-mix(in oklab, currentcolor 50%, transparent);
+      }
+    }
+  }
+  textarea {
+    resize: vertical;
+  }
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+  ::-webkit-date-and-time-value {
+    min-height: 1lh;
+    text-align: inherit;
+  }
+  ::-webkit-datetime-edit {
+    display: inline-flex;
+  }
+  ::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+  ::-webkit-datetime-edit, ::-webkit-datetime-edit-year-field, ::-webkit-datetime-edit-month-field, ::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-hour-field, ::-webkit-datetime-edit-minute-field, ::-webkit-datetime-edit-second-field, ::-webkit-datetime-edit-millisecond-field, ::-webkit-datetime-edit-meridiem-field {
+    padding-block: 0;
+  }
+  ::-webkit-calendar-picker-indicator {
+    line-height: 1;
+  }
+  :-moz-ui-invalid {
+    box-shadow: none;
+  }
+  button, input:where([type="button"], [type="reset"], [type="submit"]), ::file-selector-button {
+    appearance: button;
+  }
+  ::-webkit-inner-spin-button, ::-webkit-outer-spin-button {
+    height: auto;
+  }
+  [hidden]:where(:not([hidden="until-found"])) {
+    display: none !important;
+  }
+}
+@layer utilities {
+  .pointer-events-none {
+    pointer-events: none;
+  }
+  .absolute {
+    position: absolute;
+  }
+  .fixed {
+    position: fixed;
+  }
+  .relative {
+    position: relative;
+  }
+  .inset-0 {
+    inset: calc(var(--spacing) * 0);
+  }
+  .inset-x-0 {
+    inset-inline: calc(var(--spacing) * 0);
+  }
+  .top-0 {
+    top: calc(var(--spacing) * 0);
+  }
+  .bottom-0 {
+    bottom: calc(var(--spacing) * 0);
+  }
+  .z-30 {
+    z-index: 30;
+  }
+  .z-40 {
+    z-index: 40;
+  }
+  .mx-10 {
+    margin-inline: calc(var(--spacing) * 10);
+  }
+  .mx-14 {
+    margin-inline: calc(var(--spacing) * 14);
+  }
+  .mt-1 {
+    margin-top: calc(var(--spacing) * 1);
+  }
+  .mt-2 {
+    margin-top: calc(var(--spacing) * 2);
+  }
+  .mt-3 {
+    margin-top: calc(var(--spacing) * 3);
+  }
+  .mt-4 {
+    margin-top: calc(var(--spacing) * 4);
+  }
+  .mt-6 {
+    margin-top: calc(var(--spacing) * 6);
+  }
+  .mt-8 {
+    margin-top: calc(var(--spacing) * 8);
+  }
+  .mt-10 {
+    margin-top: calc(var(--spacing) * 10);
+  }
+  .mr-4 {
+    margin-right: calc(var(--spacing) * 4);
+  }
+  .mb-6 {
+    margin-bottom: calc(var(--spacing) * 6);
+  }
+  .mb-16 {
+    margin-bottom: calc(var(--spacing) * 16);
+  }
+  .contents {
+    display: contents;
+  }
+  .flex {
+    display: flex;
+  }
+  .grid {
+    display: grid;
+  }
+  .hidden {
+    display: none;
+  }
+  .table {
+    display: table;
+  }
+  .h-1 {
+    height: calc(var(--spacing) * 1);
+  }
+  .h-32 {
+    height: calc(var(--spacing) * 32);
+  }
+  .h-40 {
+    height: calc(var(--spacing) * 40);
+  }
+  .h-72 {
+    height: calc(var(--spacing) * 72);
+  }
+  .h-80 {
+    height: calc(var(--spacing) * 80);
+  }
+  .h-full {
+    height: 100%;
+  }
+  .min-h-0 {
+    min-height: calc(var(--spacing) * 0);
+  }
+  .w-full {
+    width: 100%;
+  }
+  .max-w-3xl {
+    max-width: var(--container-3xl);
+  }
+  .max-w-4xl {
+    max-width: var(--container-4xl);
+  }
+  .max-w-5xl {
+    max-width: var(--container-5xl);
+  }
+  .flex-1 {
+    flex: 1;
+  }
+  .border-collapse {
+    border-collapse: collapse;
+  }
+  .origin-left {
+    transform-origin: 0;
+  }
+  .transform {
+    transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
+  }
+  .resize {
+    resize: both;
+  }
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .grid-cols-\[1fr_380px\] {
+    grid-template-columns: 1fr 380px;
+  }
+  .grid-cols-\[1fr_440px\] {
+    grid-template-columns: 1fr 440px;
+  }
+  .grid-cols-\[1fr_auto\] {
+    grid-template-columns: 1fr auto;
+  }
+  .grid-cols-\[300px_1fr\] {
+    grid-template-columns: 300px 1fr;
+  }
+  .flex-col {
+    flex-direction: column;
+  }
+  .content-center {
+    align-content: center;
+  }
+  .content-start {
+    align-content: flex-start;
+  }
+  .items-center {
+    align-items: center;
+  }
+  .justify-between {
+    justify-content: space-between;
+  }
+  .justify-center {
+    justify-content: center;
+  }
+  .gap-2 {
+    gap: calc(var(--spacing) * 2);
+  }
+  .gap-3 {
+    gap: calc(var(--spacing) * 3);
+  }
+  .gap-4 {
+    gap: calc(var(--spacing) * 4);
+  }
+  .gap-5 {
+    gap: calc(var(--spacing) * 5);
+  }
+  .gap-6 {
+    gap: calc(var(--spacing) * 6);
+  }
+  .gap-8 {
+    gap: calc(var(--spacing) * 8);
+  }
+  .gap-10 {
+    gap: calc(var(--spacing) * 10);
+  }
+  .space-y-1 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 1) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 1) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .space-y-3 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 3) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 3) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .gap-x-12 {
+    column-gap: calc(var(--spacing) * 12);
+  }
+  .gap-y-5 {
+    row-gap: calc(var(--spacing) * 5);
+  }
+  .overflow-auto {
+    overflow: auto;
+  }
+  .overflow-hidden {
+    overflow: hidden;
+  }
+  .rounded-2xl {
+    border-radius: var(--radius-2xl);
+  }
+  .rounded-xl {
+    border-radius: var(--radius-xl);
+  }
+  .border {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
+  .border-t {
+    border-top-style: var(--tw-border-style);
+    border-top-width: 1px;
+  }
+  .border-b {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 1px;
+  }
+  .border-l-8 {
+    border-left-style: var(--tw-border-style);
+    border-left-width: 8px;
+  }
+  .border-stone-200 {
+    border-color: var(--color-stone-200);
+  }
+  .border-teal-700 {
+    border-color: var(--color-teal-700);
+  }
+  .bg-stone-100 {
+    background-color: var(--color-stone-100);
+  }
+  .bg-stone-200 {
+    background-color: var(--color-stone-200);
+  }
+  .bg-stone-200\/70 {
+    background-color: color-mix(in srgb, oklch(92.3% 0.003 48.717) 70%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-stone-200) 70%, transparent);
+    }
+  }
+  .bg-stone-800 {
+    background-color: var(--color-stone-800);
+  }
+  .bg-stone-900 {
+    background-color: var(--color-stone-900);
+  }
+  .bg-stone-950 {
+    background-color: var(--color-stone-950);
+  }
+  .bg-stone-950\/95 {
+    background-color: color-mix(in srgb, oklch(14.7% 0.004 49.25) 95%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-stone-950) 95%, transparent);
+    }
+  }
+  .bg-teal-700 {
+    background-color: var(--color-teal-700);
+  }
+  .bg-white {
+    background-color: var(--color-white);
+  }
+  .bg-gradient-to-r {
+    --tw-gradient-position: to right in oklab;
+    background-image: linear-gradient(var(--tw-gradient-stops));
+  }
+  .from-stone-950 {
+    --tw-gradient-from: var(--color-stone-950);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .from-10\% {
+    --tw-gradient-from-position: 10%;
+  }
+  .via-stone-950 {
+    --tw-gradient-via: var(--color-stone-950);
+    --tw-gradient-via-stops: var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-via) var(--tw-gradient-via-position), var(--tw-gradient-to) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-via-stops);
+  }
+  .via-stone-950\/80 {
+    --tw-gradient-via: color-mix(in srgb, oklch(14.7% 0.004 49.25) 80%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tw-gradient-via: color-mix(in oklab, var(--color-stone-950) 80%, transparent);
+    }
+    --tw-gradient-via-stops: var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-via) var(--tw-gradient-via-position), var(--tw-gradient-to) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-via-stops);
+  }
+  .via-46\% {
+    --tw-gradient-via-position: 46%;
+  }
+  .to-transparent {
+    --tw-gradient-to: transparent;
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .object-cover {
+    object-fit: cover;
+  }
+  .p-2 {
+    padding: calc(var(--spacing) * 2);
+  }
+  .p-3 {
+    padding: calc(var(--spacing) * 3);
+  }
+  .p-4 {
+    padding: calc(var(--spacing) * 4);
+  }
+  .p-6 {
+    padding: calc(var(--spacing) * 6);
+  }
+  .p-8 {
+    padding: calc(var(--spacing) * 8);
+  }
+  .px-4 {
+    padding-inline: calc(var(--spacing) * 4);
+  }
+  .px-5 {
+    padding-inline: calc(var(--spacing) * 5);
+  }
+  .px-6 {
+    padding-inline: calc(var(--spacing) * 6);
+  }
+  .px-7 {
+    padding-inline: calc(var(--spacing) * 7);
+  }
+  .px-8 {
+    padding-inline: calc(var(--spacing) * 8);
+  }
+  .px-14 {
+    padding-inline: calc(var(--spacing) * 14);
+  }
+  .px-16 {
+    padding-inline: calc(var(--spacing) * 16);
+  }
+  .py-3 {
+    padding-block: calc(var(--spacing) * 3);
+  }
+  .py-4 {
+    padding-block: calc(var(--spacing) * 4);
+  }
+  .py-5 {
+    padding-block: calc(var(--spacing) * 5);
+  }
+  .py-6 {
+    padding-block: calc(var(--spacing) * 6);
+  }
+  .pt-2 {
+    padding-top: calc(var(--spacing) * 2);
+  }
+  .pt-3 {
+    padding-top: calc(var(--spacing) * 3);
+  }
+  .pt-4 {
+    padding-top: calc(var(--spacing) * 4);
+  }
+  .pt-5 {
+    padding-top: calc(var(--spacing) * 5);
+  }
+  .pt-6 {
+    padding-top: calc(var(--spacing) * 6);
+  }
+  .pt-8 {
+    padding-top: calc(var(--spacing) * 8);
+  }
+  .pt-9 {
+    padding-top: calc(var(--spacing) * 9);
+  }
+  .pt-10 {
+    padding-top: calc(var(--spacing) * 10);
+  }
+  .pt-12 {
+    padding-top: calc(var(--spacing) * 12);
+  }
+  .pb-1 {
+    padding-bottom: calc(var(--spacing) * 1);
+  }
+  .pb-3 {
+    padding-bottom: calc(var(--spacing) * 3);
+  }
+  .pb-4 {
+    padding-bottom: calc(var(--spacing) * 4);
+  }
+  .pb-6 {
+    padding-bottom: calc(var(--spacing) * 6);
+  }
+  .pb-8 {
+    padding-bottom: calc(var(--spacing) * 8);
+  }
+  .pb-16 {
+    padding-bottom: calc(var(--spacing) * 16);
+  }
+  .pb-20 {
+    padding-bottom: calc(var(--spacing) * 20);
+  }
+  .text-center {
+    text-align: center;
+  }
+  .text-left {
+    text-align: left;
+  }
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+  .text-2xl {
+    font-size: var(--text-2xl);
+    line-height: var(--tw-leading, var(--text-2xl--line-height));
+  }
+  .text-3xl {
+    font-size: var(--text-3xl);
+    line-height: var(--tw-leading, var(--text-3xl--line-height));
+  }
+  .text-4xl {
+    font-size: var(--text-4xl);
+    line-height: var(--tw-leading, var(--text-4xl--line-height));
+  }
+  .text-5xl {
+    font-size: var(--text-5xl);
+    line-height: var(--tw-leading, var(--text-5xl--line-height));
+  }
+  .text-6xl {
+    font-size: var(--text-6xl);
+    line-height: var(--tw-leading, var(--text-6xl--line-height));
+  }
+  .text-lg {
+    font-size: var(--text-lg);
+    line-height: var(--tw-leading, var(--text-lg--line-height));
+  }
+  .text-sm {
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+  }
+  .text-xl {
+    font-size: var(--text-xl);
+    line-height: var(--tw-leading, var(--text-xl--line-height));
+  }
+  .text-xs {
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+  }
+  .leading-snug {
+    --tw-leading: var(--leading-snug);
+    line-height: var(--leading-snug);
+  }
+  .leading-tight {
+    --tw-leading: var(--leading-tight);
+    line-height: var(--leading-tight);
+  }
+  .font-semibold {
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+  }
+  .tracking-\[0\.16em\] {
+    --tw-tracking: 0.16em;
+    letter-spacing: 0.16em;
+  }
+  .tracking-\[0\.18em\] {
+    --tw-tracking: 0.18em;
+    letter-spacing: 0.18em;
+  }
+  .tracking-\[0\.22em\] {
+    --tw-tracking: 0.22em;
+    letter-spacing: 0.22em;
+  }
+  .tracking-\[0\.28em\] {
+    --tw-tracking: 0.28em;
+    letter-spacing: 0.28em;
+  }
+  .tracking-tight {
+    --tw-tracking: var(--tracking-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+  .text-stone-50 {
+    color: var(--color-stone-50);
+  }
+  .text-stone-200 {
+    color: var(--color-stone-200);
+  }
+  .text-stone-300 {
+    color: var(--color-stone-300);
+  }
+  .text-stone-400 {
+    color: var(--color-stone-400);
+  }
+  .text-stone-500 {
+    color: var(--color-stone-500);
+  }
+  .text-stone-600 {
+    color: var(--color-stone-600);
+  }
+  .text-stone-700 {
+    color: var(--color-stone-700);
+  }
+  .text-stone-900 {
+    color: var(--color-stone-900);
+  }
+  .text-teal-300 {
+    color: var(--color-teal-300);
+  }
+  .text-teal-800 {
+    color: var(--color-teal-800);
+  }
+  .uppercase {
+    text-transform: uppercase;
+  }
+  .underline {
+    text-decoration-line: underline;
+  }
+  .antialiased {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .outline {
+    outline-style: var(--tw-outline-style);
+    outline-width: 1px;
+  }
+  .hover\:bg-stone-700 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-stone-700);
+      }
+    }
+  }
+  .md\:grid-cols-4 {
+    @media (width >= 48rem) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+}
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #1c1917;
+}
+#deck {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1280px;
+  height: 720px;
+  background: #f5f5f4;
+}
+.slide {
+  display: none;
+  width: 1280px;
+  height: 720px;
+}
+.slide.is-active {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-bottom: 3.25rem;
+  overflow: hidden;
+}
+.diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.diagram svg {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+body.is-dark #chrome, body.is-dark #chrome span {
+  color: #d6d3d1;
+}
+@property --tw-rotate-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-z {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-space-y-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-gradient-position {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-gradient-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-gradient-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-gradient-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-gradient-stops {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-gradient-via-stops {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-gradient-from-position {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+@property --tw-gradient-via-position {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+@property --tw-gradient-to-position {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-leading {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-tracking {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@layer properties {
+  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
+    *, ::before, ::after, ::backdrop {
+      --tw-rotate-x: initial;
+      --tw-rotate-y: initial;
+      --tw-rotate-z: initial;
+      --tw-skew-x: initial;
+      --tw-skew-y: initial;
+      --tw-space-y-reverse: 0;
+      --tw-border-style: solid;
+      --tw-gradient-position: initial;
+      --tw-gradient-from: #0000;
+      --tw-gradient-via: #0000;
+      --tw-gradient-to: #0000;
+      --tw-gradient-stops: initial;
+      --tw-gradient-via-stops: initial;
+      --tw-gradient-from-position: 0%;
+      --tw-gradient-via-position: 50%;
+      --tw-gradient-to-position: 100%;
+      --tw-leading: initial;
+      --tw-font-weight: initial;
+      --tw-tracking: initial;
+      --tw-outline-style: solid;
+    }
+  }
+}
+</style>
+  </head>
+  <body class="bg-stone-100 font-sans text-stone-900 antialiased">
+    <div id="progress" class="fixed inset-x-0 top-0 z-30 h-1 origin-left bg-teal-700"></div>
+
+    <main id="deck">
+      <section class="slide slide-dark relative overflow-hidden bg-stone-950 text-stone-50" data-title="Title" data-section="Opening">
+        <img src="photos/customer.jpg" alt="" class="pointer-events-none absolute inset-0 h-full w-full object-cover" style="object-position: center 62%" />
+        <div class="absolute inset-0 bg-gradient-to-r from-stone-950 from-10% via-stone-950/80 via-46% to-transparent"></div>
+        <div class="relative flex flex-1 flex-col justify-center px-16">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-teal-300">Teaching deck</p>
+          <h1 class="mt-6 max-w-5xl text-6xl font-semibold tracking-tight">UML Use Case Diagrams</h1>
+          <p class="mt-6 max-w-3xl text-3xl text-stone-300">One Banking App example, from the system boundary to generalization.</p>
+          <p class="mt-10 text-2xl text-stone-300">Prepared by <span class="font-semibold text-stone-50">Vincent</span></p>
+          <p class="mt-4 text-lg text-stone-400">Arrow keys move · F fullscreen · O slide list</p>
+          <p class="mt-8 text-xs text-stone-400">Photo: Tokota, CC BY 3.0</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Objectives" data-section="Opening">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Opening</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">After this session</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-x-12 gap-y-5 px-14 pb-20 text-2xl leading-snug grid-cols-2">
+          <li>Explain what a Use Case Diagram is for, and what it leaves out.</li>
+          <li>Draw a system boundary and keep actors outside it.</li>
+          <li>Name actors as roles and use cases as goals.</li>
+          <li>Choose association, «include», «extend», or generalization.</li>
+          <li>Point each arrow the right way.</li>
+          <li>Review a small Banking App diagram and spot the usual mistakes.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Agenda" data-section="Opening">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Opening</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">How the session runs</h2>
+        </header>
+        <div class="mx-14 mt-8 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>Purpose, limits, and scope</span><span class="text-stone-500">10 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>System and actor</span><span class="text-stone-500">15 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>Use case goals and naming</span><span class="text-stone-500">15 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>Association</span><span class="text-stone-500">10 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>«include» and «extend»</span><span class="text-stone-500">25 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>Generalization and extension points</span><span class="text-stone-500">15 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-4"><span>Build the Banking App diagram</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Practice and review</span><span>20 min</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="What it is" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A map of external behavior</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_440px] items-center gap-10 px-14 pb-8">
+          <div>
+            <p class="text-2xl leading-snug text-stone-700">A Use Case Diagram shows the system under discussion, who is outside it, the goals they achieve, and how those pieces are related.</p>
+            <p class="mt-8 text-2xl leading-snug">It helps when an idea is clear to its author and unclear to everyone else.</p>
+          </div>
+          <figure>
+            <img src="photos/bank.jpg" alt="A bank branch" class="h-72 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-xs text-stone-400">Harrison Keely, CC BY 4.0</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Four questions" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Four questions</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-5 px-14 pb-20 text-3xl">
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="mr-4 font-semibold text-teal-800">1</span>System — what are we modeling?</li>
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="mr-4 font-semibold text-teal-800">2</span>Actors — who or what interacts with it?</li>
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="mr-4 font-semibold text-teal-800">3</span>Use cases — what goals do they achieve?</li>
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="mr-4 font-semibold text-teal-800">4</span>Relationships — how are they connected?</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Limits" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Leave these off the diagram</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-4 px-14 pb-20 text-2xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-6 py-5">Step-by-step execution order</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Algorithms and internal design</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Classes, tables, and screens</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Every error and alternative flow</li>
+        </ul>
+        <p class="px-14 pb-16 text-xl text-stone-600">Those belong in a Use Case Specification, or in an activity, sequence, or class diagram.</p>
+      </section>
+
+      <section class="slide" data-title="System boundary" data-section="System">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">System</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Use cases inside, actors outside</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 480">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="170" y="24" width="640" height="430" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="490" y="52" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="120.0" y1="222.0" x2="421.4" y2="179.6" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="120.0" y1="222.0" x2="409.2" y2="298.6" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="860.0" y1="332.0" x2="593.5" y2="323.4" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <ellipse cx="490" cy="170" rx="72" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="490" y="170" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <ellipse cx="490" cy="320" rx="104" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="490" y="320" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Check Balance</text>
+  </g>
+<g>
+    <circle cx="80" cy="170" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M80 186 V230 M58 202 H102 M80 230 L62 258 M80 230 L98 258" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="80" y="266" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+<g>
+    <circle cx="900" cy="280" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M900 296 V340 M878 312 H922 M900 340 L882 368 M900 340 L918 368" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="900" y="376" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Bank</text>
+  </g>
+</svg>
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">The rectangle is the Banking App. Customer and Bank are outside it.</p>
+      </section>
+
+      <section class="slide" data-title="Scope check" data-section="System">
+        <div class="flex flex-1 flex-col justify-center px-16 pb-16">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">System</p>
+          <p class="mt-8 max-w-5xl text-5xl font-semibold leading-tight tracking-tight">Is this behavior the Banking App’s job, or does it belong outside?</p>
+          <p class="mt-8 max-w-3xl text-2xl text-stone-600">Inside the boundary, it can be a use case. Outside, and interacting with the app, it can be an actor.</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Actor" data-section="Actor">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Actor</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">An actor is an external role</h2>
+        </header>
+        <div class="grid grid-cols-2 gap-4 px-14 pt-4">
+          <figure>
+            <img src="photos/customer.jpg" alt="A customer using an ATM, seen from behind" class="h-40 w-full rounded-2xl object-cover" style="object-position: center 62%" />
+            <figcaption class="mt-1 text-center text-sm font-semibold">Customer</figcaption>
+          </figure>
+          <figure>
+            <img src="photos/bank.jpg" alt="A bank branch" class="h-40 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-1 text-center text-sm font-semibold">Bank</figcaption>
+          </figure>
+        </div>
+        <div class="grid flex-1 content-center gap-4 px-14 pt-3 grid-cols-2">
+          <div class="rounded-2xl bg-white px-6 py-4">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal-800">Can be</p>
+            <ul class="mt-2 space-y-1 text-xl">
+              <li>A person</li>
+              <li>An organization</li>
+              <li>Another system</li>
+              <li>An external device</li>
+            </ul>
+          </div>
+          <div class="rounded-2xl bg-white px-6 py-4">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal-800">In this example</p>
+            <p class="mt-2 text-xl leading-snug"><span class="font-semibold">Customer</span> logs in, checks a balance, transfers funds, and pays.</p>
+            <p class="mt-2 text-xl leading-snug"><span class="font-semibold">Bank</span> supplies account information and supports the transactions.</p>
+          </div>
+        </div>
+        <p class="px-14 pb-1 text-center text-xs text-stone-400">Tokota, CC BY 3.0 · Harrison Keely, CC BY 4.0</p>
+      </section>
+
+      <section class="slide" data-title="Role, not a person" data-section="Actor">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Actor</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Name the role, not the individual</h2>
+        </header>
+        <div class="mx-14 mt-8 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-2 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Avoid</span><span>Prefer</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>John</span><span>Customer</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Chase Bank</span><span>Bank</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Alice from Accounting</span><span>Accountant</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Device SN-0841</span><span>Payment Terminal</span></div>
+        </div>
+        <p class="px-14 pt-6 text-xl text-stone-600">One person may play several roles. Several people may play one role.</p>
+      </section>
+
+      <section class="slide" data-title="Primary and supporting" data-section="Actor">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Actor</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Who starts, and who supports</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 380">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="190" y="48" width="600" height="280" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="490" y="76" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="130.0" y1="222.0" x2="387.8" y2="206.2" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="850.0" y1="222.0" x2="592.2" y2="206.2" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <ellipse cx="490" cy="200" rx="104" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="490" y="200" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Check Balance</text>
+  </g>
+<g>
+    <circle cx="90" cy="170" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M90 186 V230 M68 202 H112 M90 230 L72 258 M90 230 L108 258" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="90" y="266" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text><text x="90" y="286" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">(primary)</text>
+  </g>
+<g>
+    <circle cx="890" cy="170" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M890 186 V230 M868 202 H912 M890 230 L872 258 M890 230 L908 258" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="890" y="266" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Bank</text><text x="890" y="286" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">(supporting)</text>
+  </g>
+</svg>
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Customer initiates the goal. Bank provides information the app needs. Left and right is a reading habit, not a UML rule.</p>
+      </section>
+
+      <section class="slide" data-title="Finding actors" data-section="Actor">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Actor</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Ask before you add one</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-4 px-14 pb-20 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-4">Who initiates a goal through the system?</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Who receives value from it?</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Which external systems or devices exchange information with it?</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Who administers or supports it?</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Use case" data-section="Use case">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Use case</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A goal the system provides</h2>
+        </header>
+        <div class="flex flex-1 flex-col justify-center px-14 pb-20">
+          <p class="max-w-4xl text-3xl leading-snug">Drawn as an ellipse inside the boundary.</p>
+          <ul class="mt-8 grid max-w-3xl gap-3 text-2xl">
+            <li>Start the name with a verb.</li>
+            <li>Say the result, not the screen.</li>
+            <li>Stay specific, and keep the vocabulary consistent.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Main goals" data-section="Use case">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Use case</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Four goals in the Banking App</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 640">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="160" y="20" width="720" height="600" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="520" y="48" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="118.0" y1="352.0" x2="474.9" y2="154.9" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="352.0" x2="437.8" y2="270.8" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="352.0" x2="417.0" y2="365.4" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="352.0" x2="447.0" y2="464.9" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="922.0" y1="412.0" x2="585.5" y2="276.4" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="922.0" y1="412.0" x2="619.1" y2="380.3" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="922.0" y1="412.0" x2="611.9" y2="472.2" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <ellipse cx="520" cy="130" rx="72" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="520" y="130" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <ellipse cx="520" cy="250" rx="104" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="520" y="250" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Check Balance</text>
+  </g>
+<g>
+    <ellipse cx="520" cy="370" rx="104" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="520" y="370" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Transfer Funds</text>
+  </g>
+<g>
+    <ellipse cx="520" cy="490" rx="108" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="520" y="490" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Make Payment</text>
+  </g>
+<g>
+    <circle cx="78" cy="300" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M78 316 V360 M56 332 H100 M78 360 L60 388 M78 360 L96 388" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="78" y="396" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+<g>
+    <circle cx="962" cy="360" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M962 376 V420 M940 392 H984 M962 420 L944 448 M962 420 L980 448" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="962" y="456" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Bank</text>
+  </g>
+</svg>
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Bank participates in balance, transfer, and payment. Bank does not participate in Log In.</p>
+      </section>
+
+      <section class="slide" data-title="Naming" data-section="Use case">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Use case</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Rename the weak ones</h2>
+        </header>
+        <div class="mx-14 mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-3 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Weak</span><span>Problem</span><span>Better</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span>Transfer</span><span>Too vague</span><span>Transfer Funds</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span>Balance</span><span>Noun only</span><span>Check Balance</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span>Payment Screen</span><span>Describes UI</span><span>Make Payment</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span>User Data</span><span>No goal</span><span>Update Profile</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Goal level" data-section="Use case">
+        <header class="px-14 pt-9">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Use case</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Not every step is a use case</h2>
+          <p class="mt-3 max-w-5xl text-xl leading-snug text-stone-600">Only a result someone outside the system can recognize belongs on the diagram. The same story, “move money,” has three different levels.</p>
+        </header>
+        <div class="grid min-h-0 flex-1 content-start gap-5 px-14 pt-6 grid-cols-3">
+          <div class="rounded-2xl bg-white p-6">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">Actor goal</p>
+            <p class="mt-2 text-2xl font-semibold leading-tight">Transfer Funds</p>
+            <p class="mt-4 text-lg leading-snug text-stone-700">The customer opens the app to move money. When it finishes, they know the goal is done. Draw this as a primary use case: an ellipse inside the system boundary.</p>
+          </div>
+          <div class="rounded-2xl bg-white p-6">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">Shared behavior</p>
+            <p class="mt-2 text-2xl font-semibold leading-tight">Verify Sufficient Funds</p>
+            <p class="mt-4 text-lg leading-snug text-stone-700">The customer does not open the app just to check that enough money is there. Transfer Funds and Make Payment both need this step, so extract it and connect it with «include».</p>
+          </div>
+          <div class="rounded-2xl bg-white p-6">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-stone-500">Not a use case</p>
+            <p class="mt-2 text-2xl font-semibold leading-tight">Read an internal variable</p>
+            <p class="mt-4 text-lg leading-snug text-stone-700">Reading a field, calling a private function, or querying the database is an implementation detail. The customer never sees it. Record it in the specification or the code, not as an ellipse.</p>
+          </div>
+        </div>
+        <p class="px-14 py-4 text-lg leading-snug text-stone-600">Where an ellipse sits is not the order it runs. Log In drawn above Transfer Funds is only to keep the page readable. If login must happen first, write that precondition in the use case specification.</p>
+      </section>
+
+      <section class="slide" data-title="Four relationships" data-section="Relationships">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Relationships</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Four kinds of line</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-2 gap-4 px-14 pb-4 pt-4">
+          <div class="flex min-h-0 flex-col rounded-2xl bg-white px-5 pt-4 pb-3">
+            <p class="text-xl font-semibold">Association</p>
+            <svg viewBox="0 0 500 150" class="mt-1 min-h-0 w-full flex-1" role="img" aria-label="Customer joined to Log In by a solid line with no arrowhead">
+              <g fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round">
+                <circle cx="48" cy="46" r="13" fill="#F5F5F4"/>
+                <path d="M48 59 V90 M30 71 H66 M48 90 L33 112 M48 90 L63 112"/>
+              </g>
+              <text x="48" y="136" text-anchor="middle" font-size="16" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Customer</text>
+              <line x1="82" y1="96" x2="312" y2="74" stroke="#1C1917" stroke-width="1.6"/>
+              <ellipse cx="392" cy="70" rx="78" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="392" y="75" text-anchor="middle" font-size="16" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Log In</text>
+            </svg>
+            <p class="text-lg leading-snug text-stone-600">Solid line, no arrowhead. The actor participates.</p>
+          </div>
+          <div class="flex min-h-0 flex-col rounded-2xl bg-white px-5 pt-4 pb-3">
+            <p class="text-xl font-semibold">«include»</p>
+            <svg viewBox="0 0 520 150" class="mt-1 min-h-0 w-full flex-1" role="img" aria-label="Dashed arrow from Log In to Verify Password labeled include">
+              <ellipse cx="108" cy="82" rx="78" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="108" y="87" text-anchor="middle" font-size="16" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Log In</text>
+              <line x1="186" y1="82" x2="296" y2="82" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="8 6"/>
+              <polyline points="296,74 312,82 296,90" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+              <text x="248" y="64" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">«include»</text>
+              <ellipse cx="412" cy="82" rx="100" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="412" y="87" text-anchor="middle" font-size="16" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Verify Password</text>
+            </svg>
+            <p class="text-lg leading-snug text-stone-600">Dashed arrow, from the base to the included behavior.</p>
+          </div>
+          <div class="flex min-h-0 flex-col rounded-2xl bg-white px-5 pt-4 pb-3">
+            <p class="text-xl font-semibold">«extend»</p>
+            <svg viewBox="0 0 520 150" class="mt-1 min-h-0 w-full flex-1" role="img" aria-label="Dashed arrow from Display Login Error to Log In labeled extend">
+              <ellipse cx="118" cy="82" rx="108" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="118" y="78" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Display</text>
+              <text x="118" y="96" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Login Error</text>
+              <line x1="226" y1="82" x2="342" y2="82" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="8 6"/>
+              <polyline points="342,74 358,82 342,90" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+              <text x="288" y="64" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">«extend»</text>
+              <ellipse cx="430" cy="82" rx="72" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="430" y="87" text-anchor="middle" font-size="16" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Log In</text>
+            </svg>
+            <p class="text-lg leading-snug text-stone-600">Dashed arrow, from the extension back to the base.</p>
+          </div>
+          <div class="flex min-h-0 flex-col rounded-2xl bg-white px-5 pt-4 pb-3">
+            <p class="text-xl font-semibold">Generalization</p>
+            <svg viewBox="0 0 520 150" class="mt-1 min-h-0 w-full flex-1" role="img" aria-label="Solid line from Pay from Checking to Make Payment with a hollow triangle on Make Payment">
+              <ellipse cx="118" cy="82" rx="108" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="118" y="78" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Pay from</text>
+              <text x="118" y="96" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Checking</text>
+              <line x1="226" y1="82" x2="312" y2="82" stroke="#1C1917" stroke-width="1.6"/>
+              <polygon points="336,82 312,72 312,92" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+              <ellipse cx="424" cy="82" rx="88" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+              <text x="424" y="78" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Make</text>
+              <text x="424" y="96" text-anchor="middle" font-size="15" fill="#1C1917" font-family="Arial, Helvetica, sans-serif">Payment</text>
+            </svg>
+            <p class="text-lg leading-snug text-stone-600">Solid line. The hollow triangle sits on the general element.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Association" data-section="Relationships">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Association</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Only a real participation</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 640">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="160" y="20" width="720" height="600" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="520" y="48" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="118.0" y1="352.0" x2="474.9" y2="154.9" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="352.0" x2="437.8" y2="270.8" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="352.0" x2="417.0" y2="365.4" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="352.0" x2="447.0" y2="464.9" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="922.0" y1="412.0" x2="585.5" y2="276.4" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="922.0" y1="412.0" x2="619.1" y2="380.3" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="922.0" y1="412.0" x2="611.9" y2="472.2" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <ellipse cx="520" cy="130" rx="72" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="520" y="130" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <ellipse cx="520" cy="250" rx="104" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="520" y="250" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Check Balance</text>
+  </g>
+<g>
+    <ellipse cx="520" cy="370" rx="104" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="520" y="370" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Transfer Funds</text>
+  </g>
+<g>
+    <ellipse cx="520" cy="490" rx="108" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="520" y="490" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Make Payment</text>
+  </g>
+<g>
+    <circle cx="78" cy="300" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M78 316 V360 M56 332 H100 M78 360 L60 388 M78 360 L96 388" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="78" y="396" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+<g>
+    <circle cx="962" cy="360" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M962 376 V420 M940 392 H984 M962 420 L944 448 M962 420 L980 448" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="962" y="456" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Bank</text>
+  </g>
+</svg>
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Does this actor actually communicate with this use case? If not, do not draw the line.</p>
+      </section>
+
+      <section class="slide" data-title="Include" data-section="Include">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«include»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">The base pulls in required behavior</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_380px] items-center gap-8 px-14 pb-6">
+          <div>
+            <p class="text-3xl leading-snug">Use it for behavior that is required, shared, or worth extracting so it is not copied.</p>
+            <p class="mt-6 rounded-2xl bg-stone-900 px-6 py-5 text-3xl text-stone-50">Arrow: base use case → included use case</p>
+          </div>
+          <figure>
+            <img src="photos/pin.jpg" alt="An ATM keypad used to enter a PIN" class="h-80 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-xs text-stone-400">Santeri Viinamäki, CC BY-SA 4.0</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Include example" data-section="Include">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«include»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Log In includes Verify Password</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="DESCRIPTION" viewBox="0 0 681 233" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--cluster Banking App--><g class="cluster" data-qualified-name="Banking App" id="ent0002" data-source-line="4"><rect x="172.112" y="10.208" width="488.76" height="202.708" fill="#FAFAF9" style="stroke:#44403C;stroke-width:2.333;"/><text x="344.55" y="49.595" fill="#44403C" font-size="23.333" textLength="143.885" font-weight="700" font-family="Arial">Banking App</text></g><!--entity L--><g class="entity" data-qualified-name="Banking App.L" id="ent0003" data-source-line="5"><ellipse cx="236.668" cy="145.831" rx="41.237" ry="26.627" fill="#FFF" style="stroke:#1C1917;stroke-width:1.75;"/><text x="206.259" y="153.304" fill="#1C1917" font-size="21.875" textLength="60.818" font-family="Arial">Log In</text></g><!--entity VP--><g class="entity" data-qualified-name="Banking App.VP" id="ent0004" data-source-line="6"><ellipse cx="543.041" cy="145.837" rx="94.501" ry="30.527" fill="#FFF" style="stroke:#1C1917;stroke-width:1.75;"/><text x="464.022" y="153.31" fill="#1C1917" font-size="21.875" textLength="158.038" font-family="Arial">Verify Password</text></g><!--entity C--><g class="entity" data-qualified-name="C" id="ent0001" data-source-line="3"><ellipse cx="56.158" cy="87.325" rx="11.667" ry="11.667" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:0.729;"/><path d="M56.158,98.992 L56.158,138.367 M37.2,110.658 L75.117,110.658 M56.158,138.367 L37.2,160.242 M56.158,138.367 L75.117,160.242" style="stroke:#1C1917;stroke-width:0.729;" fill="none"/><text x="8.75" y="197.531" fill="#1C1917" font-size="21.875" textLength="94.817" font-family="Arial">Customer</text></g><!--link L to VP--><g class="link" data-entity-1="ent0003" data-entity-2="ent0004" id="lnk5" data-source-line="7" data-link-type="dependency"><path d="M278.425,145.833 C321.475,145.833 383.892,145.833 440.767,145.833" style="stroke:#1C1917;stroke-width:1.458;stroke-dasharray:10.208,10.208;" fill="none" id="L-to-VP"/><polygon points="448.058,145.833,434.933,140,440.767,145.833,434.933,151.667,448.058,145.833" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.458;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="323.123" y="127.158" fill="#1C1917" font-size="18.958" textLength="81.165" font-family="Arial">«include»</text></g><!--link C to L--><g class="link" data-entity-1="ent0001" data-entity-2="ent0003" id="lnk6" data-source-line="9" data-link-type="association"><path d="M118.738,145.833 C144.025,145.833 172.638,145.833 195.169,145.833" style="stroke:#1C1917;stroke-width:1.458;" fill="none" id="C-L"/></g><?plantuml-src JOv12eCm54JtESNKlHwWYD2wAcJXods8t_JJc4X-Gf7IkrTB5zqDyzx0d3XONoQ2vCrJmsNnojESaICIktl6n8bivXYKiJacz4LoN2Z127frC1ES9rHN4nuS72xhMk6bW29aZUn4HuTRg8w5_kz7IZnl68p8CwRfAup3RcWqJRT7dD6sluTTfzwgHrr3Vm00?></g></svg>
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">The dashed arrow points at the behavior being included.</p>
+      </section>
+
+      <section class="slide" data-title="Shared include" data-section="Include">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«include»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">One included use case, two bases</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 680">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="160" y="20" width="880" height="640" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="600" y="48" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="112.0" y1="352.0" x2="354.4" y2="158.5" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="112.0" y1="352.0" x2="292.4" y2="332.0" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="112.0" y1="352.0" x2="352.7" y2="500.8" stroke="#1C1917" stroke-width="1.6"/>
+<polyline points="1088.0,425.0 990.0,425.0 990.0,320.0 516.0,320.0" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1088.0,425.0 990.0,425.0 990.0,530.0 516.0,530.0" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+<g>
+    <line x1="468.0" y1="130.0" x2="631.0" y2="130.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="631.0,136.5 644.0,130.0 631.0,123.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="549.5" y="102.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="479.7" y1="343.2" x2="661.3" y2="396.2" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="659.5,402.5 673.8,399.9 663.2,390.0" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="577.8" y="344.8" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="479.7" y1="506.8" x2="661.3" y2="453.8" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="663.2,460.0 673.8,450.1 659.5,447.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="577.8" y="505.2" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <ellipse cx="390" cy="130" rx="78" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="390" y="130" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <ellipse cx="760" cy="130" rx="116" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="760" y="130" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Verify Password</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="320" rx="116" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="320" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Transfer Funds</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="530" rx="116" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="530" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Make Payment</text>
+  </g>
+<g>
+    <ellipse cx="760" cy="425" rx="128" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="760" y="416" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Verify Sufficient</text><text x="760" y="434" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Funds</text>
+  </g>
+<g>
+    <circle cx="72" cy="300" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M72 316 V360 M50 332 H94 M72 360 L54 388 M72 360 L90 388" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="72" y="396" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+<g>
+    <circle cx="1128" cy="373" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M1128 389 V433 M1106 405 H1150 M1128 433 L1110 461 M1128 433 L1146 461" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="1128" y="469" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Bank</text>
+  </g>
+</svg>
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Transfer Funds and Make Payment both include Verify Sufficient Funds. Do not draw that check twice.</p>
+      </section>
+
+      <section class="slide" data-title="Extend" data-section="Extend">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«extend»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Added only when a condition holds</h2>
+        </header>
+        <div class="flex flex-1 flex-col justify-center gap-6 px-14 pb-20">
+          <p class="max-w-4xl text-3xl leading-snug">The base use case must still make sense without the extension.</p>
+          <p class="max-w-4xl rounded-2xl bg-stone-900 px-6 py-5 text-3xl text-stone-50">Arrow: extending use case → base use case</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Extend example" data-section="Extend">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«extend»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A bad password extends Log In</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 420">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="150" y="36" width="760" height="300" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="530" y="64" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="960.0" y1="212.0" x2="718.0" y2="210.5" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="424.0" y1="210.0" x2="549.0" y2="210.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="549.0,216.5 562.0,210.0 549.0,203.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="486.5" y="159.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text><text x="486.5" y="177.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">password is incorrect</text>
+  </g>
+<g>
+    <ellipse cx="300" cy="210" rx="124" ry="36" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="300" y="201" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Display</text><text x="300" y="219" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Login Error</text>
+  </g>
+<g>
+    <ellipse cx="640" cy="210" rx="78" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="640" y="210" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <circle cx="1000" cy="160" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M1000 176 V220 M978 192 H1022 M1000 220 L982 248 M1000 220 L1018 248" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="1000" y="256" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+</svg>
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">The error is not shown on every attempt. The arrow points at the use case being extended.</p>
+      </section>
+
+      <section class="slide" data-title="Compare" data-section="Include and extend">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«include» and «extend»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Purpose, then direction</h2>
+        </header>
+        <div class="mx-14 mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white text-xl">
+          <div class="grid grid-cols-3 bg-stone-900 px-5 py-4 font-semibold text-stone-50"><span></span><span>«include»</span><span>«extend»</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-4"><span class="font-semibold">Purpose</span><span>Reuse required or shared behavior</span><span>Add conditional behavior</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-4"><span class="font-semibold">Base</span><span>Incorporates the included behavior</span><span>Stands alone without the extension</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-4"><span class="font-semibold">Arrow</span><span>Base → included</span><span>Extending → base</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-4"><span class="font-semibold">Example</span><span>Log In → Verify Password</span><span>Display Login Error → Log In</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Both arrows" data-section="Include and extend">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">«include» and «extend»</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Same base, two different arrows</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 520">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="80" y="24" width="960" height="300" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="560" y="52" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="560.0" y1="376.0" x2="560.0" y2="264.0" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="374.0" y1="230.0" x2="469.0" y2="230.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="469.0,236.5 482.0,230.0 469.0,223.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="421.5" y="153.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text><text x="421.5" y="171.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">password is incorrect</text>
+  </g>
+<g>
+    <line x1="638.0" y1="230.0" x2="731.0" y2="230.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="731.0,236.5 744.0,230.0 731.0,223.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="684.5" y="178.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <ellipse cx="250" cy="230" rx="124" ry="36" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="250" y="221" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Display</text><text x="250" y="239" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Login Error</text>
+  </g>
+<g>
+    <ellipse cx="560" cy="230" rx="78" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="560" y="230" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <ellipse cx="860" cy="230" rx="116" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="860" y="230" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Verify Password</text>
+  </g>
+<g>
+    <circle cx="560" cy="400" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M560 416 V460 M538 432 H582 M560 460 L542 488 M560 460 L578 488" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="560" y="496" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+</svg>
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Include points away from Log In. Extend points back at Log In.</p>
+      </section>
+
+      <section class="slide" data-title="Which relationship" data-section="Include and extend">
+        <div class="flex flex-1 flex-col justify-center gap-8 px-16 pb-16">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Check</p>
+          <p class="max-w-5xl text-4xl font-semibold leading-tight">Are we extracting required behavior, or adding something the base does not need?</p>
+          <p class="max-w-3xl text-2xl text-stone-600">“Include always, extend sometimes” is only a hint. Ask about the base first.</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Generalization" data-section="Generalization">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A specialized element is a kind of the general one</h2>
+        </header>
+        <div class="flex flex-1 flex-col justify-center gap-6 px-14 pb-20">
+          <p class="max-w-4xl text-3xl leading-snug">It inherits the relevant behavior and relationships, and may add its own.</p>
+          <p class="max-w-4xl rounded-2xl bg-stone-900 px-6 py-5 text-3xl text-stone-50">Solid line. Hollow triangle points at the general element.</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Use case generalization" data-section="Generalization">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Two ways to make a payment</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="DESCRIPTION" viewBox="0 0 545 494" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--cluster Banking App--><g class="cluster" data-qualified-name="Banking App" id="ent0003" data-source-line="6"><rect x="20.417" y="158.958" width="513.333" height="300.417" fill="#FAFAF9" style="stroke:#44403C;stroke-width:2.333;"/><text x="205.141" y="198.345" fill="#44403C" font-size="23.333" textLength="143.885" font-weight="700" font-family="Arial">Banking App</text></g><!--entity C--><g class="entity" data-qualified-name="C" id="ent0001" data-source-line="4"><ellipse cx="207.096" cy="18.229" rx="11.667" ry="11.667" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:0.729;"/><path d="M207.096,29.896 L207.096,69.271 M188.137,41.563 L226.054,41.563 M207.096,69.271 L188.137,91.146 M207.096,69.271 L226.054,91.146" style="stroke:#1C1917;stroke-width:0.729;" fill="none"/><text x="159.688" y="128.435" fill="#1C1917" font-size="21.875" textLength="94.817" font-family="Arial">Customer</text></g><!--entity B--><g class="entity" data-qualified-name="B" id="ent0002" data-source-line="5"><ellipse cx="353.055" cy="18.229" rx="11.667" ry="11.667" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:0.729;"/><path d="M353.055,29.896 L353.055,69.271 M334.096,41.563 L372.013,41.563 M353.055,69.271 L334.096,91.146 M353.055,69.271 L372.013,91.146" style="stroke:#1C1917;stroke-width:0.729;" fill="none"/><text x="328.125" y="128.435" fill="#1C1917" font-size="21.875" textLength="49.86" font-family="Arial">Bank</text></g><!--entity MP--><g class="entity" data-qualified-name="Banking App.MP" id="ent0004" data-source-line="7"><ellipse cx="280.326" cy="284.02" rx="87.826" ry="30.27" fill="#FFF" style="stroke:#1C1917;stroke-width:1.75;"/><text x="207.379" y="291.493" fill="#1C1917" font-size="21.875" textLength="145.894" font-family="Arial">Make Payment</text></g><!--entity PC--><g class="entity" data-qualified-name="Banking App.PC" id="ent0005" data-source-line="8"><ellipse cx="152.965" cy="404.325" rx="109.215" ry="30.992" fill="#FFF" style="stroke:#1C1917;stroke-width:1.75;"/><text x="60.568" y="411.798" fill="#1C1917" font-size="21.875" textLength="184.795" font-family="Arial">Pay from Checking</text></g><!--entity PS--><g class="entity" data-qualified-name="Banking App.PS" id="ent0006" data-source-line="9"><ellipse cx="408.11" cy="404.837" rx="101.86" ry="30.775" fill="#FFF" style="stroke:#1C1917;stroke-width:1.75;"/><text x="322.399" y="412.31" fill="#1C1917" font-size="21.875" textLength="171.422" font-family="Arial">Pay from Savings</text></g><g class="link" data-entity-1="ent0004" data-entity-2="ent0005" id="lnk8" data-link-type="extension"><polygon points="247.984,315.457,222.774,326.863,234.659,339.708,247.984,315.457" fill="none" style="stroke:#1C1917;stroke-width:1.458;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M228.717,333.285 C209.63,350.946 204.734,355.476 185.572,373.206" style="stroke:#1C1917;stroke-width:1.458;" fill="none"/></g><g class="link" data-entity-1="ent0004" data-entity-2="ent0006" id="lnk9" data-link-type="extension"><polygon points="312.384,315.457,325.847,339.631,337.658,326.719,312.384,315.457" fill="none" style="stroke:#1C1917;stroke-width:1.458;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M331.752,333.175 C351.355,351.107 356.884,356.165 376.404,374.021" style="stroke:#1C1917;stroke-width:1.458;" fill="none"/></g><g class="link" data-entity-1="ent0001" data-entity-2="ent0004" id="lnk10" data-link-type="association"><path d="M231.77,147.389 C244.66,183.612 259.75,226.014 269.572,253.615" style="stroke:#1C1917;stroke-width:1.458;" fill="none"/></g><g class="link" data-entity-1="ent0002" data-entity-2="ent0004" id="lnk11" data-link-type="association"><path d="M328.23,147.389 C315.34,183.612 300.25,226.014 290.428,253.615" style="stroke:#1C1917;stroke-width:1.458;" fill="none"/></g><?plantuml-src ROwzJiKm34RtF8Llz_84B3HpfKWT4OD9J1lTnAaIvw8AU7SIYWH8RFRvZdykUyOr8WGyKXKeaGGPrSMp3TKH53a2tVaQWvAqWoHuJY8fWlEPhFZ42gsa3BgMXYa35j3VR4A-zdvItKLU0y7GeUSL7lPzW3S5K0jPB2sPyKfWy8Z4ClIvsVoEMm8lkPtM6zc-uiin-bzdmLipogaiJJ4QniVDEqVybFswoNZosS3z--ZIAu_dhZzWKH-g3PvTUsVwgJy1?></g></svg>
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">The hollow triangles sit on Make Payment. Pay from Checking and Pay from Savings inherit its associations.</p>
+      </section>
+
+      <section class="slide" data-title="Actor generalization" data-section="Generalization">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">New and returning customers are customers</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="DESCRIPTION" viewBox="0 0 443 560" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--cluster Banking App--><g class="cluster" data-qualified-name="Banking App" id="ent0005" data-source-line="7"><rect x="164.208" y="373.333" width="221.667" height="166.994" fill="#FAFAF9" style="stroke:#44403C;stroke-width:2.333;"/><text x="203.099" y="412.72" fill="#44403C" font-size="23.333" textLength="143.885" font-weight="700" font-family="Arial">Banking App</text></g><!--entity MP--><g class="entity" data-qualified-name="Banking App.MP" id="ent0006" data-source-line="8"><ellipse cx="275.047" cy="486.713" rx="87.826" ry="30.27" fill="#FFF" style="stroke:#1C1917;stroke-width:1.75;"/><text x="202.1" y="494.186" fill="#1C1917" font-size="21.875" textLength="145.894" font-family="Arial">Make Payment</text></g><!--entity NC--><g class="entity" data-qualified-name="NC" id="ent0001" data-source-line="3"><ellipse cx="81.077" cy="20.417" rx="11.667" ry="11.667" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:0.729;"/><path d="M81.077,32.083 L81.077,71.458 M62.119,43.75 L100.036,43.75 M81.077,71.458 L62.119,93.333 M81.077,71.458 L100.036,93.333" style="stroke:#1C1917;stroke-width:0.729;" fill="none"/><text x="8.75" y="130.623" fill="#1C1917" font-size="21.875" textLength="144.655" font-family="Arial">New Customer</text></g><!--entity RC--><g class="entity" data-qualified-name="RC" id="ent0002" data-source-line="4"><ellipse cx="324.613" cy="20.417" rx="11.667" ry="11.667" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:0.729;"/><path d="M324.613,32.083 L324.613,71.458 M305.655,43.75 L343.571,43.75 M324.613,71.458 L305.655,93.333 M324.613,71.458 L343.571,93.333" style="stroke:#1C1917;stroke-width:0.729;" fill="none"/><text x="226.742" y="130.623" fill="#1C1917" font-size="21.875" textLength="195.743" font-family="Arial">Returning Customer</text></g><!--entity C--><g class="entity" data-qualified-name="C" id="ent0003" data-source-line="5"><ellipse cx="202.123" cy="220.573" rx="11.667" ry="11.667" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:0.729;"/><path d="M202.123,232.24 L202.123,271.615 M183.165,243.906 L221.081,243.906 M202.123,271.615 L183.165,293.49 M202.123,271.615 L221.081,293.49" style="stroke:#1C1917;stroke-width:0.729;" fill="none"/><text x="154.715" y="330.779" fill="#1C1917" font-size="21.875" textLength="94.817" font-family="Arial">Customer</text></g><!--entity B--><g class="entity" data-qualified-name="B" id="ent0004" data-source-line="6"><ellipse cx="347.951" cy="220.573" rx="11.667" ry="11.667" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:0.729;"/><path d="M347.951,232.24 L347.951,271.615 M328.992,243.906 L366.909,243.906 M347.951,271.615 L328.992,293.49 M347.951,271.615 L366.909,293.49" style="stroke:#1C1917;stroke-width:0.729;" fill="none"/><text x="323.021" y="330.779" fill="#1C1917" font-size="21.875" textLength="49.86" font-family="Arial">Bank</text></g><!--link NC to C--><g class="link" data-entity-1="ent0001" data-entity-2="ent0003" id="lnk7" data-source-line="9" data-link-type="extension"><path d="M124.09,150.485 C135.508,169.079 134.099,166.803 145.503,185.382" style="stroke:#1C1917;stroke-width:1.458;" fill="none" id="NC-to-C"/><polygon points="159.235,207.754,152.961,180.805,138.046,189.96,159.235,207.754" fill="none" style="stroke:#1C1917;stroke-width:1.458;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--link RC to C--><g class="link" data-entity-1="ent0002" data-entity-2="ent0003" id="lnk8" data-source-line="10" data-link-type="extension"><path d="M281.079,150.485 C269.529,169.079 270.919,166.882 259.369,185.461" style="stroke:#1C1917;stroke-width:1.458;" fill="none" id="RC-to-C"/><polygon points="245.51,207.754,266.8,190.081,251.938,180.841,245.51,207.754" fill="none" style="stroke:#1C1917;stroke-width:1.458;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--link C to MP--><g class="link" data-entity-1="ent0003" data-entity-2="ent0006" id="lnk9" data-source-line="11" data-link-type="association"><path d="M227.004,350.423 C239.881,386.56 254.902,428.735 264.673,456.152" style="stroke:#1C1917;stroke-width:1.458;" fill="none" id="C-MP"/></g><!--link B to MP--><g class="link" data-entity-1="ent0004" data-entity-2="ent0006" id="lnk10" data-source-line="12" data-link-type="association"><path d="M323.065,350.423 C310.187,386.56 295.167,428.735 285.396,456.152" style="stroke:#1C1917;stroke-width:1.458;" fill="none" id="B-MP"/></g><?plantuml-src LOr12eCm44NtESKqUtk4GkDQ4M-Gna62SIB9196sTs_I4gZB_zxd_uibuzA44FbmUBLfTOBz1kpXuPdz2fCDQDXw4jgm3o1xtA5DCJiC4dI4lgrgH4w1BCtdmbWBbHPOcTAqbAn4-T4qEmHPO9cvRvk4fm184OsEsNHwGHZqiIBnTxmRikvRQ2Q_K_EwvM78Z-TSuw-j_jBx0m00?></g></svg>
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">The triangles point at Customer. The specialized actors inherit the association with Make Payment.</p>
+      </section>
+
+      <section class="slide" data-title="Extension points" data-section="Extension point">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Extension point</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Name the place where behavior may be inserted</h2>
+        </header>
+        <div class="diagram mx-14 mt-4 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 640">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="120" y="16" width="980" height="470" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="610" y="44" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="820.0" y1="536.0" x2="820.0" y2="405.0" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="394.5" y1="177.9" x2="679.0" y2="183.7" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="678.8,190.2 692.0,184.0 679.1,177.2" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    
+  </g><text x="530" y="145" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text><text x="530" y="163" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">profile help</text>
+<g>
+    <line x1="399.5" y1="382.0" x2="679.0" y2="376.3" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="679.1,382.8 692.0,376.0 678.8,369.8" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    
+  </g><text x="520" y="330" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text><text x="520" y="348" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">privacy information</text>
+<g>
+    <ellipse cx="250" cy="175" rx="145" ry="36" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="250" y="175" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Go to Profile Help</text>
+  </g>
+<g>
+    <ellipse cx="250" cy="385" rx="150" ry="36" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="250" y="385" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Show Privacy Info</text>
+  </g>
+<g>
+    <ellipse cx="820" cy="280" rx="200" ry="125" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="820" y="216" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#1C1917">Set Up Profile</text>
+    <line x1="675" y1="238" x2="965" y2="238" stroke="#44403C" stroke-width="1.2"/>
+    <text x="820" y="264" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#44403C">extension points</text>
+    <text x="820" y="296" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">profile help</text>
+    <text x="820" y="326" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">privacy information</text>
+  </g>
+<g>
+    <circle cx="820" cy="560" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M820 576 V620 M798 592 H842 M820 620 L802 648 M820 620 L838 648" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="820" y="656" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+</svg>
+        </div>
+        <p class="px-14 py-4 text-center text-xl text-stone-600">Add an extension point only when the insertion location helps the reader.</p>
+      </section>
+
+      <section class="slide" data-title="Build steps" data-section="Complete model">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Building the diagram</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Eight passes, in this order</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-3 px-14 pb-20 text-xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">1.</span> Name the system and draw the boundary.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">2.</span> Place Customer and Bank outside it.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">3.</span> Add the four customer goals inside.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">4.</span> Associate actors only where they participate.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">5.</span> Include Verify Password and Verify Sufficient Funds.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">6.</span> Extend Log In with Display Login Error.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">7.</span> Specialize Make Payment into checking and savings.</li>
+          <li class="rounded-2xl bg-white px-5 py-4"><span class="font-semibold text-teal-800">8.</span> Remove crossings, UI details, and unused actors.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Complete diagram" data-section="Complete model">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Banking App</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The whole model</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1340 900">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="160" y="16" width="1000" height="860" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="660" y="44" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="118.0" y1="412.0" x2="595.2" y2="145.1" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="412.0" x2="562.1" y2="291.2" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="412.0" x2="536.1" y2="418.4" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="412.0" x2="575.6" y2="594.3" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="1208.0" y1="482.0" x2="706.2" y2="294.7" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="1208.0" y1="482.0" x2="738.0" y2="430.7" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="1208.0" y1="482.0" x2="723.5" y2="599.7" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="448.0" y1="120.0" x2="555.0" y2="120.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="555.0,126.5 568.0,120.0 555.0,113.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="501.5" y="142.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text>
+  </g>
+<g>
+    <line x1="712.0" y1="120.0" x2="839.0" y2="120.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="839.0,126.5 852.0,120.0 839.0,113.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="775.5" y="142.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="726.5" y1="437.8" x2="892.7" y2="472.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="891.4,478.3 905.4,474.6 894.0,465.6" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="805.1" y="476.4" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="708.0" y1="595.1" x2="915.3" y2="519.3" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="917.6,525.4 927.5,514.8 913.1,513.2" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="819.2" y="577.9" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="467.3" y1="759.8" x2="590.4" y2="660.1" stroke="#1C1917" stroke-width="1.6"/>
+    <polygon points="602.9,650.1 595.5,666.3 585.4,653.9" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+  </g>
+<g>
+    <line x1="787.7" y1="759.5" x2="684.0" y2="661.5" stroke="#1C1917" stroke-width="1.6"/>
+    <polygon points="672.3,650.5 689.5,655.7 678.5,667.3" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+  </g>
+<g>
+    <ellipse cx="330" cy="120" rx="118" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="330" y="120" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Display Login Error</text>
+  </g>
+<g>
+    <ellipse cx="640" cy="120" rx="72" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="640" y="120" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <ellipse cx="960" cy="120" rx="108" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="960" y="120" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Verify Password</text>
+  </g>
+<g>
+    <ellipse cx="640" cy="270" rx="104" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="640" y="270" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Check Balance</text>
+  </g>
+<g>
+    <ellipse cx="640" cy="420" rx="104" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="640" y="420" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Transfer Funds</text>
+  </g>
+<g>
+    <ellipse cx="640" cy="620" rx="108" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="640" y="620" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Make Payment</text>
+  </g>
+<g>
+    <ellipse cx="990" cy="492" rx="108" ry="28" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="990" y="483" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Verify Sufficient</text><text x="990" y="501" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Funds</text>
+  </g>
+<g>
+    <ellipse cx="430" cy="790" rx="112" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="430" y="790" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Pay from Checking</text>
+  </g>
+<g>
+    <ellipse cx="820" cy="790" rx="108" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="820" y="790" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Pay from Savings</text>
+  </g>
+<g>
+    <circle cx="78" cy="360" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M78 376 V420 M56 392 H100 M78 420 L60 448 M78 420 L96 448" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="78" y="456" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+<g>
+    <circle cx="1248" cy="430" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M1248 446 V490 M1226 462 H1270 M1248 490 L1230 518 M1248 490 L1266 518" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="1248" y="526" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Bank</text>
+  </g>
+</svg>
+        </div>
+      </section>
+
+      <section class="slide" data-title="How to read it" data-section="Complete model">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Banking App</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Read the lines, not the layout</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[300px_1fr] gap-6 px-14 pb-4">
+          <figure class="flex min-h-0 flex-col">
+            <img src="photos/terminal.jpg" alt="A card payment terminal" class="min-h-0 w-full flex-1 rounded-2xl object-cover" />
+            <figcaption class="pt-2 text-center text-xs text-stone-400">Daylon124, CC0</figcaption>
+          </figure>
+          <ul class="flex flex-col justify-center gap-3 text-xl">
+            <li class="rounded-2xl bg-white px-6 py-3">Customer starts the business goals. Bank supports balance and money movement.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">Log In includes password verification.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">A login error extends Log In only when the password is incorrect.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">Transfer and payment both include the funds check.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">Checking and savings payments specialize Make Payment.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Mistakes" data-section="Review">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Mistakes that show up early</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-4 px-14 pb-20 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-4">Naming an actor after a person, or placing an actor inside the boundary.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Using a noun, or a screen, as a use case name.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Treating vertical position as the order of execution.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Giving every error its own «extend», or connecting every actor to every use case.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Drawing a database inside the scope as an actor.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Arrow directions" data-section="Review">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Where the marker sits</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-4 px-14 pb-20 text-2xl">
+          <div class="rounded-2xl bg-white px-6 py-5">«include» — base → included</div>
+          <div class="rounded-2xl bg-white px-6 py-5">«extend» — extending → base</div>
+          <div class="rounded-2xl bg-white px-6 py-5">Generalization — specialized → general, hollow triangle on the general element</div>
+          <div class="rounded-2xl bg-white px-6 py-5">Association — solid line, no arrowhead</div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Checklist" data-section="Review">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Before you keep the diagram</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-3 px-14 pb-20 text-xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-4">The boundary matches the scope you mean.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">Actor names are roles. Each one participates.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">Use case names are verb phrases at one level.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">«include» points at the included use case.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">«extend» points at a base that still stands alone.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">Generalization is a true general–specialized pair.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">A reader can see the goals without a long explanation.</li>
+          <li class="rounded-2xl bg-white px-5 py-4">Flow detail has moved to the specification.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 1" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 1 · classify</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">System, actor, or use case?</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-4 px-14 pb-20 text-3xl">
+          <li>Customer</li>
+          <li>Banking App</li>
+          <li>Transfer Funds</li>
+          <li>Bank</li>
+          <li>Verify Password</li>
+        </ol>
+        <p class="px-14 pb-16 text-xl text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 1 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 1</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-3 px-14 pb-20 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Customer — Actor</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Banking App — System</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Transfer Funds — Use Case</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Bank — Actor</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Verify Password — Use Case</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 2" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 2 · rename</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Rewrite these use case names</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-4 px-14 pb-20 text-3xl">
+          <li>Payment</li>
+          <li>Account</li>
+          <li>Transfer</li>
+          <li>Login Screen</li>
+          <li>Customer Information</li>
+        </ol>
+        <p class="px-14 pb-16 text-xl text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 2 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 2</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-3 px-14 pb-20 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Make Payment</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">View Account Details, or Manage Account</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Transfer Funds</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Log In</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Update Customer Information</li>
+        </ul>
+        <p class="px-14 pb-16 text-xl text-stone-600">The right name is the actor’s actual goal.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 3" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 3 · choose the relationship</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Association, include, extend, or generalization?</h2>
+        </header>
+        <ol class="flex flex-1 flex-col justify-center gap-4 px-14 pb-20 text-2xl">
+          <li>Customer performs Check Balance.</li>
+          <li>Log In uses Verify Password as required shared behavior.</li>
+          <li>Display Login Error occurs when the password is incorrect.</li>
+          <li>Pay from Savings is a specialized form of Make Payment.</li>
+          <li>Transfer Funds and Make Payment both use Verify Sufficient Funds.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Exercise 3 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 3</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-3 px-14 pb-20 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Association</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">«include»</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">«extend»</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">Generalization</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">«include»</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 4" data-section="Practice">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 4 · draw</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Draw one use case diagram</h2>
+        </header>
+        <div class="px-14 pt-3">
+          <img src="photos/pin.jpg" alt="An ATM keypad used to enter a PIN" class="h-32 w-full rounded-2xl object-cover" />
+        </div>
+        <p class="px-14 pt-2 text-xs text-stone-400">Santeri Viinamäki, CC BY-SA 4.0</p>
+        <p class="px-14 pt-2 text-xl text-stone-600">One Banking App diagram. Every fact below has to appear on it.</p>
+        <ul class="mt-3 flex flex-1 flex-col justify-center gap-2 px-14 text-xl">
+          <li class="rounded-2xl bg-white px-6 py-3">Customer logs in and makes a payment.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Logging in always verifies the password.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">A login error appears only when the password is incorrect.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Paying from checking is one way to make a payment.</li>
+        </ul>
+        <p class="px-14 py-3 text-lg text-stone-500">A suggested diagram is on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 4 answers" data-section="Practice">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">One diagram, three relationships</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 740">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="170" y="16" width="920" height="690" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="630" y="44" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="108.0" y1="392.0" x2="434.8" y2="298.6" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="108.0" y1="392.0" x2="404.0" y2="450.9" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="500.0" y1="164.0" x2="500.0" y2="233.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="493.5,233.0 500.0,246.0 506.5,233.0" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="620.0" y="189.5" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text><text x="620.0" y="207.5" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">password is incorrect</text>
+  </g>
+<g>
+    <line x1="578.0" y1="280.0" x2="749.0" y2="280.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="749.0,286.5 762.0,280.0 749.0,273.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="663.5" y="246.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="500.0" y1="596.0" x2="500.0" y2="520.0" stroke="#1C1917" stroke-width="1.6"/>
+    <polygon points="500.0,504.0 508.0,520.0 492.0,520.0" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+  </g>
+<g>
+    <ellipse cx="500" cy="130" rx="124" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="500" y="121" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Display</text><text x="500" y="139" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Login Error</text>
+  </g>
+<g>
+    <ellipse cx="500" cy="280" rx="78" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="500" y="280" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <ellipse cx="880" cy="280" rx="118" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="880" y="280" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Verify Password</text>
+  </g>
+<g>
+    <ellipse cx="500" cy="470" rx="116" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="500" y="470" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Make Payment</text>
+  </g>
+<g>
+    <ellipse cx="500" cy="630" rx="124" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="500" y="630" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Pay from Checking</text>
+  </g>
+<g>
+    <circle cx="68" cy="340" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M68 356 V400 M46 372 H90 M68 400 L50 428 M68 400 L86 428" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="68" y="436" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+</svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Include points at Verify Password. Extend points at Log In. The hollow triangle sits on Make Payment.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 5" data-section="Practice">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 5 · Library System</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">Find the mistakes and redraw it</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="170" y="16" width="860" height="660" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="600" y="44" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Library System</text>
+  </g>
+<g>
+    <line x1="110.0" y1="302.0" x2="349.8" y2="135.0" stroke="#1C1917" stroke-width="1.6"/>
+    <polyline points="353.5,140.3 360.4,127.6 346.1,129.6" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+  </g>
+<line x1="110.0" y1="302.0" x2="331.3" y2="231.8" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="110.0" y1="302.0" x2="302.1" y2="313.9" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="110.0" y1="302.0" x2="346.2" y2="406.3" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="1090.0" y1="452.0" x2="487.6" y2="432.8" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="600.0" y1="582.0" x2="693.5" y2="545.8" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="950.0" y1="262.0" x2="843.7" y2="232.9" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="640.0" y1="210.0" x2="513.0" y2="210.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="513.0,203.5 500.0,210.0 513.0,216.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="576.5" y="174.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="500.0" y1="320.0" x2="627.0" y2="320.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="627.0,326.5 640.0,320.0 627.0,313.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="563.5" y="284.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="100" rx="100" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="100" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Search Books</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="210" rx="100" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="210" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Borrow Book</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="320" rx="100" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="320" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Return Book</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="430" rx="88" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="430" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Pay Fine</text>
+  </g>
+<g>
+    <ellipse cx="760" cy="210" rx="120" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="760" y="210" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Check Availability</text>
+  </g>
+<g>
+    <ellipse cx="760" cy="320" rx="120" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="760" y="311" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Send Overdue</text><text x="760" y="329" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Notice</text>
+  </g>
+<g>
+    <ellipse cx="760" cy="520" rx="112" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="760" y="520" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Catalog Screen</text>
+  </g>
+<g>
+    <circle cx="70" cy="250" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M70 266 V310 M48 282 H92 M70 310 L52 338 M70 310 L88 338" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="70" y="346" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">John</text>
+  </g>
+<g>
+    <circle cx="1130" cy="400" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M1130 416 V460 M1108 432 H1152 M1130 460 L1112 488 M1130 460 L1148 488" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="1130" y="496" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Payment Service</text>
+  </g>
+<g>
+    <circle cx="560" cy="530" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M560 546 V590 M538 562 H582 M560 590 L542 618 M560 590 L578 618" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="560" y="626" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Librarian</text>
+  </g>
+<g>
+    <circle cx="990" cy="210" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M990 226 V270 M968 242 H1012 M990 270 L972 298 M990 270 L1008 298" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="990" y="306" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Database</text>
+  </g>
+</svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Several rules from this session are broken. A repaired diagram is on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 5 answers" data-section="Practice">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested repair</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">The Library System, corrected</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="170" y="16" width="860" height="660" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="600" y="44" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Library System</text>
+  </g>
+<line x1="110.0" y1="302.0" x2="360.4" y2="127.6" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="110.0" y1="302.0" x2="331.3" y2="231.8" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="110.0" y1="302.0" x2="302.1" y2="313.9" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="110.0" y1="302.0" x2="346.2" y2="406.3" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="1090.0" y1="392.0" x2="486.9" y2="425.2" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="1090.0" y1="592.0" x2="851.0" y2="539.9" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="500.0" y1="210.0" x2="627.0" y2="210.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="627.0,216.5 640.0,210.0 627.0,203.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="563.5" y="174.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="640.0" y1="320.0" x2="513.0" y2="320.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="513.0,313.5 500.0,320.0 513.0,326.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="576.5" y="263.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text><text x="576.5" y="281.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">book is overdue</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="100" rx="100" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="100" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Search Books</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="210" rx="100" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="210" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Borrow Book</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="320" rx="100" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="320" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Return Book</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="430" rx="88" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="430" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Pay Fine</text>
+  </g>
+<g>
+    <ellipse cx="760" cy="210" rx="120" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="760" y="210" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Check Availability</text>
+  </g>
+<g>
+    <ellipse cx="760" cy="320" rx="120" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="760" y="311" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Send Overdue</text><text x="760" y="329" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Notice</text>
+  </g>
+<g>
+    <ellipse cx="760" cy="520" rx="116" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="760" y="520" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Manage Catalog</text>
+  </g>
+<g>
+    <circle cx="70" cy="250" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M70 266 V310 M48 282 H92 M70 310 L52 338 M70 310 L88 338" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="70" y="346" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Member</text>
+  </g>
+<g>
+    <circle cx="1130" cy="340" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M1130 356 V400 M1108 372 H1152 M1130 400 L1112 428 M1130 400 L1148 428" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="1130" y="436" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Payment Service</text>
+  </g>
+<g>
+    <circle cx="1130" cy="540" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M1130 556 V600 M1108 572 H1152 M1130 600 L1112 628 M1130 600 L1148 628" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="1130" y="636" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Librarian</text>
+  </g>
+</svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg leading-snug text-stone-600">Member is the role, and Librarian stays outside. The database is not an actor. The goal is Manage Catalog. Include points at Check Availability. Extend points at Return Book. Associations have no arrowhead.</p>
+      </section>
+
+      <section class="slide" data-title="Takeaways" data-section="Close">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Close</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Keep these ten</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-2 px-14 pb-16 text-lg leading-snug grid-cols-2">
+          <li>The diagram is the external view of goals and interactions.</li>
+          <li>The system boundary is the scope decision.</li>
+          <li>An actor is a role, not a named person.</li>
+          <li>A use case name is a verb phrase for a goal.</li>
+          <li>Association means participation, and has no arrowhead.</li>
+          <li>«include» points from the base to the included use case.</li>
+          <li>«extend» points from the extension to the base.</li>
+          <li>Generalization points from the specialized element to the general one.</li>
+          <li>The diagram stays simple and does not replace the specification.</li>
+          <li>When it gets crowded, split it or move detail elsewhere.</li>
+        </ol>
+      </section>
+
+      <section class="slide slide-dark bg-stone-950 text-stone-50" data-title="Prompts" data-section="Close">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-300">Ask the room</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Questions that keep the model honest</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-4 px-14 pb-20 text-2xl text-stone-200">
+          <li>What goal is the actor trying to achieve?</li>
+          <li>Is this responsibility inside the boundary or outside it?</li>
+          <li>Does this name express a goal, or is it only a noun?</li>
+          <li>Is the base use case meaningful without the extension?</li>
+          <li>Should this arrow point at the included behavior or at the base?</li>
+          <li>Does this detail belong on the diagram or in the specification?</li>
+        </ul>
+      </section>
+      <footer id="chrome" class="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex items-center justify-between px-8 py-3 text-sm text-stone-500">
+        <span id="section-label"></span>
+        <span id="counter"></span>
+        <span>← → · F · O</span>
+      </footer>
+    </main>
+
+    <div id="overview" class="fixed inset-0 z-40 hidden overflow-auto bg-stone-950/95 p-8 text-stone-50">
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-2xl font-semibold">Slides</h2>
+        <p class="text-stone-400">Click a slide, or press O or Esc</p>
+      </div>
+      <div id="overview-grid" class="grid grid-cols-2 gap-3 md:grid-cols-4"></div>
+    </div>
+
+    <script>
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const progress = document.getElementById("progress");
+      const counter = document.getElementById("counter");
+      const sectionLabel = document.getElementById("section-label");
+      const overview = document.getElementById("overview");
+      const overviewGrid = document.getElementById("overview-grid");
+      let index = 0;
+
+      slides.forEach((slide, slideIndex) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "rounded-xl bg-stone-800 px-4 py-3 text-left text-sm hover:bg-stone-700";
+        button.textContent = `${slideIndex + 1}. ${slide.dataset.title}`;
+        button.addEventListener("click", () => {
+          show(slideIndex);
+          closeOverview();
+        });
+        overviewGrid.appendChild(button);
+      });
+
+      function show(next) {
+        index = Math.max(0, Math.min(slides.length - 1, next));
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("is-active", slideIndex === index);
+        });
+        const current = slides[index];
+        document.body.classList.toggle("is-dark", current.classList.contains("slide-dark"));
+        sectionLabel.textContent = current.dataset.section || "";
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        progress.style.transform = `scaleX(${(index + 1) / slides.length})`;
+        document.title = `${current.dataset.title} — UML Use Case Diagrams`;
+      }
+
+      function openOverview() {
+        overview.classList.remove("hidden");
+      }
+
+      function closeOverview() {
+        overview.classList.add("hidden");
+      }
+
+      document.addEventListener("keydown", (event) => {
+        const overviewOpen = !overview.classList.contains("hidden");
+        if (event.key === "o" || event.key === "O") {
+          overviewOpen ? closeOverview() : openOverview();
+          return;
+        }
+        if (event.key === "Escape") {
+          closeOverview();
+          return;
+        }
+        if (overviewOpen) return;
+        if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(event.key)) {
+          event.preventDefault();
+          show(index + 1);
+        } else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(event.key)) {
+          event.preventDefault();
+          show(index - 1);
+        } else if (event.key === "Home") {
+          show(0);
+        } else if (event.key === "End") {
+          show(slides.length - 1);
+        } else if (event.key === "f" || event.key === "F") {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else document.documentElement.requestFullscreen();
+        }
+      });
+
+      document.getElementById("deck").addEventListener("click", (event) => {
+        if (event.target.closest("a, button")) return;
+        const x = event.clientX / window.innerWidth;
+        if (x > 0.78) show(index + 1);
+        else if (x < 0.22) show(index - 1);
+      });
+
+      function fit() {
+        const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+        document.getElementById("deck").style.transform = `translate(-50%, -50%) scale(${scale})`;
+      }
+
+      window.addEventListener("resize", fit);
+      fit();
+      show(0);
+    </script>
+  </body>
+</html>

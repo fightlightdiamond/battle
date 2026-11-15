@@ -1,0 +1,8 @@
+@startuml
+!include style.iuml
+participant "Bank Server" as Bank
+||20||
+create participant "tx:WithdrawalTransaction" as Tx
+Bank -->> Tx : create(accountId, amount)
+||40||
+@enduml

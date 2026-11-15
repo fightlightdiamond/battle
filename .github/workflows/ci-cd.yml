@@ -41,6 +41,9 @@ jobs:
       - name: Build production bundle
         run: npm run build
 
+      - name: Include UML teaching decks
+        run: cp -R docs/uml-use-case-slides docs/uml-class-slides docs/uml-sequence-slides dist/
+
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3

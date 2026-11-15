@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UML Sequence Diagrams — ATM Cash Withdrawal</title>
+    <style>/*__CSS__*/</style>
+  </head>
+  <body class="bg-stone-100 font-sans text-stone-900 antialiased">
+    <div id="progress" class="fixed inset-x-0 top-0 z-30 h-1 origin-left bg-teal-700"></div>
+
+    <main id="deck">
+      <section class="slide slide-dark relative overflow-hidden bg-stone-950 text-stone-50" data-title="Title" data-section="Opening">
+        <img src="photos/customer.jpg" alt="" class="pointer-events-none absolute inset-0 h-full w-full object-cover" style="object-position: center 62%" />
+        <div class="absolute inset-0 bg-gradient-to-r from-stone-950 from-10% via-stone-950/80 via-46% to-transparent"></div>
+        <div class="relative flex flex-1 flex-col justify-center px-16">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-teal-300">Teaching deck</p>
+          <h1 class="mt-6 max-w-4xl text-6xl font-semibold tracking-tight">UML Sequence Diagrams</h1>
+          <p class="mt-6 max-w-3xl text-3xl text-stone-300">One ATM cash withdrawal, from the first message to the guards.</p>
+          <p class="mt-10 text-2xl text-stone-300">Prepared by <span class="font-semibold text-stone-50">Vincent</span></p>
+          <p class="mt-4 text-lg text-stone-400">Arrow keys move · F fullscreen · O slide list</p>
+          <p class="mt-8 text-xs text-stone-400">Photo: Tokota, CC BY 3.0</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Objectives" data-section="Opening">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Opening</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">After this session</h2>
+        </header>
+        <ol class="grid list-inside list-decimal flex-1 content-center gap-x-12 gap-y-4 px-14 pb-16 text-xl leading-snug grid-cols-2">
+          <li>Explain what a sequence diagram is for, and what it leaves out.</li>
+          <li>Choose the participants for one scenario.</li>
+          <li>Tell an actor, an object, a lifeline, and an execution apart.</li>
+          <li>Read time from top to bottom.</li>
+          <li>Draw synchronous, asynchronous, reply, self, create, and delete messages.</li>
+          <li>Use alt, opt, loop, and par with a guard you could test.</li>
+          <li>Build the ATM withdrawal as a set of readable interactions.</li>
+          <li>Spot the usual notation and meaning mistakes.</li>
+          <li>Review a diagram against the scenario it claims to realize.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Agenda" data-section="Opening">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Opening</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">How the session runs</h2>
+        </header>
+        <div class="mx-14 mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Purpose and scenario scope</span><span class="text-stone-500">10 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Participants and lifelines</span><span class="text-stone-500">15 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Message types</span><span class="text-stone-500">30 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Execution specifications</span><span class="text-stone-500">15 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Guards and combined fragments</span><span class="text-stone-500">30 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Build the ATM diagram</span><span class="text-stone-500">30 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>System versus design sequence</span><span class="text-stone-500">15 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] bg-stone-900 px-6 py-3 font-semibold text-stone-50"><span>Exercises and review</span><span>30 min</span></div>
+        </div>
+        <p class="px-14 pt-4 text-xl text-stone-600">175 minutes in all.</p>
+      </section>
+
+      <section class="slide" data-title="What it is" data-section="Purpose">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Collaboration over time</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_420px] items-center gap-10 px-14 pb-8">
+          <div class="text-2xl leading-snug">
+            <p>A sequence diagram shows how participants collaborate to realize one scenario.</p>
+            <p class="mt-6">It answers who takes part, which messages they exchange, the order of those messages, and when someone is actually executing.</p>
+            <p class="mt-6 text-stone-600">Time runs from top to bottom. Left to right is layout.</p>
+          </div>
+          <figure>
+            <img src="photos/bank.jpg" alt="A bank branch" class="h-72 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-xs text-stone-400">Harrison Keely, CC BY 4.0</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Limits" data-section="Purpose">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Leave these to another diagram</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-4 px-14 pb-8 text-2xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-6 py-5">Static class structure</li>
+          <li class="rounded-2xl bg-white px-6 py-5">A database schema</li>
+          <li class="rounded-2xl bg-white px-6 py-5">A complete state machine</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Every data transformation</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Every scenario in one frame</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Precise timing, unless you add a constraint</li>
+        </ul>
+        <p class="px-14 pb-8 text-xl text-stone-600">Use a class diagram for structure, a state machine for lifecycle, and an activity diagram for workflow.</p>
+      </section>
+
+      <section class="slide" data-title="Scenario" data-section="Purpose">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Name the scenario before you draw</h2>
+        </header>
+        <div class="mx-14 mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-[220px_1fr] border-b border-stone-200 px-6 py-4"><span class="font-semibold text-teal-800">Scenario</span><span>Withdraw cash from an ATM</span></div>
+          <div class="grid grid-cols-[220px_1fr] border-b border-stone-200 px-6 py-4"><span class="font-semibold text-teal-800">Primary actor</span><span>Customer</span></div>
+          <div class="grid grid-cols-[220px_1fr] border-b border-stone-200 px-6 py-4"><span class="font-semibold text-teal-800">Starts when</span><span>The ATM is available and the customer has a card</span></div>
+          <div class="grid grid-cols-[220px_1fr] border-b border-stone-200 px-6 py-4"><span class="font-semibold text-teal-800">Success</span><span>Cash is dispensed, the account is debited, the card comes back</span></div>
+          <div class="grid grid-cols-[220px_1fr] px-6 py-4"><span class="font-semibold text-teal-800">Alternatives</span><span>Invalid card, invalid PIN, insufficient funds</span></div>
+        </div>
+        <p class="px-14 pt-5 text-xl text-stone-600">One purposeful interaction, or a tight family of variants. Not the whole ATM.</p>
+      </section>
+
+      <section class="slide" data-title="Titles" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A title names the scenario</h2>
+        </header>
+        <div class="mx-14 mt-8 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-2 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Use</span><span>Avoid</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Withdraw Cash</span><span>ATM Flow</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Place Order</span><span>System Sequence</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Reset Password</span><span>Main Process</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Open Graphic Document</span><span>Diagram 1</span></div>
+        </div>
+        <p class="px-14 pt-6 text-xl text-stone-600">If a precise scenario name exists, use it.</p>
+      </section>
+
+      <section class="slide" data-title="Participants" data-section="Participants">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Participants</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Who takes part in Withdraw Cash</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:01-participants-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Customer is outside. ATM is the boundary. Bank Server coordinates. Bank Account holds the funds.</p>
+      </section>
+
+      <section class="slide" data-title="Kinds of participant" data-section="Participants">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Participants</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A participant is whoever takes part</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-4 px-14 pb-10 text-2xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-6 py-5">An external actor</li>
+          <li class="rounded-2xl bg-white px-6 py-5">A specific object</li>
+          <li class="rounded-2xl bg-white px-6 py-5">An instance of a class</li>
+          <li class="rounded-2xl bg-white px-6 py-5">A subsystem or a service</li>
+          <li class="rounded-2xl bg-white px-6 py-5">A database, when that view needs it</li>
+          <li class="rounded-2xl bg-white px-6 py-5">An external system</li>
+        </ul>
+        <p class="px-14 pb-8 text-xl text-stone-600">An actor is an external role. The others collaborate inside the boundary you chose. Label each lifeline at that same level.</p>
+      </section>
+
+      <section class="slide" data-title="Names" data-section="Participants">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Participants</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">name : Type</h2>
+        </header>
+        <div class="mx-14 mt-8 overflow-hidden rounded-2xl border border-stone-200 bg-white text-3xl">
+          <div class="grid grid-cols-2 border-b border-stone-200 px-8 py-5"><span class="font-semibold">customer : Customer</span><span class="text-stone-500">role, then classifier</span></div>
+          <div class="grid grid-cols-2 border-b border-stone-200 px-8 py-5"><span class="font-semibold">atm : ATM</span><span class="text-stone-500">instance, then type</span></div>
+          <div class="grid grid-cols-2 border-b border-stone-200 px-8 py-5"><span class="font-semibold">: ATM</span><span class="text-stone-500">type only, when the instance name adds nothing</span></div>
+          <div class="grid grid-cols-2 px-8 py-5"><span class="font-semibold">tx : WithdrawalTransaction</span><span class="text-stone-500">the object this scenario creates</span></div>
+        </div>
+        <p class="px-14 pt-6 text-xl text-stone-600">Be consistent. The early ATM diagrams use readable names. A design diagram should switch to this form.</p>
+      </section>
+
+      <section class="slide" data-title="Layout" data-section="Participants">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Participants</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Left to right is not time</h2>
+        </header>
+        <ol class="mx-14 mt-8 grid gap-4 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">1</span>Initiating actor</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">2</span>Boundary or interface</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">3</span>Control or application service</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">4</span>Entity, repository, or external service</li>
+        </ol>
+        <p class="px-14 pt-6 text-xl text-stone-600">That order is easier to read. A message farther right is not a later message.</p>
+      </section>
+
+      <section class="slide" data-title="Lifeline" data-section="Lifelines">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Lifelines</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A head, then a dashed line</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:02-lifeline-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">The dashed line is presence during this interaction. Time moves down the line.</p>
+      </section>
+
+      <section class="slide" data-title="Not execution" data-section="Lifelines">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Lifelines</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Present is not the same as executing</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-6 px-14 pb-16 text-2xl grid-cols-2">
+          <div class="rounded-2xl bg-white px-8 py-8">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal-800">Lifeline</p>
+            <p class="mt-4 leading-snug">The participant exists, or takes part, through this stretch of the scenario.</p>
+          </div>
+          <div class="rounded-2xl bg-white px-8 py-8">
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal-800">Execution specification</p>
+            <p class="mt-4 leading-snug">The thin bar. A period in which that participant is performing behavior.</p>
+          </div>
+        </div>
+        <p class="px-14 pb-10 text-xl text-stone-600">Do not stretch one bar down the whole lifeline. That confuses existence with work.</p>
+      </section>
+
+      <section class="slide" data-title="Message names" data-section="Messages">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Messages</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Name the intent</h2>
+        </header>
+        <div class="mx-14 mt-8 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-2 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Prefer</span><span>Avoid</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>verifyCard(cardData)</span><span>data</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>checkAvailableFunds(amount)</span><span>process</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>debit(amount)</span><span>call method</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>dispenseCash(amount)</span><span>do validation</span></div>
+        </div>
+        <p class="px-14 pt-6 text-xl text-stone-600">A verb phrase, or an operation with its arguments. The receiver is the participant who must perform it.</p>
+      </section>
+
+      <section class="slide" data-title="Order" data-section="Messages">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Messages</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Higher happens first</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:03-order-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">insertCard, then verifyCard, then cardValid, then requestPIN. Down the page, not across it.</p>
+      </section>
+
+      <section class="slide" data-title="Synchronous" data-section="Messages">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Messages</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The sender waits</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_460px] items-center gap-8 px-14 pb-6">
+          <div class="text-2xl leading-snug">
+            <p>A synchronous message is a solid line with a filled arrowhead.</p>
+            <p class="mt-6">The sender does not continue that thread until the invoked behavior finishes. A service waiting on a query is the usual case.</p>
+            <p class="mt-6 text-stone-600">The filled head is the distinction. A solid line by itself does not make the call synchronous.</p>
+          </div>
+          <div class="diagram h-72 rounded-2xl border border-stone-200 bg-white p-3">
+            <!--svg:04-sync-->
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Reply" data-section="Messages">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Messages</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A reply is optional</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_460px] items-center gap-8 px-14 pb-6">
+          <div class="text-2xl leading-snug">
+            <p>A reply is a dashed line with an open arrowhead. It returns control, a value, or a status from an earlier call.</p>
+            <p class="mt-6">Draw it when the result matters: a returned value, an error, or a completion the reader would otherwise miss.</p>
+            <p class="mt-6 text-stone-600">UML does not require a reply on every synchronous call. Omit the ones that only add clutter.</p>
+          </div>
+          <div class="diagram h-72 rounded-2xl border border-stone-200 bg-white p-3">
+            <!--svg:05-reply-->
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="User input" data-section="Messages">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Messages</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A PIN is a new message</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_340px] items-center gap-8 px-14">
+          <div class="diagram h-72 rounded-2xl border border-stone-200 bg-white p-3">
+            <!--svg:06-input-->
+          </div>
+          <figure>
+            <img src="photos/pin.jpg" alt="An ATM keypad" class="h-72 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-xs text-stone-400">Santeri Viinamäki, CC BY-SA 4.0</figcaption>
+          </figure>
+        </div>
+        <p class="px-14 pb-4 text-center text-lg text-stone-600">requestPIN asks. enterPIN(pin) is a solid message from the customer. A dashed reply would say the ATM returned a value.</p>
+      </section>
+
+      <section class="slide" data-title="Asynchronous" data-section="Messages">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Messages</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The sender continues</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_560px] items-center gap-8 px-14 pb-6">
+          <div class="text-2xl leading-snug">
+            <p>An asynchronous message is a solid line with an open arrowhead. The sender does not wait for the receiver to finish.</p>
+            <p class="mt-6">Publishing an event, writing to a queue, or a fire-and-forget notification.</p>
+            <p class="mt-6 text-stone-600">A network hop does not make a call asynchronous. A remote HTTP request can still be synchronous for the caller.</p>
+          </div>
+          <div class="diagram h-56 rounded-2xl border border-stone-200 bg-white p-3">
+            <!--svg:07-async-->
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Self" data-section="Messages">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Messages</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A participant calls itself</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_460px] items-center gap-8 px-14 pb-6">
+          <div class="text-2xl leading-snug">
+            <p>A self message is the participant invoking its own behavior.</p>
+            <p class="mt-6">Show the internal step when the design discussion needs it, such as checking the amount format before asking the bank.</p>
+            <p class="mt-6 text-stone-600">Leave private helpers off the diagram.</p>
+          </div>
+          <div class="diagram h-56 rounded-2xl border border-stone-200 bg-white p-3">
+            <!--svg:08-self-->
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Create and delete" data-section="Messages">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Messages</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Lifetimes that start and stop</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-2 gap-6 px-14 pb-4">
+          <div class="flex min-h-0 flex-col">
+            <div class="diagram min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+              <!--svg:09-create-->
+            </div>
+            <p class="px-2 py-3 text-center text-lg text-stone-600">A dashed open arrow into the new head. The lifetime begins here. The label is name : Type.</p>
+          </div>
+          <div class="flex min-h-0 flex-col">
+            <div class="diagram min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+              <!--svg:09-delete-->
+            </div>
+            <p class="px-2 py-3 text-center text-lg text-stone-600">close() is an ordinary call. The cross at the end of the lifeline ends that instance.</p>
+          </div>
+        </div>
+        <p class="px-14 pb-3 text-center text-lg text-stone-600">Draw creation and destruction only when the scenario cares about the lifetime.</p>
+      </section>
+
+      <section class="slide" data-title="Six sorts" data-section="Messages">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Messages</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Six sorts, chosen on purpose</h2>
+        </header>
+        <div class="mx-14 mt-5 overflow-hidden rounded-2xl border border-stone-200 bg-white text-xl">
+          <div class="grid grid-cols-[220px_1fr_1.3fr] bg-stone-900 px-5 py-3 font-semibold text-stone-50"><span>Sort</span><span>Notation</span><span>Meaning</span></div>
+          <div class="grid grid-cols-[220px_1fr_1.3fr] border-t border-stone-200 px-5 py-3"><span class="font-semibold">Synchronous</span><span>Solid, filled head</span><span>Sender waits</span></div>
+          <div class="grid grid-cols-[220px_1fr_1.3fr] border-t border-stone-200 px-5 py-3"><span class="font-semibold">Asynchronous</span><span>Solid, open head</span><span>Sender continues</span></div>
+          <div class="grid grid-cols-[220px_1fr_1.3fr] border-t border-stone-200 px-5 py-3"><span class="font-semibold">Reply</span><span>Dashed, open head</span><span>A value or completion worth showing</span></div>
+          <div class="grid grid-cols-[220px_1fr_1.3fr] border-t border-stone-200 px-5 py-3"><span class="font-semibold">Self</span><span>Arrow back to the same lifeline</span><span>An internal step the design needs</span></div>
+          <div class="grid grid-cols-[220px_1fr_1.3fr] border-t border-stone-200 px-5 py-3"><span class="font-semibold">Create</span><span>Dashed, open head, into a new head</span><span>The lifetime starts</span></div>
+          <div class="grid grid-cols-[220px_1fr_1.3fr] border-t border-stone-200 px-5 py-3"><span class="font-semibold">Delete</span><span>A message, then a cross</span><span>The lifetime ends</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Execution" data-section="Execution">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Execution</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The bar is the work</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-4">
+          <!--svg:10-execution-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">ATM stays active across the bank call. Bank Server is active only while it validates the card. The customer has no bar.</p>
+      </section>
+
+      <section class="slide" data-title="Alive or executing" data-section="Execution">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Execution</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Three rules for the bar</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-5 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl bg-white px-8 py-6">The bar is a period of behavior, including time spent in a nested call. It does not mean the object is alive.</li>
+          <li class="rounded-2xl bg-white px-8 py-6">An actor may have a bar when that active participation matters. Omitting actor bars is a readability choice, not a UML rule.</li>
+          <li class="rounded-2xl bg-white px-8 py-6">Do not wrap every message on a lifeline in one bar. Line the bar up with the control that is actually running.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Guards" data-section="Fragments">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Fragments</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A guard is a testable condition</h2>
+        </header>
+        <div class="mx-14 mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-2 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Write this</span><span>Not this</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>[card valid]</span><span>[okay]</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>[PIN invalid]</span><span>[error]</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>[availableBalance &gt;= amount]</span><span>[normal]</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>[attempts &lt; 3]</span><span>[else], when you can name the condition</span></div>
+        </div>
+        <p class="px-14 pt-5 text-xl text-stone-600">Square brackets. Mutually understandable, concise, and taken from the scenario. Operands should not overlap unless you mean a nondeterministic choice.</p>
+      </section>
+
+      <section class="slide" data-title="Operators" data-section="Fragments">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Fragments</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">The operator names the control</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-4 px-14 pb-6 text-2xl grid-cols-2">
+          <div class="rounded-2xl bg-white px-6 py-5"><span class="font-semibold text-teal-800">alt</span> — mutually exclusive alternatives</div>
+          <div class="rounded-2xl bg-white px-6 py-5"><span class="font-semibold text-teal-800">opt</span> — one optional branch</div>
+          <div class="rounded-2xl bg-white px-6 py-5"><span class="font-semibold text-teal-800">loop</span> — repetition, with a bound</div>
+          <div class="rounded-2xl bg-white px-6 py-5"><span class="font-semibold text-teal-800">par</span> — operands that may run together</div>
+        </div>
+        <p class="px-14 pb-8 text-xl text-stone-600">Also available, and not the focus today: break aborts the enclosing interaction, critical marks an atomic region, and ref points at another interaction.</p>
+      </section>
+
+      <section class="slide" data-title="alt" data-section="Fragments">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Fragments</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">One of these, not both</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:11-alt-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">[card valid] and [card invalid] cannot both be true. A valid card asks for a PIN. An invalid card comes back out.</p>
+      </section>
+
+      <section class="slide" data-title="opt" data-section="Fragments">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Fragments</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Only when the guard is true</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_420px] items-center gap-8 px-14 pb-6">
+          <div class="text-2xl leading-snug">
+            <p>opt has a single operand. There is no else branch.</p>
+            <p class="mt-6">Use it when the behavior is optional and the alternative is simply to continue.</p>
+            <p class="mt-6 text-stone-600">A receipt is not an alternative to the withdrawal. It is an extra step when the customer asked for one.</p>
+          </div>
+          <div class="diagram h-80 rounded-2xl border border-stone-200 bg-white p-3">
+            <!--svg:12-opt-->
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="loop" data-section="Fragments">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Fragments</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Say how the repetition stops</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:13-loop-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">The loop runs while the PIN is invalid and attempts remain. [attempts &lt; 3], [for each selected account], and [while payment pending] are the same kind of bound. A loop with no bound is unfinished.</p>
+      </section>
+
+      <section class="slide" data-title="par" data-section="Fragments">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Fragments</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Only when they really run together</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:14-par-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Audit and notification may proceed concurrently. Both arrows are open, so the bank does not wait. par is not a box for steps that merely belong together.</p>
+      </section>
+
+      <section class="slide" data-title="Five passes" data-section="ATM">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">ATM</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Build Withdraw Cash in five passes</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-4 px-14 pb-14 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">1</span>Write the scenario: success, plus invalid card, invalid PIN, and insufficient funds.</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">2</span>Keep Customer, ATM, Bank Server, and Bank Account. Drop anyone the scenario does not need.</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">3</span>Validate the card, with an alt and two explicit guards.</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">4</span>Validate the PIN the same way.</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">5</span>Check funds, debit or decline, dispense or explain, then return the card.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="PIN" data-section="ATM">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">ATM</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A valid PIN asks for an amount</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:15-pin-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">This simplified path ejects the card on the first bad PIN. A production ATM would loop the attempts instead of stopping here.</p>
+      </section>
+
+      <section class="slide" data-title="Withdrawal" data-section="ATM">
+        <header class="px-14 pt-6">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">ATM</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">Debit and dispense, or decline</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <!--svg:16-withdraw-->
+        </div>
+        <p class="px-10 py-2 text-center text-lg text-stone-600">ejectCard() sits outside the alt, so the card comes back whether the withdrawal is approved or declined. This is the build step, not the nested model yet.</p>
+      </section>
+
+      <section class="slide" data-title="Nested card check" data-section="ATM">
+        <header class="px-14 pt-7">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">ATM · the nested model</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The card check contains the rest</h2>
+        </header>
+        <div class="diagram mx-14 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:20-nested-card-->
+        </div>
+        <p class="px-14 py-2 text-center text-lg text-stone-600">[card invalid] ends here. [card valid] leaves the ATM and the bank active: the PIN check on the next slide is inside this branch, not a new scenario.</p>
+      </section>
+
+      <section class="slide" data-title="Nested PIN" data-section="ATM">
+        <header class="px-14 pt-7">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">ATM · the nested model</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Still inside the valid card</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:20-nested-pin-->
+        </div>
+        <p class="px-10 py-2 text-center text-lg text-stone-600">[PIN invalid] ejects the card and closes the ATM bar. [PIN valid] ends on the balance reply. The next slide continues from that point.</p>
+      </section>
+
+      <section class="slide" data-title="Nested withdrawal" data-section="ATM">
+        <header class="px-14 pt-6">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">ATM · the nested model</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">Inside the valid PIN</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <!--svg:20-nested-funds-->
+        </div>
+        <p class="px-10 py-2 text-center text-lg text-stone-600">[sufficient funds] debits and dispenses. [insufficient funds] declines. ejectCard() follows either outcome, then the ATM bar closes.</p>
+      </section>
+
+      <section class="slide" data-title="How to read" data-section="ATM">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">ATM</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">One interaction, read in order</h2>
+        </header>
+        <p class="px-14 pt-3 text-xl text-stone-600">Read the previous three slides as one interaction. The PIN check sits inside [card valid], and the withdrawal sits inside [PIN valid].</p>
+        <ol class="grid list-inside list-decimal flex-1 content-center gap-x-10 gap-y-3 px-14 pb-12 text-xl leading-snug grid-cols-2">
+          <li>The customer inserts a card.</li>
+          <li>The ATM asks the bank to validate it.</li>
+          <li>An invalid card is rejected.</li>
+          <li>A valid card leads to PIN entry.</li>
+          <li>An invalid PIN ends this simplified scenario.</li>
+          <li>A valid PIN leads to the amount.</li>
+          <li>The bank checks the account.</li>
+          <li>Enough funds: debit, then dispense cash.</li>
+          <li>Not enough funds: the withdrawal is declined.</li>
+          <li>The ATM returns the card before the interaction ends.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Simplifications" data-section="ATM">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">ATM</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Do not force every variant into one frame</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-3 px-14 pb-8 text-xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-3">Three PIN attempts</li>
+          <li class="rounded-2xl bg-white px-5 py-3">A retained card</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Withdrawal limits</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Whether the ATM has the cash</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Account locks and fees</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Audit logging</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Timeout and cancellation</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Partial hardware failure</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Debit succeeded, cash did not</li>
+          <li class="rounded-2xl bg-white px-5 py-3">The compensation for that failure</li>
+        </ul>
+        <p class="px-14 pb-6 text-xl text-stone-600">When the alternatives get hard to read, draw another scenario. Reference it instead of nesting it here.</p>
+      </section>
+
+      <section class="slide" data-title="System sequence" data-section="Levels">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Levels</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The system is one black box</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:17-system-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Use this to find system events and actor interaction. cashAndCard is a reply because it returns the outcome. Do not open the box yet.</p>
+      </section>
+
+      <section class="slide" data-title="Design sequence" data-section="Levels">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Levels</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Open the box to assign work</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:18-design-->
+        </div>
+        <p class="px-10 py-3 text-center text-lg text-stone-600">The controller finds the account, authorizes the amount itself, and tells the dispenser to pay out. This is a design view of one step, not a second copy of the black box.</p>
+      </section>
+
+      <section class="slide" data-title="BCE" data-section="Levels">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Levels</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Boundary, control, entity</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:19-bce-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Boundary faces the actor. Control coordinates the scenario. Entity holds domain information and behavior. A heuristic, useful when it clarifies responsibility, never a required stereotype.</p>
+      </section>
+
+      <section class="slide" data-title="Mistakes, first half" data-section="Review">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Mistakes that change the meaning</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-3 px-14 pb-10 text-xl">
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">1</span>One diagram for the whole system. Split by scenario, variant, or service.</li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">2</span>A class name where the view needs an instance. Prefer atm : ATM, and stay consistent.</li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">3</span>A dashed reply for every thing the user types. User input is usually a new message.</li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">4</span>A reply on every call. Keep a reply when the value or the completion teaches something.</li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">5</span>An alt with no guards. Each operand needs the condition that selects it.</li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">6</span>alt used for a single optional step. That is opt.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Mistakes, second half" data-section="Review">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Mistakes that change the meaning</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-3 px-14 pb-10 text-xl" start="7">
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">7</span>One bar for the whole lifeline. Existence and execution are different marks.</li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">8</span>Later messages drawn farther right. Time is downward.</li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">9</span>A business actor, a subsystem, a private helper, and a database table in one frame, with no reason.</li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">10</span>A happy path only. Model the important failures, or give them their own diagram.</li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">11</span>A message with no responsible receiver. Someone has to perform the behavior.</li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="mr-3 font-semibold text-teal-800">12</span>Control logic written only in a note. Guards and fragments carry the order. Notes explain.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Checklist" data-section="Review">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Before you call it done</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-2 gap-x-10 gap-y-4 px-14 pb-8 text-lg leading-snug">
+          <div>
+            <p class="font-semibold text-teal-800">Scenario</p>
+            <p class="mt-1">One title. A known outcome. One abstraction level. Important alternatives present or referenced.</p>
+            <p class="mt-3 font-semibold text-teal-800">Participants</p>
+            <p class="mt-1">Each one is needed. Actors are external. Labels agree. The order is for reading.</p>
+            <p class="mt-3 font-semibold text-teal-800">Messages</p>
+            <p class="mt-1">Top to bottom. Verb phrases. Sync and async chosen on purpose. Replies only when they help. Self messages stay few.</p>
+          </div>
+          <div>
+            <p class="font-semibold text-teal-800">Fragments</p>
+            <p class="mt-1">alt operands exclude each other. opt is one branch. loop states a bound. par is real concurrency. Guards are testable.</p>
+            <p class="mt-3 font-semibold text-teal-800">Execution and life</p>
+            <p class="mt-1">Bars match the work. Create and delete appear when the lifetime matters. A dashed line is not a bar.</p>
+            <p class="mt-3 font-semibold text-teal-800">Readability</p>
+            <p class="mt-1">Readable on a slide. Few crossing lines. No implementation clutter. Notes do not replace the notation.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide slide-dark bg-stone-950 text-stone-50" data-title="Prompts" data-section="Close">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-300">Ask the room</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Questions that keep the model honest</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-3 px-14 pb-16 text-2xl text-stone-200">
+          <li>What single scenario does this diagram realize?</li>
+          <li>Which participant owns this responsibility?</li>
+          <li>Does the sender wait for completion?</li>
+          <li>Is this dashed arrow really a returned result?</li>
+          <li>What exact Boolean condition selects this operand?</li>
+          <li>Does this behavior repeat, stay optional, or run in parallel?</li>
+          <li>Is the lifeline alive, or actively executing?</li>
+          <li>Are we looking at a black box, or at internal design?</li>
+          <li>Would a separate diagram make this alternative clearer?</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 1" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Practice</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Name the element</h2>
+        </header>
+        <ol class="mx-14 mt-6 grid list-inside list-decimal gap-3 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-3">The customer stick figure</li>
+          <li class="rounded-2xl bg-white px-6 py-3">The vertical dashed line</li>
+          <li class="rounded-2xl bg-white px-6 py-3">The verifyPIN(pin) arrow</li>
+          <li class="rounded-2xl bg-white px-6 py-3">The thin rectangle on the Bank Server lifeline</li>
+          <li class="rounded-2xl bg-white px-6 py-3">The box labeled alt</li>
+          <li class="rounded-2xl bg-white px-6 py-3">[sufficient funds]</li>
+        </ol>
+        <p class="px-14 pt-4 text-xl text-stone-600">Choose from actor, lifeline, message, execution specification, combined fragment, or guard.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 1 answers" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Practice</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Name the element</h2>
+        </header>
+        <ol class="mx-14 mt-6 grid list-inside list-decimal gap-3 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">Stick figure — </span><span class="font-semibold">Actor</span></li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">Dashed line — </span><span class="font-semibold">Lifeline</span></li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">verifyPIN(pin) — </span><span class="font-semibold">Message</span></li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">Thin rectangle — </span><span class="font-semibold">Execution specification</span></li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">Box labeled alt — </span><span class="font-semibold">Combined fragment</span></li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">[sufficient funds] — </span><span class="font-semibold">Guard</span></li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Exercise 2" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Practice</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Choose the message sort</h2>
+        </header>
+        <ol class="mx-14 mt-6 grid list-inside list-decimal gap-3 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-3">The ATM waits while the bank validates the card.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">The bank publishes an audit event and continues.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">The bank returns cardValid.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">The ATM checks the amount format itself.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">The bank creates a Withdrawal Transaction.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">The ATM closes a temporary session.</li>
+        </ol>
+        <p class="px-14 pt-4 text-xl text-stone-600">Synchronous, asynchronous, reply, self, create, or delete.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 2 answers" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Practice</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Choose the message sort</h2>
+        </header>
+        <ol class="mx-14 mt-6 grid list-inside list-decimal gap-3 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">Waits for card validation — </span><span class="font-semibold">Synchronous</span></li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">Publishes an audit and continues — </span><span class="font-semibold">Asynchronous</span></li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">Returns cardValid — </span><span class="font-semibold">Reply</span></li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">Checks the format internally — </span><span class="font-semibold">Self</span></li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">Creates a Withdrawal Transaction — </span><span class="font-semibold">Create</span></li>
+          <li class="rounded-2xl bg-white px-6 py-3"><span class="text-stone-500">Closes a temporary session — </span><span class="font-semibold">Delete</span></li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Exercise 3" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Practice</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Choose the fragment</h2>
+        </header>
+        <ol class="mx-14 mt-8 grid list-inside list-decimal gap-4 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-5">Send a receipt only when the customer requested one.</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Retry PIN entry while attempts remain.</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Choose between an approved and a declined withdrawal.</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Record an audit event and send a notification at the same time.</li>
+        </ol>
+        <p class="px-14 pt-5 text-xl text-stone-600">alt, opt, loop, or par.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 3 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Practice</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Choose the fragment</h2>
+        </header>
+        <ol class="mx-14 mt-8 grid list-inside list-decimal gap-4 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="text-stone-500">Receipt only when requested — </span><span class="font-semibold">opt</span></li>
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="text-stone-500">Retry while attempts remain — </span><span class="font-semibold">loop</span></li>
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="text-stone-500">Approved or declined — </span><span class="font-semibold">alt</span></li>
+          <li class="rounded-2xl bg-white px-6 py-5"><span class="text-stone-500">Audit and notify together — </span><span class="font-semibold">par</span></li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Exercise 4" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Practice</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">What is wrong with each claim?</h2>
+        </header>
+        <ol class="mx-14 mt-6 grid list-inside list-decimal gap-3 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-4">A reply message is used for every user input.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">Later messages are placed farther to the right.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">One activation bar covers the participant’s whole lifeline.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">An alt fragment has no guards.</li>
+          <li class="rounded-2xl bg-white px-6 py-4">One diagram shows Customer, ATM System, WithdrawalController, a private helper, and a database table.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Exercise 4 answers" data-section="Practice">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Practice</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">What is wrong with each claim?</h2>
+        </header>
+        <ol class="mx-14 mt-4 grid list-inside list-decimal gap-3 text-xl leading-snug">
+          <li class="rounded-2xl bg-white px-6 py-3">User input is a new message, unless that arrow truly returns a value.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Time runs downward. Horizontal position is layout.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">The lifeline is existence. The bar is active execution. They have been collapsed into one mark.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">The conditions that select each operand are missing.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Black box, design, source code, and persistence are mixed, and the diagram never says which view it is.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Exercise 5" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Practice</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Draw a login</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-2 gap-8 px-14 pb-8">
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal-800">Participants</p>
+            <ul class="mt-3 space-y-2 text-2xl">
+              <li>User</li>
+              <li>Web App</li>
+              <li>Authentication Service</li>
+              <li>User Repository</li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal-800">The diagram needs</p>
+            <ul class="mt-3 space-y-2 text-2xl leading-snug">
+              <li>Operation-like messages</li>
+              <li>A loop, or another explicit retry</li>
+              <li>An alt with explicit guards</li>
+              <li>An execution on the service that does the work</li>
+              <li>A lock after the third failed attempt</li>
+            </ul>
+          </div>
+        </div>
+        <p class="px-14 pb-6 text-xl text-stone-600">The user submits a username and password. Valid credentials create a session. Other attempts fail. The third failure locks the account.</p>
+      </section>
+
+      <section class="slide" data-title="Login attempt" data-section="Practice">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Practice · one possible model</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Each attempt loads the user</h2>
+        </header>
+        <div class="diagram mx-10 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:20-login-attempt-->
+        </div>
+        <p class="px-10 py-3 text-center text-lg text-stone-600">The handbook nests the outcome inside this loop. The ref names that part. The service stays active across it, then the bar ends and another attempt can start.</p>
+      </section>
+
+      <section class="slide" data-title="Login outcomes" data-section="Practice">
+        <header class="px-14 pt-6">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Practice · one possible model</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">One operand runs inside that loop</h2>
+        </header>
+        <div class="diagram mx-8 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <!--svg:20-login-alt-->
+        </div>
+        <p class="px-8 py-2 text-center text-base text-stone-600">This is the body of Login outcome, still inside the loop. Session Service is added so createSession has an owner. Where the attempt count lives, and how concurrency or a reset window works, stays outside this diagram.</p>
+      </section>
+
+      <section class="slide" data-title="Glossary" data-section="Close">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Close</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The words, in one place</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-2 content-center gap-x-10 gap-y-2 px-14 pb-8 text-lg leading-snug">
+          <p><span class="font-semibold">Actor.</span> An external role in the interaction.</p>
+          <p><span class="font-semibold">Participant.</span> An actor, object, role, service, or subsystem.</p>
+          <p><span class="font-semibold">Lifeline.</span> That participant’s presence over time.</p>
+          <p><span class="font-semibold">Message.</span> Communication between lifelines.</p>
+          <p><span class="font-semibold">Synchronous.</span> The sender waits for completion.</p>
+          <p><span class="font-semibold">Asynchronous.</span> The sender does not wait.</p>
+          <p><span class="font-semibold">Reply.</span> A returned value, or return of control.</p>
+          <p><span class="font-semibold">Self message.</span> A participant invoking its own behavior.</p>
+          <p><span class="font-semibold">Create.</span> A message that begins a lifetime.</p>
+          <p><span class="font-semibold">Delete.</span> A message that ends a lifetime.</p>
+          <p><span class="font-semibold">Execution specification.</span> A period of active behavior.</p>
+          <p><span class="font-semibold">Guard.</span> A Boolean condition on an operand.</p>
+          <p><span class="font-semibold">Combined fragment.</span> A frame for alt, opt, loop, par, and the rest.</p>
+          <p><span class="font-semibold">System sequence.</span> Actors talking to the system as one black box.</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Takeaways" data-section="Close">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Close</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Twelve things to keep</h2>
+        </header>
+        <ol class="grid list-inside list-decimal flex-1 content-center gap-x-10 gap-y-2 px-14 pb-8 text-lg leading-snug grid-cols-2">
+          <li>A sequence diagram is an ordered interaction for one scenario.</li>
+          <li>Time runs from top to bottom.</li>
+          <li>A lifeline is presence, not continuous execution.</li>
+          <li>The bar shows when behavior is executing.</li>
+          <li>The arrowhead and the line together choose the message sort.</li>
+          <li>A reply is optional, and it should add information.</li>
+          <li>User input is not automatically a reply.</li>
+          <li>A guard is a condition you could test.</li>
+          <li>alt, opt, loop, and par are different kinds of control.</li>
+          <li>A system sequence and a design sequence are different levels.</li>
+          <li>One focused scenario beats one enormous diagram.</li>
+          <li>Every message assigns a responsibility.</li>
+        </ol>
+      </section>
+
+      <footer id="chrome" class="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex items-center justify-between px-8 py-3 text-sm text-stone-500">
+        <span id="section-label"></span>
+        <span id="counter"></span>
+        <span>← → · F · O</span>
+      </footer>
+    </main>
+
+    <div id="overview" class="fixed inset-0 z-40 hidden overflow-auto bg-stone-950/95 p-8 text-stone-50">
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-2xl font-semibold">Slides</h2>
+        <p class="text-stone-400">Click a slide, or press O or Esc</p>
+      </div>
+      <div id="overview-grid" class="grid grid-cols-4 gap-3"></div>
+    </div>
+
+    <script>
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const progress = document.getElementById("progress");
+      const counter = document.getElementById("counter");
+      const sectionLabel = document.getElementById("section-label");
+      const overview = document.getElementById("overview");
+      const overviewGrid = document.getElementById("overview-grid");
+      let index = 0;
+
+      slides.forEach((slide, slideIndex) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "rounded-xl bg-stone-800 px-4 py-3 text-left text-sm hover:bg-stone-700";
+        button.textContent = `${slideIndex + 1}. ${slide.dataset.title}`;
+        button.addEventListener("click", () => {
+          show(slideIndex);
+          closeOverview();
+        });
+        overviewGrid.appendChild(button);
+      });
+
+      function show(next) {
+        index = Math.max(0, Math.min(slides.length - 1, next));
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("is-active", slideIndex === index);
+        });
+        const current = slides[index];
+        document.body.classList.toggle("is-dark", current.classList.contains("slide-dark"));
+        sectionLabel.textContent = current.dataset.section || "";
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        progress.style.transform = `scaleX(${(index + 1) / slides.length})`;
+        document.title = `${current.dataset.title} — UML Sequence Diagrams`;
+      }
+
+      function openOverview() {
+        overview.classList.remove("hidden");
+      }
+
+      function closeOverview() {
+        overview.classList.add("hidden");
+      }
+
+      document.addEventListener("keydown", (event) => {
+        const overviewOpen = !overview.classList.contains("hidden");
+        if (event.key === "o" || event.key === "O") {
+          overviewOpen ? closeOverview() : openOverview();
+          return;
+        }
+        if (event.key === "Escape") {
+          closeOverview();
+          return;
+        }
+        if (overviewOpen) return;
+        if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(event.key)) {
+          event.preventDefault();
+          show(index + 1);
+        } else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(event.key)) {
+          event.preventDefault();
+          show(index - 1);
+        } else if (event.key === "Home") {
+          show(0);
+        } else if (event.key === "End") {
+          show(slides.length - 1);
+        } else if (event.key === "f" || event.key === "F") {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else document.documentElement.requestFullscreen();
+        }
+      });
+
+      document.getElementById("deck").addEventListener("click", (event) => {
+        if (event.target.closest("a, button")) return;
+        const x = event.clientX / window.innerWidth;
+        if (x > 0.78) show(index + 1);
+        else if (x < 0.22) show(index - 1);
+      });
+
+      function fit() {
+        const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+        document.getElementById("deck").style.transform = `translate(-50%, -50%) scale(${scale})`;
+      }
+
+      window.addEventListener("resize", fit);
+      fit();
+      show(0);
+    </script>
+  </body>
+</html>

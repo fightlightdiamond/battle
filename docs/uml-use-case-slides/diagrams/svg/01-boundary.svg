@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 480" width="980" height="480">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="170" y="24" width="640" height="430" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="490" y="52" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="120.0" y1="222.0" x2="421.4" y2="179.6" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="120.0" y1="222.0" x2="409.2" y2="298.6" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="860.0" y1="332.0" x2="593.5" y2="323.4" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <ellipse cx="490" cy="170" rx="72" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="490" y="170" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <ellipse cx="490" cy="320" rx="104" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="490" y="320" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Check Balance</text>
+  </g>
+<g>
+    <circle cx="80" cy="170" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M80 186 V230 M58 202 H102 M80 230 L62 258 M80 230 L98 258" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="80" y="266" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+<g>
+    <circle cx="900" cy="280" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M900 296 V340 M878 312 H922 M900 340 L882 368 M900 340 L918 368" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="900" y="376" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Bank</text>
+  </g>
+</svg>

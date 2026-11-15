@@ -1,0 +1,7 @@
+@startuml
+!include style.iuml
+participant ATM
+||30||
+ATM -> ATM : validateAmountFormat(amount)
+||40||
+@enduml

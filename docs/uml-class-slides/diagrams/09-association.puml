@@ -1,0 +1,6 @@
+@startuml
+!include style.iuml
+class Otter
+class SeaUrchin
+Otter --> SeaUrchin : eats
+@enduml

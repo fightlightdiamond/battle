@@ -1,0 +1,11 @@
+@startuml
+!include style.iuml
+actor Customer
+participant "ATM" as ATM <<boundary>>
+participant "WithdrawalController" as Controller <<control>>
+participant "Account" as Account <<entity>>
+Customer -> ATM : enterAmount(amount)
+ATM -> Controller : withdraw(accountId, amount)
+Controller -> Account : canWithdraw(amount)
+Account -->> Controller : decision
+@enduml

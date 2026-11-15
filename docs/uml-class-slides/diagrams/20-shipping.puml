@@ -1,0 +1,10 @@
+@startuml
+!include style.iuml
+class Order
+class ShippingInfo {
+  -recipientName: String
+  -addressLine: String
+  -postalCode: String
+}
+Order "1" *-- "1" ShippingInfo : delivery details
+@enduml

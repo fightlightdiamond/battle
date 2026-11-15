@@ -1,0 +1,6 @@
+@startuml
+!include style.iuml
+class ReportService
+class PdfExporter
+ReportService ..> PdfExporter : uses
+@enduml

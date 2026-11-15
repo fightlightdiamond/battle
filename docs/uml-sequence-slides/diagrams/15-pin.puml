@@ -1,0 +1,15 @@
+@startuml
+!include style.iuml
+actor Customer
+participant ATM
+participant "Bank Server" as Bank
+Customer -> ATM : enterPIN(pin)
+ATM -> Bank : verifyPIN(cardId, pin)
+alt PIN valid
+  Bank -->> ATM : pinValid
+  ATM -> Customer : requestWithdrawalAmount()
+else PIN invalid
+  Bank -->> ATM : pinInvalid
+  ATM -> Customer : ejectCard()
+end
+@enduml

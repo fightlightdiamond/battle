@@ -1,0 +1,8 @@
+@startuml
+!include style.iuml
+actor Customer
+participant ATM
+opt receipt requested
+  ATM -> Customer : printReceipt()
+end
+@enduml

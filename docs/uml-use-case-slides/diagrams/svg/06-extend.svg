@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 420" width="1080" height="420">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="150" y="36" width="760" height="300" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="530" y="64" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="960.0" y1="212.0" x2="718.0" y2="210.5" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="424.0" y1="210.0" x2="549.0" y2="210.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="549.0,216.5 562.0,210.0 549.0,203.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="486.5" y="159.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text><text x="486.5" y="177.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">password is incorrect</text>
+  </g>
+<g>
+    <ellipse cx="300" cy="210" rx="124" ry="36" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="300" y="201" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Display</text><text x="300" y="219" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Login Error</text>
+  </g>
+<g>
+    <ellipse cx="640" cy="210" rx="78" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="640" y="210" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <circle cx="1000" cy="160" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M1000 176 V220 M978 192 H1022 M1000 220 L982 248 M1000 220 L1018 248" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="1000" y="256" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+</svg>

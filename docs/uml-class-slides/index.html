@@ -1,0 +1,1824 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UML Class Diagrams — Zoo and Online Shopping</title>
+    <style>/*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com */
+@layer properties;
+@layer theme, base, components, utilities;
+@layer theme {
+  :root, :host {
+    --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+    --color-teal-300: oklch(85.5% 0.138 181.071);
+    --color-teal-700: oklch(51.1% 0.096 186.391);
+    --color-teal-800: oklch(43.7% 0.078 188.216);
+    --color-stone-50: oklch(98.5% 0.001 106.423);
+    --color-stone-100: oklch(97% 0.001 106.424);
+    --color-stone-200: oklch(92.3% 0.003 48.717);
+    --color-stone-300: oklch(86.9% 0.005 56.366);
+    --color-stone-400: oklch(70.9% 0.01 56.259);
+    --color-stone-500: oklch(55.3% 0.013 58.071);
+    --color-stone-600: oklch(44.4% 0.011 73.639);
+    --color-stone-700: oklch(37.4% 0.01 67.558);
+    --color-stone-800: oklch(26.8% 0.007 34.298);
+    --color-stone-900: oklch(21.6% 0.006 56.043);
+    --color-stone-950: oklch(14.7% 0.004 49.25);
+    --color-white: #fff;
+    --spacing: 0.25rem;
+    --container-3xl: 48rem;
+    --container-4xl: 56rem;
+    --container-5xl: 64rem;
+    --text-xs: 0.75rem;
+    --text-xs--line-height: calc(1 / 0.75);
+    --text-sm: 0.875rem;
+    --text-sm--line-height: calc(1.25 / 0.875);
+    --text-lg: 1.125rem;
+    --text-lg--line-height: calc(1.75 / 1.125);
+    --text-xl: 1.25rem;
+    --text-xl--line-height: calc(1.75 / 1.25);
+    --text-2xl: 1.5rem;
+    --text-2xl--line-height: calc(2 / 1.5);
+    --text-3xl: 1.875rem;
+    --text-3xl--line-height: calc(2.25 / 1.875);
+    --text-4xl: 2.25rem;
+    --text-4xl--line-height: calc(2.5 / 2.25);
+    --text-6xl: 3.75rem;
+    --text-6xl--line-height: 1;
+    --font-weight-semibold: 600;
+    --tracking-tight: -0.025em;
+    --leading-snug: 1.375;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --default-font-family: var(--font-sans);
+    --default-mono-font-family: var(--font-mono);
+  }
+}
+@layer base {
+  *, ::after, ::before, ::backdrop, ::file-selector-button {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+  html, :host {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+    font-feature-settings: var(--default-font-feature-settings, normal);
+    font-variation-settings: var(--default-font-variation-settings, normal);
+    -webkit-tap-highlight-color: transparent;
+  }
+  hr {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+  }
+  abbr:where([title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  a {
+    color: inherit;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+  }
+  b, strong {
+    font-weight: bolder;
+  }
+  code, kbd, samp, pre {
+    font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-feature-settings: var(--default-mono-font-feature-settings, normal);
+    font-variation-settings: var(--default-mono-font-variation-settings, normal);
+    font-size: 1em;
+  }
+  small {
+    font-size: 80%;
+  }
+  sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+  sub {
+    bottom: -0.25em;
+  }
+  sup {
+    top: -0.5em;
+  }
+  table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+  :-moz-focusring {
+    outline: auto;
+  }
+  progress {
+    vertical-align: baseline;
+  }
+  summary {
+    display: list-item;
+  }
+  ol, ul, menu {
+    list-style: none;
+  }
+  img, svg, video, canvas, audio, iframe, embed, object {
+    display: block;
+    vertical-align: middle;
+  }
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+  button, input, select, optgroup, textarea, ::file-selector-button {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    border-radius: 0;
+    background-color: transparent;
+    opacity: 1;
+  }
+  :where(select:is([multiple], [size])) optgroup {
+    font-weight: bolder;
+  }
+  :where(select:is([multiple], [size])) optgroup option {
+    padding-inline-start: 20px;
+  }
+  ::file-selector-button {
+    margin-inline-end: 4px;
+  }
+  ::placeholder {
+    opacity: 1;
+  }
+  @supports (not (-webkit-appearance: -apple-pay-button))  or (contain-intrinsic-size: 1px) {
+    ::placeholder {
+      color: currentcolor;
+      @supports (color: color-mix(in lab, red, red)) {
+        color: color-mix(in oklab, currentcolor 50%, transparent);
+      }
+    }
+  }
+  textarea {
+    resize: vertical;
+  }
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+  ::-webkit-date-and-time-value {
+    min-height: 1lh;
+    text-align: inherit;
+  }
+  ::-webkit-datetime-edit {
+    display: inline-flex;
+  }
+  ::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+  ::-webkit-datetime-edit, ::-webkit-datetime-edit-year-field, ::-webkit-datetime-edit-month-field, ::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-hour-field, ::-webkit-datetime-edit-minute-field, ::-webkit-datetime-edit-second-field, ::-webkit-datetime-edit-millisecond-field, ::-webkit-datetime-edit-meridiem-field {
+    padding-block: 0;
+  }
+  ::-webkit-calendar-picker-indicator {
+    line-height: 1;
+  }
+  :-moz-ui-invalid {
+    box-shadow: none;
+  }
+  button, input:where([type="button"], [type="reset"], [type="submit"]), ::file-selector-button {
+    appearance: button;
+  }
+  ::-webkit-inner-spin-button, ::-webkit-outer-spin-button {
+    height: auto;
+  }
+  [hidden]:where(:not([hidden="until-found"])) {
+    display: none !important;
+  }
+}
+@layer utilities {
+  .pointer-events-none {
+    pointer-events: none;
+  }
+  .absolute {
+    position: absolute;
+  }
+  .fixed {
+    position: fixed;
+  }
+  .relative {
+    position: relative;
+  }
+  .static {
+    position: static;
+  }
+  .inset-0 {
+    inset: calc(var(--spacing) * 0);
+  }
+  .inset-x-0 {
+    inset-inline: calc(var(--spacing) * 0);
+  }
+  .top-0 {
+    top: calc(var(--spacing) * 0);
+  }
+  .bottom-0 {
+    bottom: calc(var(--spacing) * 0);
+  }
+  .z-30 {
+    z-index: 30;
+  }
+  .z-40 {
+    z-index: 40;
+  }
+  .mx-8 {
+    margin-inline: calc(var(--spacing) * 8);
+  }
+  .mx-10 {
+    margin-inline: calc(var(--spacing) * 10);
+  }
+  .mx-14 {
+    margin-inline: calc(var(--spacing) * 14);
+  }
+  .mx-auto {
+    margin-inline: auto;
+  }
+  .mt-1 {
+    margin-top: calc(var(--spacing) * 1);
+  }
+  .mt-2 {
+    margin-top: calc(var(--spacing) * 2);
+  }
+  .mt-3 {
+    margin-top: calc(var(--spacing) * 3);
+  }
+  .mt-4 {
+    margin-top: calc(var(--spacing) * 4);
+  }
+  .mt-5 {
+    margin-top: calc(var(--spacing) * 5);
+  }
+  .mt-6 {
+    margin-top: calc(var(--spacing) * 6);
+  }
+  .mt-8 {
+    margin-top: calc(var(--spacing) * 8);
+  }
+  .mt-10 {
+    margin-top: calc(var(--spacing) * 10);
+  }
+  .mr-4 {
+    margin-right: calc(var(--spacing) * 4);
+  }
+  .mb-6 {
+    margin-bottom: calc(var(--spacing) * 6);
+  }
+  .flex {
+    display: flex;
+  }
+  .grid {
+    display: grid;
+  }
+  .hidden {
+    display: none;
+  }
+  .table {
+    display: table;
+  }
+  .h-1 {
+    height: calc(var(--spacing) * 1);
+  }
+  .h-32 {
+    height: calc(var(--spacing) * 32);
+  }
+  .h-40 {
+    height: calc(var(--spacing) * 40);
+  }
+  .h-44 {
+    height: calc(var(--spacing) * 44);
+  }
+  .h-52 {
+    height: calc(var(--spacing) * 52);
+  }
+  .h-72 {
+    height: calc(var(--spacing) * 72);
+  }
+  .h-80 {
+    height: calc(var(--spacing) * 80);
+  }
+  .h-full {
+    height: 100%;
+  }
+  .max-h-\[460px\] {
+    max-height: 460px;
+  }
+  .min-h-0 {
+    min-height: calc(var(--spacing) * 0);
+  }
+  .w-\[28rem\] {
+    width: 28rem;
+  }
+  .w-full {
+    width: 100%;
+  }
+  .max-w-3xl {
+    max-width: var(--container-3xl);
+  }
+  .max-w-4xl {
+    max-width: var(--container-4xl);
+  }
+  .max-w-5xl {
+    max-width: var(--container-5xl);
+  }
+  .flex-1 {
+    flex: 1;
+  }
+  .border-collapse {
+    border-collapse: collapse;
+  }
+  .origin-left {
+    transform-origin: 0;
+  }
+  .transform {
+    transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
+  }
+  .resize {
+    resize: both;
+  }
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .grid-cols-\[1fr_1\.2fr\] {
+    grid-template-columns: 1fr 1.2fr;
+  }
+  .grid-cols-\[1fr_280px\] {
+    grid-template-columns: 1fr 280px;
+  }
+  .grid-cols-\[1fr_440px\] {
+    grid-template-columns: 1fr 440px;
+  }
+  .grid-cols-\[1fr_auto\] {
+    grid-template-columns: 1fr auto;
+  }
+  .grid-cols-\[260px_1fr\] {
+    grid-template-columns: 260px 1fr;
+  }
+  .grid-cols-\[320px_1fr\] {
+    grid-template-columns: 320px 1fr;
+  }
+  .grid-cols-\[340px_1fr\] {
+    grid-template-columns: 340px 1fr;
+  }
+  .flex-col {
+    flex-direction: column;
+  }
+  .content-center {
+    align-content: center;
+  }
+  .items-center {
+    align-items: center;
+  }
+  .justify-between {
+    justify-content: space-between;
+  }
+  .justify-center {
+    justify-content: center;
+  }
+  .gap-2 {
+    gap: calc(var(--spacing) * 2);
+  }
+  .gap-3 {
+    gap: calc(var(--spacing) * 3);
+  }
+  .gap-4 {
+    gap: calc(var(--spacing) * 4);
+  }
+  .gap-6 {
+    gap: calc(var(--spacing) * 6);
+  }
+  .gap-10 {
+    gap: calc(var(--spacing) * 10);
+  }
+  .space-y-1 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 1) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 1) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .gap-x-8 {
+    column-gap: calc(var(--spacing) * 8);
+  }
+  .gap-x-10 {
+    column-gap: calc(var(--spacing) * 10);
+  }
+  .gap-y-2 {
+    row-gap: calc(var(--spacing) * 2);
+  }
+  .gap-y-4 {
+    row-gap: calc(var(--spacing) * 4);
+  }
+  .overflow-auto {
+    overflow: auto;
+  }
+  .overflow-hidden {
+    overflow: hidden;
+  }
+  .rounded-2xl {
+    border-radius: var(--radius-2xl);
+  }
+  .rounded-xl {
+    border-radius: var(--radius-xl);
+  }
+  .border {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
+  .border-t {
+    border-top-style: var(--tw-border-style);
+    border-top-width: 1px;
+  }
+  .border-b {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 1px;
+  }
+  .border-l-8 {
+    border-left-style: var(--tw-border-style);
+    border-left-width: 8px;
+  }
+  .border-stone-200 {
+    border-color: var(--color-stone-200);
+  }
+  .border-stone-300 {
+    border-color: var(--color-stone-300);
+  }
+  .border-teal-700 {
+    border-color: var(--color-teal-700);
+  }
+  .bg-stone-100 {
+    background-color: var(--color-stone-100);
+  }
+  .bg-stone-200 {
+    background-color: var(--color-stone-200);
+  }
+  .bg-stone-200\/70 {
+    background-color: color-mix(in srgb, oklch(92.3% 0.003 48.717) 70%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-stone-200) 70%, transparent);
+    }
+  }
+  .bg-stone-800 {
+    background-color: var(--color-stone-800);
+  }
+  .bg-stone-900 {
+    background-color: var(--color-stone-900);
+  }
+  .bg-stone-950 {
+    background-color: var(--color-stone-950);
+  }
+  .bg-stone-950\/95 {
+    background-color: color-mix(in srgb, oklch(14.7% 0.004 49.25) 95%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-stone-950) 95%, transparent);
+    }
+  }
+  .bg-teal-700 {
+    background-color: var(--color-teal-700);
+  }
+  .bg-white {
+    background-color: var(--color-white);
+  }
+  .bg-gradient-to-r {
+    --tw-gradient-position: to right in oklab;
+    background-image: linear-gradient(var(--tw-gradient-stops));
+  }
+  .from-stone-950 {
+    --tw-gradient-from: var(--color-stone-950);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .from-10\% {
+    --tw-gradient-from-position: 10%;
+  }
+  .via-stone-950 {
+    --tw-gradient-via: var(--color-stone-950);
+    --tw-gradient-via-stops: var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-via) var(--tw-gradient-via-position), var(--tw-gradient-to) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-via-stops);
+  }
+  .via-stone-950\/75 {
+    --tw-gradient-via: color-mix(in srgb, oklch(14.7% 0.004 49.25) 75%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tw-gradient-via: color-mix(in oklab, var(--color-stone-950) 75%, transparent);
+    }
+    --tw-gradient-via-stops: var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-via) var(--tw-gradient-via-position), var(--tw-gradient-to) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-via-stops);
+  }
+  .via-42\% {
+    --tw-gradient-via-position: 42%;
+  }
+  .to-stone-950 {
+    --tw-gradient-to: var(--color-stone-950);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .to-transparent {
+    --tw-gradient-to: transparent;
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .object-cover {
+    object-fit: cover;
+  }
+  .object-right {
+    object-position: right;
+  }
+  .object-top {
+    object-position: top;
+  }
+  .p-2 {
+    padding: calc(var(--spacing) * 2);
+  }
+  .p-3 {
+    padding: calc(var(--spacing) * 3);
+  }
+  .p-6 {
+    padding: calc(var(--spacing) * 6);
+  }
+  .p-8 {
+    padding: calc(var(--spacing) * 8);
+  }
+  .px-4 {
+    padding-inline: calc(var(--spacing) * 4);
+  }
+  .px-5 {
+    padding-inline: calc(var(--spacing) * 5);
+  }
+  .px-6 {
+    padding-inline: calc(var(--spacing) * 6);
+  }
+  .px-8 {
+    padding-inline: calc(var(--spacing) * 8);
+  }
+  .px-10 {
+    padding-inline: calc(var(--spacing) * 10);
+  }
+  .px-14 {
+    padding-inline: calc(var(--spacing) * 14);
+  }
+  .px-16 {
+    padding-inline: calc(var(--spacing) * 16);
+  }
+  .py-2 {
+    padding-block: calc(var(--spacing) * 2);
+  }
+  .py-3 {
+    padding-block: calc(var(--spacing) * 3);
+  }
+  .py-4 {
+    padding-block: calc(var(--spacing) * 4);
+  }
+  .py-5 {
+    padding-block: calc(var(--spacing) * 5);
+  }
+  .py-8 {
+    padding-block: calc(var(--spacing) * 8);
+  }
+  .pt-2 {
+    padding-top: calc(var(--spacing) * 2);
+  }
+  .pt-3 {
+    padding-top: calc(var(--spacing) * 3);
+  }
+  .pt-4 {
+    padding-top: calc(var(--spacing) * 4);
+  }
+  .pt-5 {
+    padding-top: calc(var(--spacing) * 5);
+  }
+  .pt-6 {
+    padding-top: calc(var(--spacing) * 6);
+  }
+  .pt-8 {
+    padding-top: calc(var(--spacing) * 8);
+  }
+  .pt-10 {
+    padding-top: calc(var(--spacing) * 10);
+  }
+  .pt-12 {
+    padding-top: calc(var(--spacing) * 12);
+  }
+  .pb-1 {
+    padding-bottom: calc(var(--spacing) * 1);
+  }
+  .pb-2 {
+    padding-bottom: calc(var(--spacing) * 2);
+  }
+  .pb-6 {
+    padding-bottom: calc(var(--spacing) * 6);
+  }
+  .pb-8 {
+    padding-bottom: calc(var(--spacing) * 8);
+  }
+  .pb-12 {
+    padding-bottom: calc(var(--spacing) * 12);
+  }
+  .pb-14 {
+    padding-bottom: calc(var(--spacing) * 14);
+  }
+  .pb-16 {
+    padding-bottom: calc(var(--spacing) * 16);
+  }
+  .pb-20 {
+    padding-bottom: calc(var(--spacing) * 20);
+  }
+  .text-center {
+    text-align: center;
+  }
+  .text-left {
+    text-align: left;
+  }
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+  .text-2xl {
+    font-size: var(--text-2xl);
+    line-height: var(--tw-leading, var(--text-2xl--line-height));
+  }
+  .text-3xl {
+    font-size: var(--text-3xl);
+    line-height: var(--tw-leading, var(--text-3xl--line-height));
+  }
+  .text-4xl {
+    font-size: var(--text-4xl);
+    line-height: var(--tw-leading, var(--text-4xl--line-height));
+  }
+  .text-6xl {
+    font-size: var(--text-6xl);
+    line-height: var(--tw-leading, var(--text-6xl--line-height));
+  }
+  .text-lg {
+    font-size: var(--text-lg);
+    line-height: var(--tw-leading, var(--text-lg--line-height));
+  }
+  .text-sm {
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+  }
+  .text-xl {
+    font-size: var(--text-xl);
+    line-height: var(--tw-leading, var(--text-xl--line-height));
+  }
+  .text-xs {
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+  }
+  .leading-snug {
+    --tw-leading: var(--leading-snug);
+    line-height: var(--leading-snug);
+  }
+  .font-semibold {
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+  }
+  .tracking-\[0\.16em\] {
+    --tw-tracking: 0.16em;
+    letter-spacing: 0.16em;
+  }
+  .tracking-\[0\.22em\] {
+    --tw-tracking: 0.22em;
+    letter-spacing: 0.22em;
+  }
+  .tracking-\[0\.28em\] {
+    --tw-tracking: 0.28em;
+    letter-spacing: 0.28em;
+  }
+  .tracking-tight {
+    --tw-tracking: var(--tracking-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+  .text-stone-50 {
+    color: var(--color-stone-50);
+  }
+  .text-stone-200 {
+    color: var(--color-stone-200);
+  }
+  .text-stone-300 {
+    color: var(--color-stone-300);
+  }
+  .text-stone-400 {
+    color: var(--color-stone-400);
+  }
+  .text-stone-500 {
+    color: var(--color-stone-500);
+  }
+  .text-stone-600 {
+    color: var(--color-stone-600);
+  }
+  .text-stone-700 {
+    color: var(--color-stone-700);
+  }
+  .text-stone-900 {
+    color: var(--color-stone-900);
+  }
+  .text-teal-300 {
+    color: var(--color-teal-300);
+  }
+  .text-teal-800 {
+    color: var(--color-teal-800);
+  }
+  .lowercase {
+    text-transform: lowercase;
+  }
+  .uppercase {
+    text-transform: uppercase;
+  }
+  .italic {
+    font-style: italic;
+  }
+  .underline {
+    text-decoration-line: underline;
+  }
+  .antialiased {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .opacity-50 {
+    opacity: 50%;
+  }
+  .outline {
+    outline-style: var(--tw-outline-style);
+    outline-width: 1px;
+  }
+  .hover\:bg-stone-700 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-stone-700);
+      }
+    }
+  }
+}
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #1c1917;
+}
+#deck {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1280px;
+  height: 720px;
+  background: #f5f5f4;
+}
+.slide {
+  display: none;
+  width: 1280px;
+  height: 720px;
+}
+.slide.is-active {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-bottom: 3.25rem;
+  overflow: hidden;
+}
+.diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.diagram svg {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+body.is-dark #chrome, body.is-dark #chrome span {
+  color: #d6d3d1;
+}
+@property --tw-rotate-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-z {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-space-y-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-gradient-position {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-gradient-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-gradient-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-gradient-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-gradient-stops {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-gradient-via-stops {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-gradient-from-position {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+@property --tw-gradient-via-position {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+@property --tw-gradient-to-position {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-leading {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-tracking {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@layer properties {
+  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
+    *, ::before, ::after, ::backdrop {
+      --tw-rotate-x: initial;
+      --tw-rotate-y: initial;
+      --tw-rotate-z: initial;
+      --tw-skew-x: initial;
+      --tw-skew-y: initial;
+      --tw-space-y-reverse: 0;
+      --tw-border-style: solid;
+      --tw-gradient-position: initial;
+      --tw-gradient-from: #0000;
+      --tw-gradient-via: #0000;
+      --tw-gradient-to: #0000;
+      --tw-gradient-stops: initial;
+      --tw-gradient-via-stops: initial;
+      --tw-gradient-from-position: 0%;
+      --tw-gradient-via-position: 50%;
+      --tw-gradient-to-position: 100%;
+      --tw-leading: initial;
+      --tw-font-weight: initial;
+      --tw-tracking: initial;
+      --tw-outline-style: solid;
+    }
+  }
+}
+</style>
+  </head>
+  <body class="bg-stone-100 font-sans text-stone-900 antialiased">
+    <div id="progress" class="fixed inset-x-0 top-0 z-30 h-1 origin-left bg-teal-700"></div>
+
+    <main id="deck">
+      <section class="slide slide-dark relative overflow-hidden bg-stone-950 text-stone-50" data-title="Title" data-section="Opening">
+        <img src="photos/title-otter.jpg" alt="" class="pointer-events-none absolute inset-0 h-full w-full object-cover object-right" />
+        <div class="absolute inset-0 bg-gradient-to-r from-stone-950 from-10% via-stone-950/75 via-42% to-transparent"></div>
+        <div class="relative flex flex-1 flex-col justify-center px-16">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-teal-300">Teaching deck</p>
+          <h1 class="mt-6 max-w-5xl text-6xl font-semibold tracking-tight">UML Class Diagrams</h1>
+          <p class="mt-6 max-w-3xl text-3xl text-stone-300">Static structure, from one class to the Online Shopping model.</p>
+          <p class="mt-10 text-2xl text-stone-300">Prepared by <span class="font-semibold text-stone-50">Vincent</span></p>
+          <p class="mt-4 text-lg text-stone-400">Arrow keys move · F fullscreen · O slide list</p>
+          <p class="mt-8 text-xs text-stone-400">Photo: Mike Baird, CC BY 2.0</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Objectives" data-section="Opening">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Opening</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">After this session</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-x-10 gap-y-4 px-14 pb-16 text-xl leading-snug grid-cols-2">
+          <li>Explain what a Class Diagram represents.</li>
+          <li>Distinguish a class from an object.</li>
+          <li>Read names, attributes, and operations.</li>
+          <li>Interpret +, −, #, and ~ visibility.</li>
+          <li>Model generalization, association, aggregation, and composition.</li>
+          <li>Read multiplicity at both ends.</li>
+          <li>Separate structure from implementation detail.</li>
+          <li>Build and review a small Class Diagram.</li>
+          <li>Spot misuse of aggregation and composition.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Agenda" data-section="Opening">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Opening</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">How the session runs</h2>
+        </header>
+        <div class="mx-14 mt-5 overflow-hidden rounded-2xl border border-stone-200 bg-white text-xl">
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Purpose and diagram scope</span><span class="text-stone-500">10 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Class anatomy</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Attributes, operations, and visibility</span><span class="text-stone-500">25 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Generalization and abstract classes</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Association and navigability</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Aggregation and composition</span><span class="text-stone-500">25 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Multiplicity</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Online Shopping example</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] bg-stone-900 px-6 py-3 font-semibold text-stone-50"><span>Exercises and review</span><span>30 min</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="What it is" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A map of static structure</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_440px] items-center gap-10 px-14 pb-8">
+          <div>
+            <p class="text-2xl leading-snug text-stone-700">A Class Diagram shows the classes that matter, the data they own, the behavior they offer, and how those classes are related.</p>
+            <p class="mt-8 text-2xl leading-snug">Multiplicity and navigability are constraints on that structure. Call order belongs on a sequence or activity diagram.</p>
+          </div>
+          <figure>
+            <img src="photos/park.jpg" alt="A wildlife park lawn, with a giant tortoise in front of the park house" class="h-72 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-xs text-stone-400">Trevor Rickard, CC BY-SA 2.0</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Five questions" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Five questions</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-4 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">1</span>What concepts exist?</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">2</span>What information does each one own?</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">3</span>What operations can it perform?</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">4</span>How are the concepts related?</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">5</span>How many instances may participate?</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Limits" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Leave these off the diagram</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-4 px-14 pb-16 text-2xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-6 py-5">The order of method calls</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Every getter and setter</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Database tables as the model</li>
+          <li class="rounded-2xl bg-white px-6 py-5">UI widgets mixed with domain classes</li>
+        </ul>
+        <p class="px-14 pb-14 text-xl text-stone-600">Choose one abstraction level: conceptual, analysis, design, or implementation.</p>
+      </section>
+
+      <section class="slide" data-title="Compartments" data-section="Class">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Class</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Name, attributes, operations</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 415 409" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Animal--><g class="entity" data-qualified-name="Animal" id="ent0001" data-source-line="2"><rect x="10.938" y="10.938" width="384.94" height="379.05" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="10.938" width="384.94" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="166.942" y="54.893" fill="#1C1917" font-size="21.875" textLength="72.931" font-weight="700" font-family="Arial">Animal</text><line x1="12.5" y1="82.967" x2="394.315" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="125.36" fill="#1C1917" font-size="21.875" textLength="131.303" font-family="Arial">-name: String</text><text x="35.938" y="181.764" fill="#1C1917" font-size="21.875" textLength="104.568" font-family="Arial">-id: Integer</text><text x="35.938" y="238.168" fill="#1C1917" font-size="21.875" textLength="124.04" font-family="Arial">-age: Integer</text><line x1="12.5" y1="264.679" x2="394.315" y2="264.679" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="307.072" fill="#1C1917" font-size="21.875" textLength="334.94" font-family="Arial">+setName(newName: String): void</text><text x="35.938" y="363.477" fill="#1C1917" font-size="21.875" textLength="110.037" font-family="Arial">+eat(): void</text></g><?plantuml-src KypCIyufJKbLA2wfp4dLoopDpU5ApaaiBbPmpClCJSnHgEPIKD3DIynDjL88BYdAp4i7yJDJh1GyyqfIqrEBGDp4z5HaldPnQeaVK8T6Ncgv7v9EJIk5ilpC592ArCGI3HYt5W00?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">A class is a rectangle of up to three compartments. Empty compartments may be omitted.</p>
+      </section>
+
+      <section class="slide" data-title="Naming" data-section="Class">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Class</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Name the concept</h2>
+        </header>
+        <div class="mx-14 mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-2 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Prefer</span><span>Avoid</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Animal</span><span>Data</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Employee</span><span>ManagerThing</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>ShoppingCart</span><span>ProcessObject</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>OrderDetail</span><span>Stuff</span></div>
+        </div>
+        <p class="px-14 pt-6 text-xl text-stone-600">Singular noun. PascalCase. A domain concept, not a placeholder.</p>
+      </section>
+
+      <section class="slide" data-title="Class or object" data-section="Class">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Class</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A class is the type</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-6 px-14 pb-16 grid-cols-2">
+          <div class="rounded-2xl bg-white p-8">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">Class</p>
+            <p class="mt-3 text-3xl font-semibold">Animal</p>
+            <p class="mt-4 text-xl leading-snug text-stone-700">Defines the features every animal instance can have: name, id, age, and eat.</p>
+          </div>
+          <div class="overflow-hidden rounded-2xl bg-white">
+            <img src="photos/tortoise.jpg" alt="An Aldabra giant tortoise, one instance of Animal" class="h-44 w-full object-cover" />
+            <div class="p-6">
+              <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">Object</p>
+              <p class="mt-2 text-3xl font-semibold">ruth: Animal</p>
+              <p class="mt-3 text-xl leading-snug text-stone-700">name = "Ruth"<br />id = 304<br />age = 114</p>
+            </div>
+          </div>
+        </div>
+        <p class="px-14 pb-14 text-xl text-stone-600">A snapshot of one object belongs on an Object Diagram.</p>
+      </section>
+
+      <section class="slide" data-title="Attributes" data-section="Features">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Attributes</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Information an instance holds</h2>
+        </header>
+        <div class="flex flex-1 flex-col justify-center px-14 pb-16">
+          <p class="max-w-4xl rounded-2xl bg-stone-900 px-6 py-5 font-mono text-3xl text-stone-50">visibility name: Type = default</p>
+          <ul class="mt-8 grid max-w-3xl gap-3 text-2xl">
+            <li>Start with a lowercase letter. Use camelCase.</li>
+            <li>Give the attribute a specific type.</li>
+            <li>Do not store a value the model can derive.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Attribute or association" data-section="Features">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Attributes</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A value, or another class?</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-6 px-14 pb-16 text-2xl grid-cols-2">
+          <div class="rounded-2xl bg-white p-8">
+            <p class="font-semibold">Attribute</p>
+            <p class="mt-4 leading-snug text-stone-700">A value-like property. <span class="font-mono text-xl">-name: String</span> and <span class="font-mono text-xl">-dateOfBirth: Date</span>.</p>
+          </div>
+          <div class="rounded-2xl bg-white p-8">
+            <p class="font-semibold">Association</p>
+            <p class="mt-4 leading-snug text-stone-700">Another domain class participates. Do not hide Department behind <span class="font-mono text-xl">-departmentId: Integer</span>.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Operations" data-section="Features">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Operations</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Behavior the class offers</h2>
+        </header>
+        <div class="flex flex-1 flex-col justify-center gap-6 px-14 pb-16">
+          <p class="max-w-5xl rounded-2xl bg-stone-900 px-6 py-5 font-mono text-2xl text-stone-50">visibility name(parameter: Type): ReturnType</p>
+          <p class="max-w-4xl text-2xl leading-snug"><span class="font-mono">+setName(newName: String): void</span> is public, takes one String, and returns nothing.</p>
+          <p class="max-w-4xl text-2xl leading-snug text-stone-700">Parentheses mark an operation. An operation is the declared feature. A method is one implementation of it.</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Visibility" data-section="Features">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Visibility</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Who may refer to the member</h2>
+        </header>
+        <div class="mx-14 mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-3 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Symbol</span><span>Name</span><span>Typical meaning</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span class="font-mono">+</span><span>Public</span><span>Any client that can see the class</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span class="font-mono">−</span><span>Private</span><span>Only the owning class</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span class="font-mono">#</span><span>Protected</span><span>The class and its descendants</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span class="font-mono">~</span><span>Package</span><span>The same package</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Visibility example" data-section="Features">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Visibility</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">One class, four symbols</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 346 353" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class VisibilityExample--><g class="entity" data-qualified-name="VisibilityExample" id="ent0001" data-source-line="2"><rect x="10.938" y="10.938" width="316.292" height="322.646" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="10.938" width="316.292" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="79.116" y="54.893" fill="#1C1917" font-size="21.875" textLength="179.935" font-weight="700" font-family="Arial">VisibilityExample</text><line x1="12.5" y1="82.967" x2="325.667" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="125.36" fill="#1C1917" font-size="21.875" textLength="223.706" font-family="Arial">-privateAttribute: String</text><text x="35.938" y="181.764" fill="#1C1917" font-size="21.875" textLength="257.202" font-family="Arial">~packageAttribute: Integer</text><line x1="12.5" y1="208.275" x2="325.667" y2="208.275" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="250.668" fill="#1C1917" font-size="21.875" textLength="232.849" font-family="Arial">+publicOperation(): void</text><text x="35.938" y="307.072" fill="#1C1917" font-size="21.875" textLength="266.292" font-family="Arial">#protectedOperation(): void</text></g><?plantuml-src RSkn2W8n383X_PuYugA8Fi1j3WvE3iBjQHjACDU6DZqyH9_TZWvkFtpy6qvUMY2ejWgTkCqoUC5QOUBAZeLjlJnnLY5u3G07RKxOtvGA6kUqsu-mP0wTZbfuGQEpMM7NZ4QuzqgnsrPBDl96uT_vKVGFZB_dDHb5AiFx2m00?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Keep mutable state private. Expose behavior through public operations. Protected members stay rare.</p>
+      </section>
+
+      <section class="slide" data-title="Employee" data-section="Example">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Employee</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A first complete class</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 554 409" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Employee--><g class="entity" data-qualified-name="Employee" id="ent0001" data-source-line="2"><rect x="10.938" y="10.938" width="524.82" height="379.05" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="10.938" width="524.82" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="221.677" y="54.893" fill="#1C1917" font-size="21.875" textLength="103.34" font-weight="700" font-family="Arial">Employee</text><line x1="12.5" y1="82.967" x2="534.195" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="125.36" fill="#1C1917" font-size="21.875" textLength="131.303" font-family="Arial">-name: String</text><text x="35.938" y="181.764" fill="#1C1917" font-size="21.875" textLength="200.635" font-family="Arial">-employeeId: Integer</text><text x="35.938" y="238.168" fill="#1C1917" font-size="21.875" textLength="215.215" font-family="Arial">-phoneNumber: String</text><text x="35.938" y="294.572" fill="#1C1917" font-size="21.875" textLength="187.241" font-family="Arial">-department: String</text><line x1="12.5" y1="321.083" x2="534.195" y2="321.083" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="363.477" fill="#1C1917" font-size="21.875" textLength="474.82" font-family="Arial">+updatePhoneNumber(newNumber: String): void</text></g><?plantuml-src LOj12W8n40JlUSLuKqGVaBk7lOZW2-9EimOcav1Cb4Nykom8hiUkhjf47QKpgDaiECQUn8qIMgDJAf9dW5wEwA0XmTFLQjHfsVY-0tiQr32XBhZSi-BSqmrrRJDAg9QWjgBxNZWOBhzagtZ-npjFZnpPlJy0?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Is department a string, or a concept the model must reason about? We replace that string when we draw associations.</p>
+      </section>
+
+      <section class="slide" data-title="Map" data-section="Class">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Zoo</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Read the class. Two marks are next.</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 418 856" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Animal--><g class="entity" data-qualified-name="Animal" id="ent0001" data-source-line="2"><rect x="10.938" y="10.938" width="384.94" height="379.05" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="10.938" width="384.94" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="166.942" y="54.893" fill="#1C1917" font-size="21.875" textLength="72.931" font-weight="700" font-family="Arial">Animal</text><line x1="12.5" y1="82.967" x2="394.315" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="125.36" fill="#1C1917" font-size="21.875" textLength="131.303" font-family="Arial">-name: String</text><text x="35.938" y="181.764" fill="#1C1917" font-size="21.875" textLength="104.568" font-family="Arial">-id: Integer</text><text x="35.938" y="238.168" fill="#1C1917" font-size="21.875" textLength="124.04" font-family="Arial">-age: Integer</text><line x1="12.5" y1="264.679" x2="394.315" y2="264.679" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="307.072" fill="#1C1917" font-size="21.875" textLength="334.94" font-family="Arial">+setName(newName: String): void</text><text x="35.938" y="363.477" fill="#1C1917" font-size="21.875" textLength="110.037" font-family="Arial">+eat(): void</text></g><!--class Otter--><g class="entity" data-qualified-name="Otter" id="ent0002" data-source-line="9"><rect x="64.109" y="479.047" width="278.598" height="140.933" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="64.109" y="479.047" width="278.598" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="177.277" y="523.003" fill="#1C1917" font-size="21.875" textLength="52.263" font-weight="700" font-family="Arial">Otter</text><line x1="65.672" y1="551.076" x2="341.145" y2="551.076" style="stroke:#1C1917;stroke-width:2.188;"/><text x="89.109" y="593.469" fill="#1C1917" font-size="21.875" textLength="228.598" font-family="Arial">-whiskerLength: Integer</text></g><!--class SeaUrchin--><g class="entity" data-qualified-name="SeaUrchin" id="ent0003" data-source-line="12"><rect x="129" y="763.734" width="148.825" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="129" y="763.734" width="148.825" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="149.313" y="807.69" fill="#1C1917" font-size="21.875" textLength="108.2" font-weight="700" font-family="Arial">SeaUrchin</text></g><!--reverse link Animal to Otter--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk4" data-source-line="13" data-link-type="extension"><path d="M203.406,418.812 C203.406,450.109 203.406,452.594 203.406,478.375" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Animal-backto-Otter" codeLine="13"/><polygon points="203.406,390.687,194.031,418.812,212.781,418.812,203.406,390.687" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--link Otter to SeaUrchin--><g class="link" data-entity-1="ent0002" data-entity-2="ent0003" id="lnk5" data-source-line="14" data-link-type="dependency"><path d="M203.406,620.578 C203.406,667.109 203.406,718.578 203.406,755.516" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Otter-to-SeaUrchin" codeLine="14"/><polygon points="203.406,763.328,209.656,749.266,203.406,755.516,197.156,749.266,203.406,763.328" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="220.594" y="699.975" fill="#1C1917" font-size="20.313" textLength="38.393" font-family="Arial">eats</text></g><?plantuml-src JOvD2i8m44RtESMugqWyG131fI3jedY0q0xfO3f2ChM8UdSRqj8k7xplPqVS-A55YFBsUAIXzwhnDaQuCFNMmqS1QBOz6gWb4Bl4r1guig33aD0wtF8XefHJec0SoqroR-3rf3OPQALOy3SFLY8OyjxOKNnWk24xwTRgnQpHtaFJ4QlvvEchTSwhtABrURN0mBGN_m00?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Name, attributes, operations, and visibility are on Animal. The hollow triangle and the eats arrow are the next lessons.</p>
+      </section>
+
+      <section class="slide" data-title="Generalization" data-section="Generalization">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Three animals. One general class.</h2>
+        </header>
+        <div class="grid grid-cols-3 gap-4 px-14 pt-4">
+          <figure>
+            <img src="photos/otter.jpg" alt="A sea otter floating on its back" class="h-52 w-full rounded-2xl object-cover object-top" />
+            <figcaption class="mt-2 text-center text-xl font-semibold">Otter</figcaption>
+          </figure>
+          <figure>
+            <img src="photos/tortoise.jpg" alt="An Aldabra giant tortoise" class="h-52 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-center text-xl font-semibold">Tortoise</figcaption>
+          </figure>
+          <figure>
+            <img src="photos/loris.jpg" alt="A pygmy slow loris on a branch" class="h-52 w-full rounded-2xl object-cover object-right" />
+            <figcaption class="mt-2 text-center text-xl font-semibold">SlowLoris</figcaption>
+          </figure>
+        </div>
+        <p class="px-14 pt-3 text-xl text-stone-700">Each one is an Animal. Each may add features of its own.</p>
+        <p class="mx-14 mt-3 rounded-2xl bg-stone-900 px-6 py-4 text-2xl text-stone-50">Solid line. Hollow triangle on the general class.</p>
+        <p class="px-14 pt-2 text-xs text-stone-400">Photos: Marshal Hedin, CC BY-SA 2.0 · Yotcmdr, public domain · K.A.I. Nekaris, CC BY-SA 3.0</p>
+      </section>
+
+      <section class="slide" data-title="Zoo generalization" data-section="Generalization">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Otter adds whiskerLength</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 726 582" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Animal--><g class="entity" data-qualified-name="Animal" id="ent0001" data-source-line="2"><rect x="257.188" y="10.938" width="181.303" height="322.646" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="257.188" y="10.938" width="181.303" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="311.374" y="54.893" fill="#1C1917" font-size="21.875" textLength="72.931" font-weight="700" font-family="Arial">Animal</text><line x1="258.75" y1="82.967" x2="436.928" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="282.188" y="125.36" fill="#1C1917" font-size="21.875" textLength="131.303" font-family="Arial">-name: String</text><text x="282.188" y="181.764" fill="#1C1917" font-size="21.875" textLength="104.568" font-family="Arial">-id: Integer</text><text x="282.188" y="238.168" fill="#1C1917" font-size="21.875" textLength="124.04" font-family="Arial">-age: Integer</text><line x1="258.75" y1="264.679" x2="436.928" y2="264.679" style="stroke:#1C1917;stroke-width:2.188;"/><text x="282.188" y="307.072" fill="#1C1917" font-size="21.875" textLength="110.037" font-family="Arial">+eat(): void</text></g><!--class Tortoise--><g class="entity" data-qualified-name="Tortoise" id="ent0002" data-source-line="8"><rect x="10.938" y="453.969" width="126.918" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="453.969" width="126.918" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="31.25" y="497.925" fill="#1C1917" font-size="21.875" textLength="86.293" font-weight="700" font-family="Arial">Tortoise</text></g><!--class Otter--><g class="entity" data-qualified-name="Otter" id="ent0003" data-source-line="9"><rect x="208.531" y="419.516" width="278.598" height="140.933" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="208.531" y="419.516" width="278.598" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="321.699" y="463.472" fill="#1C1917" font-size="21.875" textLength="52.263" font-weight="700" font-family="Arial">Otter</text><line x1="210.094" y1="491.545" x2="485.567" y2="491.545" style="stroke:#1C1917;stroke-width:2.188;"/><text x="233.531" y="533.938" fill="#1C1917" font-size="21.875" textLength="228.598" font-family="Arial">-whiskerLength: Integer</text></g><!--class SlowLoris--><g class="entity" data-qualified-name="SlowLoris" id="ent0004" data-source-line="12"><rect x="558.078" y="453.969" width="145.151" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="558.078" y="453.969" width="145.151" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="578.391" y="497.925" fill="#1C1917" font-size="21.875" textLength="104.526" font-weight="700" font-family="Arial">SlowLoris</text></g><!--reverse link Animal to Tortoise--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk5" data-source-line="13" data-link-type="extension"><path d="M237.954,300.242 C185.47,360.617 141.422,411.313 104.984,453.219" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Animal-backto-Tortoise" codeLine="13"/><polygon points="256.406,279.016,230.879,294.091,245.03,306.392,256.406,279.016" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--reverse link Animal to Otter--><g class="link" data-entity-1="ent0001" data-entity-2="ent0003" id="lnk6" data-source-line="14" data-link-type="extension"><path d="M347.828,362.469 C347.828,392.469 347.828,394.188 347.828,419.5" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Animal-backto-Otter" codeLine="14"/><polygon points="347.828,334.344,338.453,362.469,357.203,362.469,347.828,334.344" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--reverse link Animal to SlowLoris--><g class="link" data-entity-1="ent0001" data-entity-2="ent0004" id="lnk7" data-source-line="15" data-link-type="extension"><path d="M458.068,296.447 C513.256,357.838 561.313,411.297 599.609,453.906" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Animal-backto-SlowLoris" codeLine="15"/><polygon points="439.266,275.531,451.096,302.715,465.04,290.18,439.266,275.531" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><?plantuml-src LOvD2i8m44RtESMuKoGU8BXnAHHSr0k4PaW7ymEJgKNKkqirshfy3xx7jwBKXS4X5Ba5tD4GW-g2BGKEYQ8DS5S0Ejc81bfXIdvYSWQEIT0ZJsWzBdcBLjOR0zTCJZrhxfnPCXMiU191_iJ7die5kS7afPyxts4RyjXafgBge_r3wpctbE_ed_cDNm00?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Use it only when the specialized instance can stand in for the general type.</p>
+      </section>
+
+      <section class="slide" data-title="Is-a test" data-section="Generalization">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Both statements have to hold</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-6 px-14 pb-16 text-2xl grid-cols-2">
+          <div class="rounded-2xl bg-white p-8">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">1</p>
+            <p class="mt-3 leading-snug">The specialized class is a kind of the general class.</p>
+          </div>
+          <div class="rounded-2xl bg-white p-8">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">2</p>
+            <p class="mt-3 leading-snug">A specialized instance can be used wherever the general type is expected.</p>
+          </div>
+        </div>
+        <p class="px-14 pb-14 text-xl text-stone-600">Inheritance is not a trick for reusing code. Prefer delegation when the is-a test fails.</p>
+      </section>
+
+      <section class="slide" data-title="Abstract class" data-section="Generalization">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Abstract class</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Shared, but not instantiated</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 539 512" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Animal--><g class="entity" data-qualified-name="Animal" id="ent0001" data-source-line="2"><rect x="163.438" y="10.938" width="181.303" height="322.646" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="163.438" y="10.938" width="181.303" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="217.624" y="54.893" fill="#1C1917" font-size="21.875" textLength="72.931" font-weight="700" font-style="italic" font-family="Arial">Animal</text><line x1="165" y1="82.967" x2="343.178" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="188.438" y="125.36" fill="#1C1917" font-size="21.875" textLength="131.303" font-family="Arial">-name: String</text><text x="188.438" y="181.764" fill="#1C1917" font-size="21.875" textLength="104.568" font-family="Arial">-id: Integer</text><text x="188.438" y="238.168" fill="#1C1917" font-size="21.875" textLength="124.04" font-family="Arial">-age: Integer</text><line x1="165" y1="264.679" x2="343.178" y2="264.679" style="stroke:#1C1917;stroke-width:2.188;"/><text x="188.438" y="307.072" fill="#1C1917" font-size="21.875" textLength="110.037" font-family="Arial">+eat(): void</text></g><!--class Tortoise--><g class="entity" data-qualified-name="Tortoise" id="ent0002" data-source-line="8"><rect x="10.938" y="419.516" width="126.918" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="419.516" width="126.918" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="31.25" y="463.472" fill="#1C1917" font-size="21.875" textLength="86.293" font-weight="700" font-family="Arial">Tortoise</text></g><!--class Otter--><g class="entity" data-qualified-name="Otter" id="ent0003" data-source-line="9"><rect x="207.641" y="419.516" width="92.888" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="207.641" y="419.516" width="92.888" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="227.953" y="463.472" fill="#1C1917" font-size="21.875" textLength="52.263" font-weight="700" font-family="Arial">Otter</text></g><!--class SlowLoris--><g class="entity" data-qualified-name="SlowLoris" id="ent0004" data-source-line="10"><rect x="370.578" y="419.516" width="145.151" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="370.578" y="419.516" width="145.151" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="390.891" y="463.472" fill="#1C1917" font-size="21.875" textLength="104.526" font-weight="700" font-family="Arial">SlowLoris</text></g><!--reverse link Animal to Tortoise--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk5" data-source-line="11" data-link-type="extension"><path d="M147.471,340.033 C122.846,378.423 113.578,392.891 96.672,419.25" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Animal-backto-Tortoise" codeLine="11"/><polygon points="162.656,316.359,139.58,334.971,155.362,345.094,162.656,316.359" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--reverse link Animal to Otter--><g class="link" data-entity-1="ent0001" data-entity-2="ent0003" id="lnk6" data-source-line="12" data-link-type="extension"><path d="M254.078,362.469 C254.078,394.5 254.078,396.953 254.078,419.172" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Animal-backto-Otter" codeLine="12"/><polygon points="254.078,334.344,244.703,362.469,263.453,362.469,254.078,334.344" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--reverse link Animal to SlowLoris--><g class="link" data-entity-1="ent0001" data-entity-2="ent0004" id="lnk7" data-source-line="13" data-link-type="extension"><path d="M361.025,332.285 C388.588,373.144 400.813,391.25 419.75,419.297" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Animal-backto-SlowLoris" codeLine="13"/><polygon points="345.297,308.969,353.253,337.528,368.797,327.042,345.297,308.969" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><?plantuml-src JOrD2W8n38NtFKNSAL8FCBXnAGWknWl4DfH0Vw39AABUNOSEsjtx7ldoLfnTd3o1w2FIZgSK3Lv5Ape55r443faJHdWQ09inqG2ZLivXPlO37BDIe3eZ1kfvIwZhpG2tmjwyJNjtALKB2oruLltUjZp6SZ-LocAMpVtBsh_Gbqthcv_y0G00?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">The italic name means Animal is abstract. The zoo creates a Tortoise, an Otter, or a SlowLoris.</p>
+      </section>
+
+      <section class="slide" data-title="Association" data-section="Association">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Association</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A structural link between instances</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_280px] gap-4 px-14 pt-3">
+          <div class="diagram min-h-0 rounded-2xl border border-stone-200 bg-white p-3">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 182 320" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Otter--><g class="entity" data-qualified-name="Otter" id="ent0001" data-source-line="2"><rect x="38.906" y="10.938" width="92.888" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="38.906" y="10.938" width="92.888" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="59.219" y="54.893" fill="#1C1917" font-size="21.875" textLength="52.263" font-weight="700" font-family="Arial">Otter</text></g><!--class SeaUrchin--><g class="entity" data-qualified-name="SeaUrchin" id="ent0002" data-source-line="3"><rect x="10.938" y="226.719" width="148.825" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="226.719" width="148.825" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="31.25" y="270.675" fill="#1C1917" font-size="21.875" textLength="108.2" font-weight="700" font-family="Arial">SeaUrchin</text></g><!--link Otter to SeaUrchin--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk3" data-source-line="4" data-link-type="dependency"><path d="M85.344,83.641 C85.344,123.031 85.344,178.766 85.344,218.187" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Otter-to-SeaUrchin" codeLine="4"/><polygon points="85.344,226,91.594,211.937,85.344,218.187,79.094,211.937,85.344,226" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="102.531" y="162.959" fill="#1C1917" font-size="20.313" textLength="38.393" font-family="Arial">eats</text></g><?plantuml-src KypCIyufJKbLA2wfp4dLoopDpU5ApaaiBbRmBob9BOAoWrCJGukICpBpkC2Y2hgwTWWn1Ik5rCIIOW00?></g></svg>
+          </div>
+          <figure class="flex min-h-0 flex-col">
+            <img src="photos/urchin.jpg" alt="A purple sea urchin on a reef" class="min-h-0 w-full flex-1 rounded-2xl object-cover" />
+            <figcaption class="pt-2 text-center text-sm font-semibold">SeaUrchin</figcaption>
+          </figure>
+        </div>
+        <p class="px-14 pt-3 text-center text-lg text-stone-600">The verb phrase names the link. This open arrow shows navigability. Leave the arrow off when direction does not matter.</p>
+        <p class="px-14 pb-2 text-center text-xs text-stone-400">Diego Delso, CC BY-SA 4.0</p>
+      </section>
+
+      <section class="slide" data-title="Navigability" data-section="Association">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Association</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Two different questions</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-6 px-14 pb-16 text-2xl grid-cols-2">
+          <div class="rounded-2xl bg-white p-8">
+            <p class="font-semibold">Navigability</p>
+            <p class="mt-4 leading-snug text-stone-700">Which direction can be traversed? An open arrow answers that, and only when the direction matters.</p>
+          </div>
+          <div class="rounded-2xl bg-white p-8">
+            <p class="font-semibold">Multiplicity</p>
+            <p class="mt-4 leading-snug text-stone-700">How many instances may participate? A number such as 0..* is not an arrow, and an arrow is not “many.”</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Department" data-section="Association">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Association</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Replace the department string</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 557 640" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Employee--><g class="entity" data-qualified-name="Employee" id="ent0001" data-source-line="2"><rect x="10.938" y="10.938" width="524.82" height="322.646" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="10.938" width="524.82" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="221.677" y="54.893" fill="#1C1917" font-size="21.875" textLength="103.34" font-weight="700" font-family="Arial">Employee</text><line x1="12.5" y1="82.967" x2="534.195" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="125.36" fill="#1C1917" font-size="21.875" textLength="131.303" font-family="Arial">-name: String</text><text x="35.938" y="181.764" fill="#1C1917" font-size="21.875" textLength="200.635" font-family="Arial">-employeeId: Integer</text><text x="35.938" y="238.168" fill="#1C1917" font-size="21.875" textLength="215.215" font-family="Arial">-phoneNumber: String</text><line x1="12.5" y1="264.679" x2="534.195" y2="264.679" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="307.072" fill="#1C1917" font-size="21.875" textLength="474.82" font-family="Arial">+updatePhoneNumber(newNumber: String): void</text></g><!--class Department--><g class="entity" data-qualified-name="Department" id="ent0002" data-source-line="8"><rect x="182.703" y="477.328" width="181.303" height="140.933" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="182.703" y="477.328" width="181.303" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="212.579" y="521.284" fill="#1C1917" font-size="21.875" textLength="121.552" font-weight="700" font-family="Arial">Department</text><line x1="184.266" y1="549.357" x2="362.444" y2="549.357" style="stroke:#1C1917;stroke-width:2.188;"/><text x="207.703" y="591.751" fill="#1C1917" font-size="21.875" textLength="131.303" font-family="Arial">-name: String</text></g><!--link Employee to Department--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk3" data-source-line="11" data-link-type="dependency"><path d="M273.344,333.922 C273.344,384 273.344,428.828 273.344,469.172" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Employee-to-Department" codeLine="11"/><polygon points="273.344,476.984,279.594,462.922,273.344,469.172,267.094,462.922,273.344,476.984" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="290.531" y="413.569" fill="#1C1917" font-size="20.313" textLength="74.496" font-family="Arial">works in</text><text x="226.105" y="380.705" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text><text x="243.839" y="444.948" fill="#1C1917" font-size="20.313" font-family="Arial">1</text></g><?plantuml-src ROxB2i8m54Jt-OfhLZveq6qMhkoY6n7yWjXSQZ2v2NbOYlJVfL2qWikPESFCob1hYqP8UR0eJ76MjLQb1BKBrW-8y6805Ic74guv6kecZNFQQ0aDPUmmJdQuUy9pSJUC2tfNWbOPBzzmJTZ_OXi9Jsyq6-Vv4mOLiqFAVmwCxFEExuNOSgYg8_03NzOaz3u-4XXw0m00?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Each employee works in exactly one department. A department has zero or many employees. The arrow says Employee can reach Department.</p>
+      </section>
+
+      <section class="slide" data-title="Aggregation" data-section="Aggregation">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Shared aggregation</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A hollow diamond on the whole</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 215 320" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Creep--><g class="entity" data-qualified-name="Creep" id="ent0001" data-source-line="2"><rect x="23.078" y="10.938" width="102.629" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="23.078" y="10.938" width="102.629" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="43.391" y="54.893" fill="#1C1917" font-size="21.875" textLength="62.004" font-weight="700" font-family="Arial">Creep</text></g><!--class Tortoise--><g class="entity" data-qualified-name="Tortoise" id="ent0002" data-source-line="3"><rect x="10.938" y="226.719" width="126.918" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="226.719" width="126.918" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="31.25" y="270.675" fill="#1C1917" font-size="21.875" textLength="86.293" font-weight="700" font-family="Arial">Tortoise</text></g><!--reverse link Creep to Tortoise--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk3" data-source-line="4" data-link-type="aggregation"><path d="M74.391,102.391 C74.391,141.781 74.391,186.578 74.391,226" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Creep-backto-Tortoise" codeLine="4"/><polygon points="74.391,83.641,68.141,93.016,74.391,102.391,80.641,93.016,74.391,83.641" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="91.578" y="162.959" fill="#1C1917" font-size="20.313" textLength="84.652" font-family="Arial">members</text><text x="20.145" y="130.117" fill="#1C1917" font-size="20.313" textLength="33.881" font-family="Arial">0..1</text><text x="22.875" y="194.651" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text></g><?plantuml-src KypCIyufJKbLA2wfp4dLoopDpU5ApaaiBbPmBafDBO2oG_ABIl8pYrEvm88AIWPwUePA2lcwkc2cbX9SWOALGcvgRb9gKJ40?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">A tortoise may belong to a creep and still exist on its own. Use the hollow diamond only when that aggregate meaning is real.</p>
+      </section>
+
+      <section class="slide" data-title="Aggregation caution" data-section="Aggregation">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Shared aggregation</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A plain line is often more honest</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[340px_1fr] items-center gap-6 px-14">
+          <figure>
+            <img src="photos/tortoise-free.jpg" alt="An Aldabra giant tortoise walking across open grass" class="h-80 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-xs text-stone-400">Bjørn Christian Tørrissen, CC BY-SA 4.0</figcaption>
+          </figure>
+          <ul class="flex flex-col justify-center gap-4 text-2xl">
+            <li class="rounded-2xl bg-white px-6 py-4">Do not draw a hollow diamond just to say “has-a.”</li>
+            <li class="rounded-2xl bg-white px-6 py-4">Do not draw it just because a class holds a collection.</li>
+            <li class="rounded-2xl bg-white px-6 py-4">Do not draw it just because the part can exist alone.</li>
+          </ul>
+        </div>
+        <p class="px-14 py-4 text-xl text-stone-600">UML leaves shared aggregation weak. Prefer a plain association when the team cannot agree what the diamond adds.</p>
+      </section>
+
+      <section class="slide" data-title="Composition" data-section="Composition">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Composition</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A filled diamond on the whole</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 606 285" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class VisitorCenter--><g class="entity" data-qualified-name="VisitorCenter" id="ent0001" data-source-line="5"><rect x="10.938" y="101.563" width="177.985" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="101.563" width="177.985" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="31.25" y="145.518" fill="#1C1917" font-size="21.875" textLength="137.36" font-weight="700" font-family="Arial">VisitorCenter</text></g><!--class Lobby--><g class="entity" data-qualified-name="Lobby" id="ent0002" data-source-line="6"><rect x="457.766" y="10.938" width="106.239" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="457.766" y="10.938" width="106.239" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="478.078" y="54.893" fill="#1C1917" font-size="21.875" textLength="65.614" font-weight="700" font-family="Arial">Lobby</text></g><!--class Bathroom--><g class="entity" data-qualified-name="Bathroom" id="ent0003" data-source-line="7"><rect x="438.922" y="192.188" width="143.922" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="438.922" y="192.188" width="143.922" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="459.234" y="236.143" fill="#1C1917" font-size="21.875" textLength="103.297" font-weight="700" font-family="Arial">Bathroom</text></g><!--reverse link VisitorCenter to Lobby--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk4" data-source-line="8" data-link-type="composition"><path d="M207.788,113.965 C289.507,95.808 390.125,73.453 457.562,58.453" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="VisitorCenter-backto-Lobby" codeLine="8"/><polygon points="189.484,118.031,199.992,122.099,207.788,113.965,197.281,109.897,189.484,118.031" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="276.422" y="58.85" fill="#1C1917" font-size="20.313" textLength="75.656" font-family="Arial">contains</text><text x="217.231" y="94.622" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="418.241" y="99.801" fill="#1C1917" font-size="20.313" font-family="Arial">1</text></g><!--reverse link VisitorCenter to Bathroom--><g class="link" data-entity-1="ent0001" data-entity-2="ent0003" id="lnk5" data-source-line="9" data-link-type="composition"><path d="M207.546,169.709 C230.155,176.162 236.484,177.578 259.234,182.891 C319.172,196.891 388.047,209.094 438.328,217.297" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="VisitorCenter-backto-Bathroom" codeLine="9"/><polygon points="189.516,164.563,196.815,173.146,207.546,169.709,200.246,161.126,189.516,164.563" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="276.422" y="162.881" fill="#1C1917" font-size="20.313" textLength="75.656" font-family="Arial">contains</text><text x="217.266" y="205.178" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="380.508" y="253.973" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">1..*</text></g><?plantuml-src TOon3e9044Jx-ugLaWI2bT5IMslxurXbmx5BTfU2lpSIOh2mcidBcpaGfpnt2EPBnfhcCOUCJmSNK7hr3Xqf9YVXO0Fn53MEmDAXuGIdPWSryl21voQa7CtWGKOkUaDsr8tTfMsNhL-ZzoeoXXyHYcC1PLMjkUfmWIJiaTZ-gdLT5j_3tU0D?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">One visitor center owns exactly one lobby, and one or more bathrooms. Each part belongs to that one center.</p>
+      </section>
+
+      <section class="slide" data-title="Ownership test" data-section="Composition">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Composition</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Ask before you fill the diamond</h2>
+        </header>
+        <div class="grid grid-cols-2 gap-4 px-14 pt-4">
+          <figure>
+            <img src="photos/zoo.jpg" alt="The entrance building of Riga Zoo" class="h-40 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-1 text-center text-sm font-semibold">VisitorCenter</figcaption>
+          </figure>
+          <figure>
+            <img src="photos/lobby.jpg" alt="A building lobby with a reception desk" class="h-40 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-1 text-center text-sm font-semibold">Lobby</figcaption>
+          </figure>
+        </div>
+        <ol class="mt-3 grid flex-1 content-center gap-3 px-14 text-xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-3">Is the part owned by at most one whole at a time?</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Is the part’s identity meaningful inside that whole?</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Does the whole govern creation, transfer, or destruction?</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Would shared ownership contradict the domain?</li>
+        </ol>
+        <p class="px-14 py-3 text-lg text-stone-600">“Delete the whole, delete the part” is only an intuition. A database cascade does not prove composition.</p>
+        <p class="px-14 pb-1 text-center text-xs text-stone-400">Trogain, CC BY-SA 4.0 · PAULIX04, CC BY-SA 4.0</p>
+      </section>
+
+      <section class="slide" data-title="Compare diamonds" data-section="Composition">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Aggregation and composition</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Weak share, or exclusive ownership</h2>
+        </header>
+        <div class="mx-14 mt-4 overflow-hidden rounded-2xl border border-stone-200 bg-white text-xl">
+          <div class="grid grid-cols-3 bg-stone-900 px-5 py-3 font-semibold text-stone-50"><span></span><span>Shared aggregation</span><span>Composition</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-3"><span class="font-semibold">Mark</span><span>Hollow diamond</span><span>Filled diamond</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-3"><span class="font-semibold">Sharing</span><span>A part may be shared</span><span>At most one whole at a time</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-3"><span class="font-semibold">Lifecycle</span><span>Not necessarily tied</span><span>The whole normally governs it</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-3"><span class="font-semibold">Use</span><span>Sparingly</span><span>Only with clear ownership</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Relationship kinds" data-section="Relationships">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Relationships</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The four marks, together</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 843 407" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Animal--><g class="entity" data-qualified-name="Animal" id="ent0001" data-source-line="3"><rect x="43.156" y="313.984" width="113.556" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="43.156" y="313.984" width="113.556" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="63.469" y="357.94" fill="#1C1917" font-size="21.875" textLength="72.931" font-weight="700" font-family="Arial">Animal</text></g><!--class Otter--><g class="entity" data-qualified-name="Otter" id="ent0002" data-source-line="4"><rect x="402.813" y="313.984" width="92.888" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="402.813" y="313.984" width="92.888" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="423.125" y="357.94" fill="#1C1917" font-size="21.875" textLength="52.263" font-weight="700" font-family="Arial">Otter</text></g><!--class SeaUrchin--><g class="entity" data-qualified-name="SeaUrchin" id="ent0003" data-source-line="5"><rect x="672.094" y="313.984" width="148.825" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="672.094" y="313.984" width="148.825" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="692.406" y="357.94" fill="#1C1917" font-size="21.875" textLength="108.2" font-weight="700" font-family="Arial">SeaUrchin</text></g><!--class Creep--><g class="entity" data-qualified-name="Creep" id="ent0004" data-source-line="6"><rect x="48.609" y="171.797" width="102.629" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="48.609" y="171.797" width="102.629" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="68.922" y="215.753" fill="#1C1917" font-size="21.875" textLength="62.004" font-weight="700" font-family="Arial">Creep</text></g><!--class Tortoise--><g class="entity" data-qualified-name="Tortoise" id="ent0005" data-source-line="7"><rect x="385.797" y="171.797" width="126.918" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="385.797" y="171.797" width="126.918" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="406.109" y="215.753" fill="#1C1917" font-size="21.875" textLength="86.293" font-weight="700" font-family="Arial">Tortoise</text></g><!--class VisitorCenter--><g class="entity" data-qualified-name="VisitorCenter" id="ent0006" data-source-line="8"><rect x="10.938" y="29.609" width="177.985" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="29.609" width="177.985" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="31.25" y="73.565" fill="#1C1917" font-size="21.875" textLength="137.36" font-weight="700" font-family="Arial">VisitorCenter</text></g><!--class Lobby--><g class="entity" data-qualified-name="Lobby" id="ent0007" data-source-line="9"><rect x="396.141" y="29.609" width="106.239" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="396.141" y="29.609" width="106.239" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="416.453" y="73.565" fill="#1C1917" font-size="21.875" textLength="65.614" font-weight="700" font-family="Arial">Lobby</text></g><!--reverse link Animal to Otter--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk8" data-source-line="10" data-link-type="extension"><path d="M185.234,350 C253.281,350 339.063,350 402.156,350" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Animal-backto-Otter" codeLine="10"/><polygon points="157.109,350,185.234,359.375,185.234,340.625,157.109,350" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--link Otter to SeaUrchin--><g class="link" data-entity-1="ent0002" data-entity-2="ent0003" id="lnk9" data-source-line="11" data-link-type="dependency"><path d="M496.125,350 C542.859,350 608.672,350 663.719,350" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Otter-to-SeaUrchin" codeLine="11"/><polygon points="671.531,350,657.469,343.75,663.719,350,657.469,356.25,671.531,350" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="573.656" y="329.99" fill="#1C1917" font-size="20.313" textLength="38.393" font-family="Arial">eats</text></g><!--reverse link Creep to Tortoise--><g class="link" data-entity-1="ent0004" data-entity-2="ent0005" id="lnk10" data-source-line="12" data-link-type="aggregation"><path d="M170.702,208.803 C195.077,209.115 206.031,209.219 232.672,209.375 C281.281,209.672 293.438,209.734 342.047,209.375 C355.984,209.266 370.969,209.094 385.125,208.891" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Creep-backto-Tortoise" codeLine="12"/><polygon points="151.953,208.563,161.247,214.932,170.702,208.803,161.407,202.433,151.953,208.563" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="256.891" y="189.365" fill="#1C1917" font-size="20.313" textLength="62.108" font-family="Arial">groups</text></g><!--reverse link VisitorCenter to Lobby--><g class="link" data-entity-1="ent0006" data-entity-2="ent0007" id="lnk11" data-source-line="13" data-link-type="composition"><path d="M208.047,65.625 C273.156,65.625 340.969,65.625 395.516,65.625" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="VisitorCenter-backto-Lobby" codeLine="13"/><polygon points="189.297,65.625,198.672,71.875,208.047,65.625,198.672,59.375,189.297,65.625" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="249.859" y="45.615" fill="#1C1917" font-size="20.313" textLength="75.656" font-family="Arial">contains</text></g><?plantuml-src LOtB2i9034NtynLnAzGF416aMy65Z_rq6jl0T5AIT57muntgbE8ct92JUtQKGfnQ1BKvue6c8Rg8RmDZ4EfwWvO4Wn4d5w9NXKkYmSUotCnGIhwZVqheQGLhGHnBVh0Oas9PNwHaB3McxVtAJJExNpkSFbLLofS9LNNU1704zAPkCG1dTEtFbqvu6jNzAM2VcKMGWS39F2Nz0W00?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Triangle on the general class. Open arrow for navigability. Hollow diamond for aggregation. Filled diamond for composition.</p>
+      </section>
+
+      <section class="slide" data-title="Multiplicity" data-section="Multiplicity">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Multiplicity</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">How many may participate</h2>
+        </header>
+        <div class="mx-14 mt-5 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-2 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Written</span><span>Means</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-3"><span class="font-mono">1</span><span>Exactly one</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-3"><span class="font-mono">0..1</span><span>Zero or one</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-3"><span class="font-mono">* or 0..*</span><span>Zero or many</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-3"><span class="font-mono">1..*</span><span>One or many</span></div>
+        </div>
+        <p class="px-14 pt-5 text-xl text-stone-600">The number is a domain rule. If the requirement is unknown, leave it unresolved.</p>
+      </section>
+
+      <section class="slide" data-title="Read both ends" data-section="Multiplicity">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Multiplicity</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Stand at one class, read the far number</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 198 320" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Customer--><g class="entity" data-qualified-name="Customer" id="ent0001" data-source-line="2"><rect x="10.938" y="10.938" width="142.726" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="10.938" width="142.726" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="31.25" y="54.893" fill="#1C1917" font-size="21.875" textLength="102.101" font-weight="700" font-family="Arial">Customer</text></g><!--class Order--><g class="entity" data-qualified-name="Order" id="ent0002" data-source-line="3"><rect x="32.203" y="226.719" width="100.194" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="32.203" y="226.719" width="100.194" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="52.516" y="270.675" fill="#1C1917" font-size="21.875" textLength="59.569" font-weight="700" font-family="Arial">Order</text></g><!--link Customer to Order--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk3" data-source-line="4" data-link-type="dependency"><path d="M82.297,83.641 C82.297,123.031 82.297,178.766 82.297,218.187" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Customer-to-Order" codeLine="4"/><polygon points="82.297,226,88.547,211.937,82.297,218.187,76.047,211.937,82.297,226" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="99.484" y="162.959" fill="#1C1917" font-size="20.313" textLength="58.716" font-family="Arial">places</text><text x="51.878" y="130.117" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="30.782" y="194.651" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text></g><?plantuml-src KypCIyufJKbLA2wfp4dLoopDpU5ApaaiBbPmBYqkoSzDBO9o_OjIW6oOe8AIePA2hgwTWfA1dfwM4aHMmKgX82SnERKO0000?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">One customer places zero or many orders. Each order belongs to exactly one customer.</p>
+      </section>
+
+      <section class="slide" data-title="Dependency" data-section="Dependency">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Dependency</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Uses, without keeping a link</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 221 320" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class ReportService--><g class="entity" data-qualified-name="ReportService" id="ent0001" data-source-line="2"><rect x="10.938" y="10.938" width="188.954" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="10.938" width="188.954" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="31.25" y="54.893" fill="#1C1917" font-size="21.875" textLength="148.329" font-weight="700" font-family="Arial">ReportService</text></g><!--class PdfExporter--><g class="entity" data-qualified-name="PdfExporter" id="ent0002" data-source-line="3"><rect x="22.5" y="226.719" width="165.819" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="22.5" y="226.719" width="165.819" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="42.813" y="270.675" fill="#1C1917" font-size="21.875" textLength="125.194" font-weight="700" font-family="Arial">PdfExporter</text></g><!--link ReportService to PdfExporter--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk3" data-source-line="4" data-link-type="dependency"><path d="M105.422,83.641 C105.422,123.031 105.422,178.766 105.422,218.187" style="stroke:#1C1917;stroke-width:1.563;stroke-dasharray:10.938,10.938;" fill="none" id="ReportService-to-PdfExporter" codeLine="4"/><polygon points="105.422,226,111.672,211.937,105.422,218.187,99.172,211.937,105.422,226" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="122.609" y="162.959" fill="#1C1917" font-size="20.313" textLength="42.906" font-family="Arial">uses</text></g><?plantuml-src KypCIyufJKbLA2wfp4dLoopDpU5ApaaiBbO8IYt8Boe9JYqgoqnEXOe5fAIvLe24KukuKEGLzFJia6KLh1HAYrEB0G00?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">A dashed arrow. Typical signals are a parameter, a local variable, or a temporary service. Skip code-level noise.</p>
+      </section>
+
+      <section class="slide" data-title="Users" data-section="Shopping">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Customer and Administrator are users</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 650 707" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class User--><g class="entity" data-qualified-name="User" id="ent0001" data-source-line="2"><rect x="101.016" y="10.938" width="438.484" height="379.05" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="101.016" y="10.938" width="438.484" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="295.937" y="54.893" fill="#1C1917" font-size="21.875" textLength="48.642" font-weight="700" font-family="Arial">User</text><line x1="102.578" y1="82.967" x2="537.937" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="126.016" y="125.36" fill="#1C1917" font-size="21.875" textLength="148.34" font-family="Arial">-userId: Integer</text><text x="126.016" y="181.764" fill="#1C1917" font-size="21.875" textLength="170.204" font-family="Arial">-password: String</text><text x="126.016" y="238.168" fill="#1C1917" font-size="21.875" textLength="207.951" font-family="Arial">-loginStatus: Boolean</text><text x="126.016" y="294.572" fill="#1C1917" font-size="21.875" textLength="184.795" font-family="Arial">-registerDate: Date</text><line x1="102.578" y1="321.083" x2="537.937" y2="321.083" style="stroke:#1C1917;stroke-width:2.188;"/><text x="126.016" y="363.477" fill="#1C1917" font-size="21.875" textLength="388.484" font-family="Arial">+verifyLogin(password: String): Boolean</text></g><!--class Customer--><g class="entity" data-qualified-name="Customer" id="ent0002" data-source-line="9"><rect x="10.938" y="475.922" width="274.892" height="209.837" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="475.922" width="274.892" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="97.333" y="519.878" fill="#1C1917" font-size="21.875" textLength="102.101" font-weight="700" font-family="Arial">Customer</text><line x1="12.5" y1="547.951" x2="284.267" y2="547.951" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="590.344" fill="#1C1917" font-size="21.875" textLength="224.892" font-family="Arial">-customerName: String</text><line x1="12.5" y1="616.855" x2="284.267" y2="616.855" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="659.249" fill="#1C1917" font-size="21.875" textLength="203.625" font-family="Arial">+placeOrder(): Order</text></g><!--class Administrator--><g class="entity" data-qualified-name="Administrator" id="ent0003" data-source-line="13"><rect x="356.172" y="510.375" width="271.933" height="140.933" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="356.172" y="510.375" width="271.933" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="420.43" y="554.331" fill="#1C1917" font-size="21.875" textLength="143.416" font-weight="700" font-family="Arial">Administrator</text><line x1="357.734" y1="582.404" x2="626.542" y2="582.404" style="stroke:#1C1917;stroke-width:2.188;"/><text x="381.172" y="624.798" fill="#1C1917" font-size="21.875" textLength="221.933" font-family="Arial">+updateCatalog(): void</text></g><!--reverse link User to Customer--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk4" data-source-line="16" data-link-type="extension"><path d="M222.665,416.249 C209.399,445.358 207.797,448.859 195.797,475.203" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="User-backto-Customer" codeLine="16"/><polygon points="234.328,390.656,214.134,412.361,231.196,420.137,234.328,390.656" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--reverse link User to Administrator--><g class="link" data-entity-1="ent0001" data-entity-2="ent0003" id="lnk5" data-source-line="17" data-link-type="extension"><path d="M417.859,416.252 C437.234,458.799 444.969,475.766 460.406,509.656" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="User-backto-Administrator" codeLine="17"/><polygon points="406.203,390.656,409.327,420.138,426.391,412.367,406.203,390.656" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><?plantuml-src NO_B2i8m44NtVaNSAQL-G77ZOoE8BiGF69An1DAaJ2OLKV_TYTRws8J98VVEoTXwxP915VdYS6PJuqRQGOpg697KTQHKcMJQc4fjF6EDb54hByw111wOhAypSw6s_i30ALPg6O93y9aJrZOoqXeOAvLFeKM7P4-NRSvC_jkcd_ozjrcboA5v6-d-jeC6lnIAre76FHcaYNGyXw5XOHhhHOI0mwkcIAqHcnKmY7jETC4Q2Jo_Fh-LvR3s2_tqF000?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">The triangles sit on User. Each specialized class adds its own behavior.</p>
+      </section>
+
+      <section class="slide" data-title="Places orders" data-section="Shopping">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A customer may have no orders yet</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 307 571" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Customer--><g class="entity" data-qualified-name="Customer" id="ent0001" data-source-line="2"><rect x="10.938" y="10.938" width="274.892" height="140.933" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="10.938" width="274.892" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="97.333" y="54.893" fill="#1C1917" font-size="21.875" textLength="102.101" font-weight="700" font-family="Arial">Customer</text><line x1="12.5" y1="82.967" x2="284.267" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="125.36" fill="#1C1917" font-size="21.875" textLength="224.892" font-family="Arial">-customerName: String</text></g><!--class Order--><g class="entity" data-qualified-name="Order" id="ent0002" data-source-line="5"><rect x="25.516" y="295.625" width="245.732" height="253.741" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="25.516" y="295.625" width="245.732" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="118.597" y="339.581" fill="#1C1917" font-size="21.875" textLength="59.569" font-weight="700" font-family="Arial">Order</text><line x1="27.078" y1="367.654" x2="269.685" y2="367.654" style="stroke:#1C1917;stroke-width:2.188;"/><text x="50.516" y="410.048" fill="#1C1917" font-size="21.875" textLength="156.853" font-family="Arial">-orderId: Integer</text><text x="50.516" y="466.452" fill="#1C1917" font-size="21.875" textLength="162.92" font-family="Arial">-orderDate: Date</text><text x="50.516" y="522.856" fill="#1C1917" font-size="21.875" textLength="195.732" font-family="Arial">-status: OrderStatus</text></g><!--link Customer to Order--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk3" data-source-line="10" data-link-type="dependency"><path d="M148.391,152.578 C148.391,193.734 148.391,239.281 148.391,287.562" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Customer-to-Order" codeLine="10"/><polygon points="148.391,295.375,154.641,281.312,148.391,287.562,142.141,281.312,148.391,295.375" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="165.578" y="231.865" fill="#1C1917" font-size="20.313" textLength="58.716" font-family="Arial">places</text><text x="119.28" y="199.258" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="100.401" y="263.306" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text></g><?plantuml-src FKqz3y8W5Dpv5Kz64uYk32wwTD6Xlu30IqC2rF0UGsFyxoqLkrpkBlTn2jd5wX68buWwr1I5YvO8xfLuJbZW8m2Kw-ff4neOkOGyYM-Fleh_v-P61szWo8mJbiDxMDwA3Pj5RBcI-JN7NMnhnwMyIb3g1lAYzLdsVGFlQ1tI2W00?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">0..* is the customer’s history. 1 says every order has exactly one customer.</p>
+      </section>
+
+      <section class="slide" data-title="Order details" data-section="Shopping">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A line item belongs to one order</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 267 515" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Order--><g class="entity" data-qualified-name="Order" id="ent0001" data-source-line="2"><rect x="24.281" y="10.938" width="206.853" height="140.933" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="24.281" y="10.938" width="206.853" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="97.923" y="54.893" fill="#1C1917" font-size="21.875" textLength="59.569" font-weight="700" font-family="Arial">Order</text><line x1="25.844" y1="82.967" x2="229.571" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="49.281" y="125.36" fill="#1C1917" font-size="21.875" textLength="156.853" font-family="Arial">-orderId: Integer</text></g><!--class OrderDetail--><g class="entity" data-qualified-name="OrderDetail" id="ent0002" data-source-line="5"><rect x="10.938" y="295.609" width="233.556" height="197.337" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="295.609" width="233.556" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="68.147" y="339.565" fill="#1C1917" font-size="21.875" textLength="119.138" font-weight="700" font-family="Arial">OrderDetail</text><line x1="12.5" y1="367.638" x2="242.931" y2="367.638" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="410.032" fill="#1C1917" font-size="21.875" textLength="164.159" font-family="Arial">-quantity: Integer</text><text x="35.938" y="466.436" fill="#1C1917" font-size="21.875" textLength="183.556" font-family="Arial">-unitPrice: Decimal</text></g><!--reverse link Order to OrderDetail--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk3" data-source-line="9" data-link-type="composition"><path d="M127.719,171.234 C127.719,213.328 127.719,248.906 127.719,295.25" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Order-backto-OrderDetail" codeLine="9"/><polygon points="127.719,152.484,121.469,161.859,127.719,171.234,133.969,161.859,127.719,152.484" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="144.906" y="231.85" fill="#1C1917" font-size="20.313" textLength="75.656" font-family="Arial">contains</text><text x="98.609" y="199.153" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="79.118" y="263.147" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">1..*</text></g><?plantuml-src LOmn2iCm34LtdqBr6B2Xg-SicTeh65aKWQ9GMnv2wTtZag7jz1-VnxkmelH2q6mNYjnNSIYvDRZLGXLU3Y1i7rnAWaMD7bJT-zUPoJBBQJvxLcFRl-eukxBTAoCbc0bvpJ82PzvVFKmXZ8rnyd-z1BZf86q7?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Composition: an order owns one or more details. A one-to-one order line would usually be suspicious.</p>
+      </section>
+
+      <section class="slide" data-title="Shopping cart" data-section="Shopping">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The cart owns the items. The product is not a part.</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 1365 287" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Customer--><g class="entity" data-qualified-name="Customer" id="ent0001" data-source-line="3"><rect x="10.938" y="101.781" width="142.726" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="101.781" width="142.726" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="31.25" y="145.737" fill="#1C1917" font-size="21.875" textLength="102.101" font-weight="700" font-family="Arial">Customer</text></g><!--class ShoppingCart--><g class="entity" data-qualified-name="ShoppingCart" id="ent0002" data-source-line="4"><rect x="322.406" y="101.781" width="185.226" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="322.406" y="101.781" width="185.226" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="342.719" y="145.737" fill="#1C1917" font-size="21.875" textLength="144.601" font-weight="700" font-family="Arial">ShoppingCart</text></g><!--class CartItem--><g class="entity" data-qualified-name="CartItem" id="ent0003" data-source-line="5"><rect x="704.516" y="67.328" width="214.159" height="140.933" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="704.516" y="67.328" width="214.159" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="767.225" y="111.284" fill="#1C1917" font-size="21.875" textLength="88.739" font-weight="700" font-family="Arial">CartItem</text><line x1="706.078" y1="139.357" x2="917.112" y2="139.357" style="stroke:#1C1917;stroke-width:2.188;"/><text x="729.516" y="181.751" fill="#1C1917" font-size="21.875" textLength="164.159" font-family="Arial">-quantity: Integer</text></g><!--class Product--><g class="entity" data-qualified-name="Product" id="ent0004" data-source-line="8"><rect x="1113.984" y="10.938" width="228.749" height="253.741" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="1113.984" y="10.938" width="228.749" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="1187.039" y="54.893" fill="#1C1917" font-size="21.875" textLength="82.64" font-weight="700" font-family="Arial">Product</text><line x1="1115.547" y1="82.967" x2="1341.171" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="1138.984" y="125.36" fill="#1C1917" font-size="21.875" textLength="178.749" font-family="Arial">-productId: Integer</text><text x="1138.984" y="181.764" fill="#1C1917" font-size="21.875" textLength="131.303" font-family="Arial">-name: String</text><text x="1138.984" y="238.168" fill="#1C1917" font-size="21.875" textLength="145.862" font-family="Arial">-price: Decimal</text></g><!--reverse link Customer to ShoppingCart--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk5" data-source-line="13" data-link-type="composition"><path d="M172.922,137.797 C221.891,137.797 268.906,137.797 321.969,137.797" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Customer-backto-ShoppingCart" codeLine="13"/><polygon points="154.172,137.797,163.547,144.047,172.922,137.797,163.547,131.547,154.172,137.797" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="214.594" y="117.787" fill="#1C1917" font-size="20.313" textLength="47.419" font-family="Arial">owns</text><text x="181.731" y="175.973" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="282.941" y="175.461" fill="#1C1917" font-size="20.313" font-family="Arial">1</text></g><!--reverse link ShoppingCart to CartItem--><g class="link" data-entity-1="ent0002" data-entity-2="ent0003" id="lnk6" data-source-line="14" data-link-type="composition"><path d="M527.094,137.797 C585.672,137.797 643.063,137.797 704.203,137.797" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="ShoppingCart-backto-CartItem" codeLine="14"/><polygon points="508.344,137.797,517.719,144.047,527.094,137.797,517.719,131.547,508.344,137.797" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="568.578" y="117.787" fill="#1C1917" font-size="20.313" textLength="75.656" font-family="Arial">contains</text><text x="535.787" y="175.291" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="645.789" y="175.077" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text></g><!--link CartItem to Product--><g class="link" data-entity-1="ent0003" data-entity-2="ent0004" id="lnk7" data-source-line="15" data-link-type="dependency"><path d="M919.141,137.797 C978.75,137.797 1045.328,137.797 1106.031,137.797" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="CartItem-to-Product" codeLine="15"/><polygon points="1113.844,137.797,1099.781,131.547,1106.031,137.797,1099.781,144.047,1113.844,137.797" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="979.609" y="117.787" fill="#1C1917" font-size="20.313" textLength="74.506" font-family="Arial">refers to</text><text x="946.661" y="174.821" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text><text x="1074.373" y="175.076" fill="#1C1917" font-size="20.313" font-family="Arial">1</text></g><?plantuml-src LP2x3i8m34NtVeNfM2aLh1bOOEc6n1T4gTjQogCaZX12_3jHdp3PlZhNllA1d3QfHOZyCbXJigOms36mXq3zmD1IGCtaNQ6DYX4kARAt69RnFlXn9DTVLE2Lo6t3QE5T08X7Kew9Nn8QnzXdusVXRi6tIVECZVFGj3kNLQSiIhXpo1TcYdGMhgZ9AfCthMcWF9LG2J7LtqmWmJzTBFwq3JxMTLNkWILexrXHvZTjOOGuJxOrj8I07OQO7_K5?></g></svg>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">A customer owns one cart. A cart owns its items. Each item refers to a product that exists on its own.</p>
+      </section>
+
+      <section class="slide" data-title="Shipping" data-section="Shopping">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A snapshot owned by the order</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[260px_1fr] gap-4 px-14 pt-3">
+          <figure class="flex min-h-0 flex-col">
+            <img src="photos/parcel.jpg" alt="A shipping label being taped onto a parcel" class="min-h-0 w-full flex-1 rounded-2xl object-cover" style="object-position: center 22%" />
+            <figcaption class="pt-2 text-center text-xs text-stone-400">Meanwell Packaging, CC BY 2.0</figcaption>
+          </figure>
+          <div class="diagram min-h-0 rounded-2xl border border-stone-200 bg-white p-3">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 335 503" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Order--><g class="entity" data-qualified-name="Order" id="ent0001" data-source-line="2"><rect x="94.656" y="10.938" width="100.194" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="94.656" y="10.938" width="100.194" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="114.969" y="54.893" fill="#1C1917" font-size="21.875" textLength="59.569" font-weight="700" font-family="Arial">Order</text></g><!--class ShippingInfo--><g class="entity" data-qualified-name="ShippingInfo" id="ent0002" data-source-line="3"><rect x="10.938" y="226.719" width="267.618" height="253.741" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="226.719" width="267.618" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="77.925" y="270.675" fill="#1C1917" font-size="21.875" textLength="133.643" font-weight="700" font-family="Arial">ShippingInfo</text><line x1="12.5" y1="298.748" x2="276.993" y2="298.748" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="341.141" fill="#1C1917" font-size="21.875" textLength="217.618" font-family="Arial">-recipientName: String</text><text x="35.938" y="397.545" fill="#1C1917" font-size="21.875" textLength="195.764" font-family="Arial">-addressLine: String</text><text x="35.938" y="453.95" fill="#1C1917" font-size="21.875" textLength="187.251" font-family="Arial">-postalCode: String</text></g><!--reverse link Order to ShippingInfo--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk3" data-source-line="8" data-link-type="composition"><path d="M144.75,102.078 C144.75,137.109 144.75,174.5 144.75,226.406" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Order-backto-ShippingInfo" codeLine="8"/><polygon points="144.75,83.328,138.5,92.703,144.75,102.078,151,92.703,144.75,83.328" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="161.938" y="162.959" fill="#1C1917" font-size="20.313" textLength="134.352" font-family="Arial">delivery details</text><text x="114.2" y="130.145" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="116.325" y="194.332" fill="#1C1917" font-size="20.313" font-family="Arial">1</text></g><?plantuml-src LOqn2i9044NxFSMOKbZ1DgsL85ha1ClEg0EJtMLc4mYIkoS6GLBzntl5Ft2ACY21rKden4ClBaemWuSYwO-xDvV2wNLDpmmV1-2L8XUcLE-XfnQwgcl-Xe2eP7RZjDCbMmrooVYtizike3atSFH-szrH2qZ28-cqGWqijW00?></g></svg>
+          </div>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Composition fits an order-specific address snapshot. A reusable customer address book wants a plain association instead.</p>
+      </section>
+
+      <section class="slide" data-title="Whole model" data-section="Shopping">
+        <header class="px-14 pt-6">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">The whole model</h2>
+        </header>
+        <div class="diagram mx-8 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 1581 525" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class User--><g class="entity" data-qualified-name="User" id="ent0001" data-source-line="4"><rect x="10.938" y="355.109" width="89.267" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="355.109" width="89.267" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="31.25" y="399.065" fill="#1C1917" font-size="21.875" textLength="48.642" font-weight="700" font-family="Arial">User</text></g><!--class Customer--><g class="entity" data-qualified-name="Customer" id="ent0002" data-source-line="11"><rect x="189.266" y="234.797" width="142.726" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="189.266" y="234.797" width="142.726" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="209.578" y="278.753" fill="#1C1917" font-size="21.875" textLength="102.101" font-weight="700" font-family="Arial">Customer</text></g><!--class Administrator--><g class="entity" data-qualified-name="Administrator" id="ent0003" data-source-line="15"><rect x="375.75" y="426.984" width="184.041" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="375.75" y="426.984" width="184.041" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="396.063" y="470.94" fill="#1C1917" font-size="21.875" textLength="143.416" font-weight="700" font-family="Arial">Administrator</text></g><!--class ShoppingCart--><g class="entity" data-qualified-name="ShoppingCart" id="ent0004" data-source-line="18"><rect x="603.531" y="58.234" width="185.226" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="603.531" y="58.234" width="185.226" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="623.844" y="102.19" fill="#1C1917" font-size="21.875" textLength="144.601" font-weight="700" font-family="Arial">ShoppingCart</text></g><!--class CartItem--><g class="entity" data-qualified-name="CartItem" id="ent0005" data-source-line="19"><rect x="1075.281" y="17.609" width="129.364" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="1075.281" y="17.609" width="129.364" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="1095.594" y="61.565" fill="#1C1917" font-size="21.875" textLength="88.739" font-weight="700" font-family="Arial">CartItem</text></g><!--class Product--><g class="entity" data-qualified-name="Product" id="ent0006" data-source-line="22"><rect x="1434.906" y="159.797" width="123.265" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="1434.906" y="159.797" width="123.265" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="1455.219" y="203.753" fill="#1C1917" font-size="21.875" textLength="82.64" font-weight="700" font-family="Arial">Product</text></g><!--class Order--><g class="entity" data-qualified-name="Order" id="ent0007" data-source-line="27"><rect x="646.047" y="234.797" width="100.194" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="646.047" y="234.797" width="100.194" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="666.359" y="278.753" fill="#1C1917" font-size="21.875" textLength="59.569" font-weight="700" font-family="Arial">Order</text></g><!--class OrderDetail--><g class="entity" data-qualified-name="OrderDetail" id="ent0008" data-source-line="32"><rect x="1060.078" y="159.797" width="159.763" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="1060.078" y="159.797" width="159.763" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="1080.391" y="203.753" fill="#1C1917" font-size="21.875" textLength="119.138" font-weight="700" font-family="Arial">OrderDetail</text></g><!--class ShippingInfo--><g class="entity" data-qualified-name="ShippingInfo" id="ent0009" data-source-line="36"><rect x="1052.828" y="301.984" width="174.268" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="1052.828" y="301.984" width="174.268" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="1073.141" y="345.94" fill="#1C1917" font-size="21.875" textLength="133.643" font-weight="700" font-family="Arial">ShippingInfo</text></g><!--reverse link User to Customer--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" id="lnk10" data-source-line="37" data-link-type="extension"><path d="M125.115,350.62 C153.412,333.761 166.484,325.969 197.719,307.359" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="User-backto-Customer" codeLine="37"/><polygon points="100.953,365.016,129.913,358.674,120.316,342.566,100.953,365.016" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--reverse link User to Administrator--><g class="link" data-entity-1="ent0001" data-entity-2="ent0003" id="lnk11" data-source-line="38" data-link-type="extension"><path d="M128.606,403.683 C193.747,415.136 289.922,432.031 375.219,447.016" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="User-backto-Administrator" codeLine="38"/><polygon points="100.906,398.813,126.983,412.916,130.23,394.449,100.906,398.813" fill="none" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--reverse link Customer to ShoppingCart--><g class="link" data-entity-1="ent0002" data-entity-2="ent0004" id="lnk12" data-source-line="39" data-link-type="composition"><path d="M328.122,223.78 C347.263,210.952 354.109,207.656 375.75,197.375 C449.313,162.438 537.781,134.859 602.828,117.063" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Customer-backto-ShoppingCart" codeLine="39"/><polygon points="312.547,234.219,323.814,234.191,328.122,223.78,316.855,223.808,312.547,234.219" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="444.328" y="110.99" fill="#1C1917" font-size="20.313" textLength="47.419" font-family="Arial">owns</text><text x="292.767" y="202.119" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="563.772" y="157.222" fill="#1C1917" font-size="20.313" font-family="Arial">1</text></g><!--reverse link ShoppingCart to CartItem--><g class="link" data-entity-1="ent0004" data-entity-2="ent0005" id="lnk13" data-source-line="40" data-link-type="composition"><path d="M807.687,84.108 C893.155,76.233 999.938,66.391 1074.953,59.469" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="ShoppingCart-backto-CartItem" codeLine="40"/><polygon points="789.016,85.828,798.925,91.192,807.687,84.108,797.778,78.744,789.016,85.828" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="883.297" y="45.615" fill="#1C1917" font-size="20.313" textLength="75.656" font-family="Arial">contains</text><text x="817.125" y="122.571" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="1016.864" y="98.601" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text></g><!--link CartItem to Product--><g class="link" data-entity-1="ent0005" data-entity-2="ent0006" id="lnk14" data-source-line="41" data-link-type="dependency"><path d="M1205,70.172 C1256.313,84.531 1329.844,107.297 1391.156,134.875 C1406.594,141.828 1415.903,146.541 1430.653,155.119" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="CartItem-to-Product" codeLine="41"/><polygon points="1437.406,159.047,1428.392,146.574,1430.653,155.119,1422.108,157.38,1437.406,159.047" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="1294.281" y="71.803" fill="#1C1917" font-size="20.313" textLength="74.506" font-family="Arial">refers to</text><text x="1232.913" y="110.468" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text><text x="1395.585" y="128.669" fill="#1C1917" font-size="20.313" font-family="Arial">1</text></g><!--link Customer to Order--><g class="link" data-entity-1="ent0002" data-entity-2="ent0007" id="lnk15" data-source-line="42" data-link-type="dependency"><path d="M332.625,270.813 C420.688,270.813 561.344,270.813 637.875,270.813" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Customer-to-Order" codeLine="42"/><polygon points="645.688,270.813,631.625,264.563,637.875,270.813,631.625,277.063,645.688,270.813" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="438.859" y="250.803" fill="#1C1917" font-size="20.313" textLength="58.716" font-family="Arial">places</text><text x="360.2" y="308.989" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="587.541" y="309.842" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text></g><!--reverse link Order to OrderDetail--><g class="link" data-entity-1="ent0007" data-entity-2="ent0008" id="lnk16" data-source-line="43" data-link-type="composition"><path d="M765.469,259.278 C841.266,246.388 968.719,224.688 1059.406,209.25" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Order-backto-OrderDetail" codeLine="43"/><polygon points="746.984,262.422,757.275,267.012,765.469,259.278,755.179,254.689,746.984,262.422" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="883.297" y="197.959" fill="#1C1917" font-size="20.313" textLength="75.656" font-family="Arial">contains</text><text x="774.553" y="300.232" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="1001.303" y="248.639" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">1..*</text></g><!--link OrderDetail to Product--><g class="link" data-entity-1="ent0008" data-entity-2="ent0006" id="lnk17" data-source-line="44" data-link-type="dependency"><path d="M1220.141,200.219 C1236.875,200.984 1254.438,201.672 1270.844,202.063 C1324.297,203.359 1337.703,203.672 1391.156,202.063 C1405.234,201.641 1412.576,201.344 1426.81,200.516" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="OrderDetail-to-Product" codeLine="44"/><polygon points="1434.609,200.063,1420.208,194.64,1426.81,200.516,1420.934,207.119,1434.609,200.063" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="1288.031" y="182.053" fill="#1C1917" font-size="20.313" textLength="86.933" font-family="Arial">describes</text><text x="1247.912" y="238.365" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text><text x="1395.361" y="239.572" fill="#1C1917" font-size="20.313" font-family="Arial">1</text></g><!--reverse link Order to ShippingInfo--><g class="link" data-entity-1="ent0007" data-entity-2="ent0009" id="lnk18" data-source-line="45" data-link-type="composition"><path d="M762.366,314.929 C786.96,330.148 802.031,336.484 832.516,344.25 C905.094,362.734 990.516,358.969 1052.609,351.844" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Order-backto-ShippingInfo" codeLine="45"/><polygon points="746.422,305.063,751.105,315.31,762.366,314.929,757.683,304.681,746.422,305.063" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="854.391" y="324.24" fill="#1C1917" font-size="20.313" textLength="134.352" font-family="Arial">delivery details</text><text x="726.65" y="353.975" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="1013.529" y="391.279" fill="#1C1917" font-size="20.313" font-family="Arial">1</text></g><!--link Administrator to Product--><g class="link" data-entity-1="ent0003" data-entity-2="ent0006" id="lnk19" data-source-line="46" data-link-type="dependency"><path d="M560.313,474.313 C706.844,488.75 1001.469,501.859 1227.094,409.875 C1324.938,369.984 1410.561,288.212 1457.124,238.306" style="stroke:#1C1917;stroke-width:1.563;stroke-dasharray:10.938,10.938;" fill="none" id="Administrator-to-Product" codeLine="46"/><polygon points="1462.453,232.594,1448.29,238.612,1457.124,238.306,1457.43,247.14,1462.453,232.594" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="849.703" y="448.74" fill="#1C1917" font-size="20.313" textLength="143.427" font-family="Arial">updates catalog</text></g><?plantuml-src TLFBRjim4BppArYVqXWIcgjG16YTYu4Y2M3q0nXoBIz0aIgvIc2q_VSiILaF8xd8oz7iU3Yx-e9Esy60Z7IsKEFGMM7XI9Ay3DYUI1eCe0cz4oTaNWVT2uGej5KnojyHWlmhfAm6hlQcaNj7q498KC-CDnyOF510roRC-XRTWHGDiP4_lRUWNC83j1W9meCYQ6HwChfzXO37yw_KStEjzdNk_p-wsGsHV7TnfCVJe-fWOM7RMwNXAHW8DwoHYqdXX-dGiP6Wo1UPxT0RThDJfDXxwdZrQAQ6mydtFGllLA2B2oxt15rnyMTGZf3ESpANrkVWpQ2fqFfok4hGhQqp2tMA1pHsoavA-Gv5nwVoIYLZgs2hE4uWTvPnhDKUW1JQpwwGvksGdZ-sSpXXpcJlZbxa3Vd-hwgcwIoWLTnY6j_cRYDl-NNwNGOi6-dVN1GhR29_g-lRpPn-8xLtV0dcJzZ8gQhxt7QPG2C377cfUUdN9ZAnz9IC6vct9ufod8tEd36vnTyluKyT68WwuCi7qfjLe9bgaR-CCnT9CuhrrjRr_KAth6-KkYpmEm00?></g></svg>
+        </div>
+        <p class="px-14 py-2 text-center text-lg text-stone-600">Class names and relationships. The compartments are on the previous slides.</p>
+      </section>
+
+      <section class="slide" data-title="How to read it" data-section="Shopping">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Read the marks, not the layout</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[320px_1fr] gap-6 px-14 pb-6">
+          <img src="photos/cart.jpg" alt="A supermarket cart holding groceries" class="h-full max-h-[460px] w-full rounded-2xl object-cover" />
+          <ul class="flex flex-col justify-center gap-3 text-xl">
+            <li class="rounded-2xl bg-white px-6 py-3">Customer and Administrator specialize User.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">The customer owns one cart and places zero or many orders.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">Cart items and order details are owned parts. Products are not.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">An order owns its shipping snapshot.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">Administrator updates the catalog through a dependency, not ownership.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Build steps" data-section="Workflow">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Building the diagram</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Eight passes, in this order</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-3 px-14 pb-16 text-xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">1.</span> State the view and its scope.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">2.</span> Keep concepts that have identity and responsibility.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">3.</span> Assign information and behavior.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">4.</span> Start with plain associations.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">5.</span> Add multiplicity from the rules.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">6.</span> Add generalization only after the is-a test.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">7.</span> Add visibility when the view needs it.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">8.</span> Review ownership, both ends, and readability.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Mistakes" data-section="Review">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Mistakes that show up early</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-3 px-14 pb-16 text-lg leading-snug grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-3">Turning every noun into a class.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Drawing the database schema instead of the domain.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Inheriting only to reuse code.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Using a hollow diamond as decoration for “has-a.”</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Using composition because a delete cascades.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Reading 0..* as a navigable arrow.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Filling classes with getters and setters.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Guessing a multiplicity the requirements never stated.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Checklist" data-section="Review">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Before you keep the diagram</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-3 px-14 pb-16 text-xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-3">The view and abstraction level are stated.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Names are singular domain nouns.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Every generalization passes the is-a test.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Important classes are not hidden as id attributes.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Composition has exclusive ownership.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Both association ends have been read aloud.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Visibility is a decision, not decoration.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">A reader can see the structure without a tour.</li>
+        </ul>
+      </section>
+
+      <section class="slide slide-dark bg-stone-950 text-stone-50" data-title="Prompts" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-300">Ask the room</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Questions that keep the model honest</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-3 px-14 pb-16 text-2xl text-stone-200">
+          <li>Is this a class, an object, or only a value?</li>
+          <li>Which class owns this information?</li>
+          <li>What responsibility justifies this operation?</li>
+          <li>Is the relationship really is-a?</li>
+          <li>Could this part belong to two wholes at once?</li>
+          <li>What does the far multiplicity say?</li>
+          <li>Is this domain structure, or implementation structure?</li>
+          <li>Would a plain association be more precise?</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 1" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 1 · read a class</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">What does this class say?</h2>
+        </header>
+        <div class="mx-auto mt-6 w-[28rem] rounded-2xl border border-stone-300 bg-white font-mono text-xl">
+          <p class="border-b border-stone-300 px-5 py-3 text-center font-sans text-2xl font-semibold">Employee</p>
+          <div class="space-y-1 px-5 py-3">
+            <p>−name: String</p>
+            <p>−employeeId: Integer</p>
+            <p>−phoneNumber: String</p>
+          </div>
+          <div class="border-t border-stone-300 px-5 py-3">+updatePhoneNumber(newNumber: String): void</div>
+        </div>
+        <ol class="mx-14 mt-6 grid gap-2 text-xl">
+          <li>Which members are private?</li>
+          <li>Which member is public?</li>
+          <li>What parameter does the operation accept, and what does it return?</li>
+        </ol>
+        <p class="px-14 pt-4 text-lg text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 1 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 1</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-4 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">name, employeeId, and phoneNumber are private.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">updatePhoneNumber is public.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">It accepts newNumber: String and returns void.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 2" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 2 · choose the relationship</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Which line is it?</h2>
+        </header>
+        <ol class="flex flex-1 flex-col justify-center gap-3 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-3">Otter is a kind of Animal.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Otter eats SeaUrchin.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">VisitorCenter exclusively owns its Lobby.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">ReportService temporarily uses PdfExporter.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Creep groups tortoises that still exist on their own.</li>
+        </ol>
+        <p class="px-14 pb-12 text-lg text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 2 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 2</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-3 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Generalization</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Association</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Composition</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Dependency</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Shared aggregation. A plain association may still be enough.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 3" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 3 · multiplicity</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Read it from both ends</h2>
+        </header>
+        <p class="mx-14 mt-10 rounded-2xl bg-stone-900 px-8 py-8 text-center font-mono text-4xl text-stone-50">Customer "1" ——— "0..*" Order</p>
+        <p class="px-14 pt-8 text-2xl text-stone-700">What rule does each number state?</p>
+        <p class="px-14 pt-6 text-lg text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 3 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 3</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-4 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-5">One customer may have zero or many orders.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-5">Each order belongs to exactly one customer.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 4" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 4 · find the problem</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">What is wrong with each claim?</h2>
+        </header>
+        <ol class="flex flex-1 flex-col justify-center gap-3 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-3">Customer is the general class of Order.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Order is composed of Product, even though many orders share a product.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Every customer has exactly one order.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Employee stores departmentId, but the view must explain department membership.</li>
+        </ol>
+        <p class="px-14 pb-12 text-lg text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 4 answers" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 4</h2>
+        </header>
+        <ol class="flex flex-1 flex-col justify-center gap-3 px-14 pb-16 text-xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">An order is not a kind of customer. That generalization fails the is-a test.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">A product exists independently and can be referenced by many orders. Use an association.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">1 to 1 blocks a customer with no orders and a customer with several.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Model Department as a class and associate it when membership matters.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Exercise 5" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 5 · Library</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Draw the class diagram</h2>
+        </header>
+        <div class="px-14 pt-3">
+          <img src="photos/library.jpg" alt="Bookshelves in a public library" class="h-32 w-full rounded-2xl object-cover" style="object-position: center 42%" />
+        </div>
+        <p class="px-14 pt-3 text-xl text-stone-600">Member, Librarian, Book, BookCopy, Loan, Reservation.</p>
+        <ul class="mt-3 grid flex-1 content-center gap-2 px-14 text-lg grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-3">A book describes a title and may have several physical copies.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">A member may have zero or many loans.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Each loan concerns one book copy.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">A copy is on at most one active loan at a time.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">A member may reserve a book title.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Include one justified composition, and multiplicity where it matters.</li>
+        </ul>
+        <p class="px-14 py-4 text-lg text-stone-500">A suggested model is on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 5 answers" data-section="Practice">
+        <header class="px-14 pt-6">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested model</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">One library structure</h2>
+        </header>
+        <div class="diagram mx-8 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" data-diagram-type="CLASS" viewBox="0 0 1603 526" zoomAndPan="magnify" preserveAspectRatio="xMidYMid meet" contentStyleType="text/css"><?plantuml 1.2026.10?><defs/><g font-family="sans-serif" lengthAdjust="spacing"><!--class Member--><g class="entity" data-qualified-name="Member" id="ent0001" data-source-line="3"><rect x="10.938" y="35.938" width="236.012" height="197.337" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="10.938" y="35.938" width="236.012" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="87.004" y="79.893" fill="#1C1917" font-size="21.875" textLength="83.879" font-weight="700" font-family="Arial">Member</text><line x1="12.5" y1="107.967" x2="245.387" y2="107.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="35.938" y="150.36" fill="#1C1917" font-size="21.875" textLength="186.012" font-family="Arial">-memberId: Integer</text><text x="35.938" y="206.764" fill="#1C1917" font-size="21.875" textLength="131.303" font-family="Arial">-name: String</text></g><!--class Librarian--><g class="entity" data-qualified-name="Librarian" id="ent0002" data-source-line="7"><rect x="61.828" y="334.531" width="134.224" height="72.029" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="61.828" y="334.531" width="134.224" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="82.141" y="378.487" fill="#1C1917" font-size="21.875" textLength="93.599" font-weight="700" font-family="Arial">Librarian</text></g><!--class Book--><g class="entity" data-qualified-name="Book" id="ent0003" data-source-line="8"><rect x="992.484" y="10.938" width="166.713" height="197.337" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="992.484" y="10.938" width="166.713" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="1048.497" y="54.893" fill="#1C1917" font-size="21.875" textLength="54.688" font-weight="700" font-family="Arial">Book</text><line x1="994.047" y1="82.967" x2="1157.635" y2="82.967" style="stroke:#1C1917;stroke-width:2.188;"/><text x="1017.484" y="125.36" fill="#1C1917" font-size="21.875" textLength="116.713" font-family="Arial">-isbn: String</text><text x="1017.484" y="181.764" fill="#1C1917" font-size="21.875" textLength="110.625" font-family="Arial">-title: String</text></g><!--class BookCopy--><g class="entity" data-qualified-name="BookCopy" id="ent0004" data-source-line="12"><rect x="1338.875" y="192.188" width="240.883" height="197.337" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="1338.875" y="192.188" width="240.883" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="1404.629" y="236.143" fill="#1C1917" font-size="21.875" textLength="109.375" font-weight="700" font-family="Arial">BookCopy</text><line x1="1340.438" y1="264.217" x2="1578.195" y2="264.217" style="stroke:#1C1917;stroke-width:2.188;"/><text x="1363.875" y="306.61" fill="#1C1917" font-size="21.875" textLength="155.635" font-family="Arial">-barcode: String</text><text x="1363.875" y="363.014" fill="#1C1917" font-size="21.875" textLength="190.883" font-family="Arial">-status: CopyStatus</text></g><!--class Loan--><g class="entity" data-qualified-name="Loan" id="ent0005" data-source-line="16"><rect x="451.641" y="237.438" width="342.407" height="266.241" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="451.641" y="237.438" width="342.407" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="596.718" y="281.393" fill="#1C1917" font-size="21.875" textLength="52.252" font-weight="700" font-family="Arial">Loan</text><line x1="453.203" y1="309.467" x2="792.485" y2="309.467" style="stroke:#1C1917;stroke-width:2.188;"/><text x="476.641" y="351.86" fill="#1C1917" font-size="21.875" textLength="153.21" font-family="Arial">-loanDate: Date</text><text x="476.641" y="408.264" fill="#1C1917" font-size="21.875" textLength="148.351" font-family="Arial">-dueDate: Date</text><line x1="453.203" y1="434.775" x2="792.485" y2="434.775" style="stroke:#1C1917;stroke-width:2.188;"/><text x="476.641" y="477.168" fill="#1C1917" font-size="21.875" textLength="292.407" font-family="Arial">+close(returnDate: Date): void</text></g><!--class Reservation--><g class="entity" data-qualified-name="Reservation" id="ent0006" data-source-line="21"><rect x="518.203" y="26.641" width="209.277" height="140.933" fill="#FFF" style="stroke:#1C1917;stroke-width:2.188;"/><rect x="518.203" y="26.641" width="209.277" height="72.029" fill="#F5F5F4" style="stroke:#1C1917;stroke-width:2.188;"/><text x="560.229" y="70.597" fill="#1C1917" font-size="21.875" textLength="125.226" font-weight="700" font-family="Arial">Reservation</text><line x1="519.766" y1="98.67" x2="725.918" y2="98.67" style="stroke:#1C1917;stroke-width:2.188;"/><text x="543.203" y="141.063" fill="#1C1917" font-size="21.875" textLength="159.277" font-family="Arial">-createdAt: Date</text></g><!--reverse link Book to BookCopy--><g class="link" data-entity-1="ent0003" data-entity-2="ent0004" id="lnk7" data-source-line="24" data-link-type="composition"><path d="M1176.863,157.005 C1229.082,181.896 1280.516,206.406 1338.578,234.063" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Book-backto-BookCopy" codeLine="24"/><polygon points="1159.938,148.938,1165.711,158.613,1176.863,157.005,1171.09,147.33,1159.938,148.938" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="1220.125" y="153.397" fill="#1C1917" font-size="20.313" textLength="58.716" font-family="Arial">copies</text><text x="1187.087" y="190.904" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="1280.306" y="266.206" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">1..*</text></g><!--link Member to Loan--><g class="link" data-entity-1="ent0001" data-entity-2="ent0005" id="lnk8" data-source-line="25" data-link-type="dependency"><path d="M247.438,190.828 C308.25,220.063 376.678,252.959 443.865,285.256" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Member-to-Loan" codeLine="25"/><polygon points="450.906,288.641,440.94,276.915,443.865,285.256,435.524,288.181,450.906,288.641" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="313.359" y="197.647" fill="#1C1917" font-size="20.313" textLength="72.244" font-family="Arial">borrows</text><text x="275.074" y="232.684" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="393.284" y="263.628" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text></g><!--link Loan to BookCopy--><g class="link" data-entity-1="ent0005" data-entity-2="ent0004" id="lnk9" data-source-line="26" data-link-type="dependency"><path d="M794.547,354.281 C956.406,338.797 1187.989,316.666 1330.536,303.025" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Loan-to-BookCopy" codeLine="26"/><polygon points="1338.313,302.281,1323.719,297.399,1330.536,303.025,1324.909,309.842,1338.313,302.281" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="1035.219" y="300.178" fill="#1C1917" font-size="20.313" textLength="82.42" font-family="Arial">concerns</text><text x="821.883" y="389.597" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text><text x="1299.554" y="340.287" fill="#1C1917" font-size="20.313" font-family="Arial">1</text></g><!--link Member to Reservation--><g class="link" data-entity-1="ent0001" data-entity-2="ent0006" id="lnk10" data-source-line="27" data-link-type="dependency"><path d="M247.438,125.672 C329.656,119.391 430.882,111.657 509.96,105.625" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Member-to-Reservation" codeLine="27"/><polygon points="517.75,105.031,503.253,99.869,509.96,105.625,504.204,112.333,517.75,105.031" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="319.609" y="93.615" fill="#1C1917" font-size="20.313" textLength="59.827" font-family="Arial">makes</text><text x="275.074" y="161.928" fill="#1C1917" font-size="20.313" font-family="Arial">1</text><text x="459.555" y="143.067" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text></g><!--link Reservation to Book--><g class="link" data-entity-1="ent0006" data-entity-2="ent0003" id="lnk11" data-source-line="28" data-link-type="dependency"><path d="M728.172,100 C808.359,102.219 910.003,105.049 984.206,107.111" style="stroke:#1C1917;stroke-width:1.563;" fill="none" id="Reservation-to-Book" codeLine="28"/><polygon points="992.016,107.328,978.132,100.69,984.206,107.111,977.785,113.185,992.016,107.328" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="854.984" y="83.35" fill="#1C1917" font-size="20.313" textLength="77.888" font-family="Arial">reserves</text><text x="755.502" y="137.273" fill="#1C1917" font-size="20.313" textLength="30.489" font-family="Arial">0..*</text><text x="953.343" y="144.9" fill="#1C1917" font-size="20.313" font-family="Arial">1</text></g><!--link Librarian to Loan--><g class="link" data-entity-1="ent0002" data-entity-2="ent0005" id="lnk12" data-source-line="29" data-link-type="dependency"><path d="M196.734,374.5 C225.578,376.047 259.797,377.609 290.703,378.359 C342.781,379.641 391.674,379.215 443.174,377.902" style="stroke:#1C1917;stroke-width:1.563;stroke-dasharray:10.938,10.938;" fill="none" id="Librarian-to-Loan" codeLine="29"/><polygon points="450.984,377.703,436.767,371.813,443.174,377.902,437.086,384.309,450.984,377.703" fill="#1C1917" style="stroke:#1C1917;stroke-width:1.563;stroke-linejoin:miter;stroke-miterlimit:10;"/><text x="307.891" y="358.35" fill="#1C1917" font-size="20.313" textLength="83.561" font-family="Arial">manages</text></g><?plantuml-src TP5DRyCW38Rl_0elfwrJelNAeT8-BfMso_eB27WPAe7AE9sggVzzGD8s-xg0CS_xOfihwxKR34BaWyF63hqJ3jyOE03Pxft1M4BDDdYXdOeHNh1laU1J0DHzYTT6mjepTaWvwLMF4ZPCrdVYEAcURKkAh3gvF8Im7JriRFqPJsUsx7xhC_yOTeTHqohImU1S5bdn42LaQ5FYozj1-L7dKlIaE0dpcZDcm6-9M-r2n6j27cY6taZO1slEbgyOaVOgZsLqreG9C_SyEHr5wR1QLh2ewxGtpQAwT251Xvt5AAPfPgwkLr3T5QvKBA4DHE4ZYdAShWgr_67bDPB_psnUguHURTEpyzmVnecZGYJq_7FGDAjJPRtogiFu1G00?></g></svg>
+        </div>
+        <p class="px-14 py-2 text-center text-lg leading-snug text-stone-600">Book owns its copies. A loan refers to one copy. “At most one active loan” still needs a note: multiplicity alone cannot see time.</p>
+      </section>
+
+      <section class="slide" data-title="Takeaways" data-section="Close">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Close</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">Keep these twelve</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-x-8 gap-y-2 px-14 pb-12 text-lg leading-snug grid-cols-2">
+          <li>The diagram is static structure, not call order.</li>
+          <li>A class is a type. An object is one instance.</li>
+          <li>Compartments hold the name, attributes, and operations.</li>
+          <li>Visibility is an access constraint.</li>
+          <li>Generalization is a real is-a relationship.</li>
+          <li>An abstract class is not instantiated.</li>
+          <li>Association is the default structural line.</li>
+          <li>Shared aggregation is weak. Use it sparingly.</li>
+          <li>Composition needs exclusive ownership.</li>
+          <li>Read multiplicity at both ends.</li>
+          <li>Navigability and multiplicity are different questions.</li>
+          <li>Keep the view scoped and traceable to the requirements.</li>
+        </ol>
+      </section>
+
+      <footer id="chrome" class="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex items-center justify-between px-8 py-3 text-sm text-stone-500">
+        <span id="section-label"></span>
+        <span id="counter"></span>
+        <span>← → · F · O</span>
+      </footer>
+    </main>
+
+    <div id="overview" class="fixed inset-0 z-40 hidden overflow-auto bg-stone-950/95 p-8 text-stone-50">
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-2xl font-semibold">Slides</h2>
+        <p class="text-stone-400">Click a slide, or press O or Esc</p>
+      </div>
+      <div id="overview-grid" class="grid grid-cols-2 gap-3"></div>
+    </div>
+
+    <script>
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const progress = document.getElementById("progress");
+      const counter = document.getElementById("counter");
+      const sectionLabel = document.getElementById("section-label");
+      const overview = document.getElementById("overview");
+      const overviewGrid = document.getElementById("overview-grid");
+      let index = 0;
+
+      slides.forEach((slide, slideIndex) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "rounded-xl bg-stone-800 px-4 py-3 text-left text-sm hover:bg-stone-700";
+        button.textContent = `${slideIndex + 1}. ${slide.dataset.title}`;
+        button.addEventListener("click", () => {
+          show(slideIndex);
+          closeOverview();
+        });
+        overviewGrid.appendChild(button);
+      });
+
+      function show(next) {
+        index = Math.max(0, Math.min(slides.length - 1, next));
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("is-active", slideIndex === index);
+        });
+        const current = slides[index];
+        document.body.classList.toggle("is-dark", current.classList.contains("slide-dark"));
+        sectionLabel.textContent = current.dataset.section || "";
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        progress.style.transform = `scaleX(${(index + 1) / slides.length})`;
+        document.title = `${current.dataset.title} — UML Class Diagrams`;
+      }
+
+      function openOverview() {
+        overview.classList.remove("hidden");
+      }
+
+      function closeOverview() {
+        overview.classList.add("hidden");
+      }
+
+      document.addEventListener("keydown", (event) => {
+        const overviewOpen = !overview.classList.contains("hidden");
+        if (event.key === "o" || event.key === "O") {
+          overviewOpen ? closeOverview() : openOverview();
+          return;
+        }
+        if (event.key === "Escape") {
+          closeOverview();
+          return;
+        }
+        if (overviewOpen) return;
+        if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(event.key)) {
+          event.preventDefault();
+          show(index + 1);
+        } else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(event.key)) {
+          event.preventDefault();
+          show(index - 1);
+        } else if (event.key === "Home") {
+          show(0);
+        } else if (event.key === "End") {
+          show(slides.length - 1);
+        } else if (event.key === "f" || event.key === "F") {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else document.documentElement.requestFullscreen();
+        }
+      });
+
+      document.getElementById("deck").addEventListener("click", (event) => {
+        if (event.target.closest("a, button")) return;
+        const x = event.clientX / window.innerWidth;
+        if (x > 0.78) show(index + 1);
+        else if (x < 0.22) show(index - 1);
+      });
+
+      function fit() {
+        const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+        document.getElementById("deck").style.transform = `translate(-50%, -50%) scale(${scale})`;
+      }
+
+      window.addEventListener("resize", fit);
+      fit();
+      show(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+@startuml
+!include style.iuml
+actor Customer
+participant "ATM System" as System
+Customer -> System : insertCard(cardData)
+System -> Customer : requestPIN()
+Customer -> System : enterPIN(pin)
+System -> Customer : requestWithdrawalAmount()
+Customer -> System : withdraw(amount)
+System -->> Customer : cashAndCard
+@enduml

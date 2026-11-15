@@ -1,0 +1,9 @@
+@startuml
+!include style.iuml
+class Creep
+class Tortoise
+class VisitorCenter
+class Lobby
+Creep o-- Tortoise : shared aggregation
+VisitorCenter *-- Lobby : composition
+@enduml

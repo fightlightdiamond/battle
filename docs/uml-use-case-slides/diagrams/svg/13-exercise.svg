@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 740" width="1160" height="740">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="170" y="16" width="920" height="690" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="630" y="44" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="108.0" y1="392.0" x2="434.8" y2="298.6" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="108.0" y1="392.0" x2="404.0" y2="450.9" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="500.0" y1="164.0" x2="500.0" y2="233.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="493.5,233.0 500.0,246.0 506.5,233.0" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="620.0" y="189.5" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text><text x="620.0" y="207.5" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">password is incorrect</text>
+  </g>
+<g>
+    <line x1="578.0" y1="280.0" x2="749.0" y2="280.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="749.0,286.5 762.0,280.0 749.0,273.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="663.5" y="246.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="500.0" y1="596.0" x2="500.0" y2="520.0" stroke="#1C1917" stroke-width="1.6"/>
+    <polygon points="500.0,504.0 508.0,520.0 492.0,520.0" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+  </g>
+<g>
+    <ellipse cx="500" cy="130" rx="124" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="500" y="121" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Display</text><text x="500" y="139" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Login Error</text>
+  </g>
+<g>
+    <ellipse cx="500" cy="280" rx="78" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="500" y="280" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <ellipse cx="880" cy="280" rx="118" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="880" y="280" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Verify Password</text>
+  </g>
+<g>
+    <ellipse cx="500" cy="470" rx="116" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="500" y="470" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Make Payment</text>
+  </g>
+<g>
+    <ellipse cx="500" cy="630" rx="124" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="500" y="630" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Pay from Checking</text>
+  </g>
+<g>
+    <circle cx="68" cy="340" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M68 356 V400 M46 372 H90 M68 400 L50 428 M68 400 L86 428" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="68" y="436" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+</svg>

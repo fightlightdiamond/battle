@@ -1,0 +1,27 @@
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam dpi 150
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam ArrowColor #1C1917
+skinparam ArrowFontColor #1C1917
+skinparam ArrowFontSize 13
+skinparam classBorderColor #1C1917
+skinparam classBackgroundColor #FFFFFF
+skinparam classHeaderBackgroundColor #F5F5F4
+skinparam classFontColor #1C1917
+skinparam classFontSize 16
+skinparam classFontStyle bold
+skinparam classAttributeFontColor #1C1917
+skinparam classAttributeFontSize 14
+skinparam classAttributeIconSize 0
+skinparam classStereotypeFontColor #44403C
+skinparam classStereotypeFontSize 12
+skinparam classBorderThickness 1.4
+skinparam nodesep 45
+skinparam ranksep 55
+skinparam padding 10
+skinparam roundcorner 0
+skinparam style strictuml
+hide circle
+hide empty members

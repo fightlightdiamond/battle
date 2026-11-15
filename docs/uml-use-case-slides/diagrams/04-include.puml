@@ -1,0 +1,11 @@
+@startuml
+!include style.iuml
+left to right direction
+actor Customer as C
+rectangle "Banking App" {
+  usecase "Log In" as L
+  usecase "Verify Password" as VP
+  L ..> VP : <<include>>
+}
+C -- L
+@enduml

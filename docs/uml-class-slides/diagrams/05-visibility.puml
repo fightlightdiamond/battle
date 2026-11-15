@@ -1,0 +1,9 @@
+@startuml
+!include style.iuml
+class VisibilityExample {
+  +publicOperation(): void
+  -privateAttribute: String
+  #protectedOperation(): void
+  ~packageAttribute: Integer
+}
+@enduml

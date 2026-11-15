@@ -1,0 +1,11 @@
+@startuml
+!include style.iuml
+left to right direction
+skinparam nodesep 70
+skinparam ranksep 90
+class VisitorCenter
+class Lobby
+class Bathroom
+VisitorCenter "1" *-- "1" Lobby : contains
+VisitorCenter "1" *-- "1..*" Bathroom : contains
+@enduml

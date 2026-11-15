@@ -1,0 +1,17 @@
+@startuml
+!pragma layout smetana
+!include style.iuml
+top to bottom direction
+actor Customer as C
+actor Bank as B
+rectangle "Banking App" {
+  usecase "Make Payment" as MP
+  usecase "Pay from Checking" as PC
+  usecase "Pay from Savings" as PS
+  PC -[hidden]right- PS
+  MP <|-down- PC
+  MP <|-down- PS
+}
+C -down- MP
+B -down- MP
+@enduml

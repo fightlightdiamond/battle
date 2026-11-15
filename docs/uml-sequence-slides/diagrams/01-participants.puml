@@ -1,0 +1,8 @@
+@startuml
+!include style.iuml
+actor Customer
+participant ATM
+participant "Bank Server" as Bank
+participant "Bank Account" as Account
+||140||
+@enduml

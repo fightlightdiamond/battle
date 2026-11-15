@@ -1,0 +1,16 @@
+@startuml
+!include style.iuml
+class Animal {
+  -name: String
+  -id: Integer
+  -age: Integer
+  +setName(newName: String): void
+  +eat(): void
+}
+class Otter {
+  -whiskerLength: Integer
+}
+class SeaUrchin
+Animal <|-- Otter
+Otter --> SeaUrchin : eats
+@enduml

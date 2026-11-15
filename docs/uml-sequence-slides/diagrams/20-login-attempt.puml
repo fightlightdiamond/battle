@@ -1,0 +1,16 @@
+@startuml
+!include style.iuml
+actor User
+participant "Web App" as Web
+participant "Authentication Service" as Auth
+participant "User Repository" as Repo
+loop while attempts remain
+  User -> Web : submitCredentials(username, password)
+  Web -> Auth : authenticate(username, password)
+  activate Auth
+  Auth -> Repo : findByUsername(username)
+  Repo -->> Auth : userRecord
+  ref over User, Repo : Login outcome
+  deactivate Auth
+end
+@enduml

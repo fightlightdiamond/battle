@@ -1,0 +1,21 @@
+@startuml
+!include style.iuml
+actor Customer
+participant ATM
+participant "Bank Server" as Bank
+participant "Bank Account" as Account
+Customer -> ATM : enterAmount(amount)
+ATM -> Bank : requestWithdrawal(accountId, amount)
+Bank -> Account : checkAvailableFunds(amount)
+Account -->> Bank : availableBalance
+alt sufficient funds
+  Bank -> Account : debit(amount)
+  Account -->> Bank : debitConfirmed
+  Bank -->> ATM : withdrawalApproved
+  ATM -> Customer : dispenseCash(amount)
+else insufficient funds
+  Bank -->> ATM : withdrawalDeclined
+  ATM -> Customer : displayInsufficientFunds()
+end
+ATM -> Customer : ejectCard()
+@enduml

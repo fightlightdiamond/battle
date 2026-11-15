@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 520" width="1100" height="520">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="80" y="24" width="960" height="300" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="560" y="52" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="560.0" y1="376.0" x2="560.0" y2="264.0" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="374.0" y1="230.0" x2="469.0" y2="230.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="469.0,236.5 482.0,230.0 469.0,223.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="421.5" y="153.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text><text x="421.5" y="171.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">password is incorrect</text>
+  </g>
+<g>
+    <line x1="638.0" y1="230.0" x2="731.0" y2="230.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="731.0,236.5 744.0,230.0 731.0,223.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="684.5" y="178.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <ellipse cx="250" cy="230" rx="124" ry="36" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="250" y="221" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Display</text><text x="250" y="239" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Login Error</text>
+  </g>
+<g>
+    <ellipse cx="560" cy="230" rx="78" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="560" y="230" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <ellipse cx="860" cy="230" rx="116" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="860" y="230" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Verify Password</text>
+  </g>
+<g>
+    <circle cx="560" cy="400" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M560 416 V460 M538 432 H582 M560 460 L542 488 M560 460 L578 488" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="560" y="496" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+</svg>

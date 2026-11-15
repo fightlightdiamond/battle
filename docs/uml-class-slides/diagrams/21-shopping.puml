@@ -1,0 +1,48 @@
+@startuml
+!include style.iuml
+left to right direction
+hide members
+class User {
+  -userId: Integer
+  -password: String
+  -loginStatus: Boolean
+  -registerDate: Date
+  +verifyLogin(password: String): Boolean
+}
+class Customer {
+  -customerName: String
+  +placeOrder(): Order
+}
+class Administrator {
+  +updateCatalog(): void
+}
+class ShoppingCart
+class CartItem {
+  -quantity: Integer
+}
+class Product {
+  -productId: Integer
+  -name: String
+  -price: Decimal
+}
+class Order {
+  -orderId: Integer
+  -orderDate: Date
+  -status: OrderStatus
+}
+class OrderDetail {
+  -quantity: Integer
+  -unitPrice: Decimal
+}
+class ShippingInfo
+User <|-- Customer
+User <|-- Administrator
+Customer "1" *-- "1" ShoppingCart : owns
+ShoppingCart "1" *-- "0..*" CartItem : contains
+CartItem "0..*" --> "1" Product : refers to
+Customer "1" --> "0..*" Order : places
+Order "1" *-- "1..*" OrderDetail : contains
+OrderDetail "0..*" --> "1" Product : describes
+Order "1" *-- "1" ShippingInfo : delivery details
+Administrator ..> Product : updates catalog
+@enduml

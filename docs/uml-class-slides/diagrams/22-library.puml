@@ -1,0 +1,31 @@
+@startuml
+!include style.iuml
+left to right direction
+class Member {
+  -memberId: Integer
+  -name: String
+}
+class Librarian
+class Book {
+  -isbn: String
+  -title: String
+}
+class BookCopy {
+  -barcode: String
+  -status: CopyStatus
+}
+class Loan {
+  -loanDate: Date
+  -dueDate: Date
+  +close(returnDate: Date): void
+}
+class Reservation {
+  -createdAt: Date
+}
+Book "1" *-- "1..*" BookCopy : copies
+Member "1" --> "0..*" Loan : borrows
+Loan "0..*" --> "1" BookCopy : concerns
+Member "1" --> "0..*" Reservation : makes
+Reservation "0..*" --> "1" Book : reserves
+Librarian ..> Loan : manages
+@enduml

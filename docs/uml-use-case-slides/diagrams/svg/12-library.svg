@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="170" y="16" width="860" height="660" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="600" y="44" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Library System</text>
+  </g>
+<g>
+    <line x1="110.0" y1="302.0" x2="349.8" y2="135.0" stroke="#1C1917" stroke-width="1.6"/>
+    <polyline points="353.5,140.3 360.4,127.6 346.1,129.6" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+  </g>
+<line x1="110.0" y1="302.0" x2="331.3" y2="231.8" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="110.0" y1="302.0" x2="302.1" y2="313.9" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="110.0" y1="302.0" x2="346.2" y2="406.3" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="1090.0" y1="452.0" x2="487.6" y2="432.8" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="600.0" y1="582.0" x2="693.5" y2="545.8" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="950.0" y1="262.0" x2="843.7" y2="232.9" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="640.0" y1="210.0" x2="513.0" y2="210.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="513.0,203.5 500.0,210.0 513.0,216.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="576.5" y="174.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="500.0" y1="320.0" x2="627.0" y2="320.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="627.0,326.5 640.0,320.0 627.0,313.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="563.5" y="284.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="100" rx="100" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="100" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Search Books</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="210" rx="100" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="210" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Borrow Book</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="320" rx="100" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="320" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Return Book</text>
+  </g>
+<g>
+    <ellipse cx="400" cy="430" rx="88" ry="30" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="400" y="430" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Pay Fine</text>
+  </g>
+<g>
+    <ellipse cx="760" cy="210" rx="120" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="760" y="210" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Check Availability</text>
+  </g>
+<g>
+    <ellipse cx="760" cy="320" rx="120" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="760" y="311" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Send Overdue</text><text x="760" y="329" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Notice</text>
+  </g>
+<g>
+    <ellipse cx="760" cy="520" rx="112" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="760" y="520" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Catalog Screen</text>
+  </g>
+<g>
+    <circle cx="70" cy="250" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M70 266 V310 M48 282 H92 M70 310 L52 338 M70 310 L88 338" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="70" y="346" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">John</text>
+  </g>
+<g>
+    <circle cx="1130" cy="400" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M1130 416 V460 M1108 432 H1152 M1130 460 L1112 488 M1130 460 L1148 488" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="1130" y="496" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Payment Service</text>
+  </g>
+<g>
+    <circle cx="560" cy="530" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M560 546 V590 M538 562 H582 M560 590 L542 618 M560 590 L578 618" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="560" y="626" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Librarian</text>
+  </g>
+<g>
+    <circle cx="990" cy="210" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M990 226 V270 M968 242 H1012 M990 270 L972 298 M990 270 L1008 298" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="990" y="306" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Database</text>
+  </g>
+</svg>

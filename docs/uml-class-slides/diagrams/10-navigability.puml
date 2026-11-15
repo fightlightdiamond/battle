@@ -1,0 +1,6 @@
+@startuml
+!include style.iuml
+class Customer
+class Order
+Customer --> Order : accesses
+@enduml

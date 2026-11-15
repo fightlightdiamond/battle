@@ -1,0 +1,19 @@
+@startuml
+!include style.iuml
+class User {
+  -userId: Integer
+  -password: String
+  -loginStatus: Boolean
+  -registerDate: Date
+  +verifyLogin(password: String): Boolean
+}
+class Customer {
+  -customerName: String
+  +placeOrder(): Order
+}
+class Administrator {
+  +updateCatalog(): void
+}
+User <|-- Customer
+User <|-- Administrator
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+!include style.iuml
+left to right direction
+class Animal
+class Otter
+class SeaUrchin
+class Creep
+class Tortoise
+class VisitorCenter
+class Lobby
+Animal <|-- Otter
+Otter --> SeaUrchin : eats
+Creep o-- Tortoise : groups
+VisitorCenter *-- Lobby : contains
+@enduml

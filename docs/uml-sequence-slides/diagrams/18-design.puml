@@ -1,0 +1,14 @@
+@startuml
+!include style.iuml
+actor Customer
+participant ATM
+participant WithdrawalController
+participant AccountRepository
+participant CashDispenser
+Customer -> ATM : enterAmount(amount)
+ATM -> WithdrawalController : withdraw(accountId, amount)
+WithdrawalController -> AccountRepository : find(accountId)
+AccountRepository -->> WithdrawalController : account
+WithdrawalController -> WithdrawalController : authorize(amount)
+WithdrawalController -> CashDispenser : dispense(amount)
+@enduml

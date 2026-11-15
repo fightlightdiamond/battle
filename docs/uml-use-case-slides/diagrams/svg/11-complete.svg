@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1340 900" width="1340" height="900">
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+  <g>
+    <rect x="160" y="16" width="1000" height="860" fill="#FAFAF9" stroke="#44403C" stroke-width="1.8"/>
+    <text x="660" y="44" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#44403C">Banking App</text>
+  </g>
+<line x1="118.0" y1="412.0" x2="595.2" y2="145.1" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="412.0" x2="562.1" y2="291.2" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="412.0" x2="536.1" y2="418.4" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="118.0" y1="412.0" x2="575.6" y2="594.3" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="1208.0" y1="482.0" x2="706.2" y2="294.7" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="1208.0" y1="482.0" x2="738.0" y2="430.7" stroke="#1C1917" stroke-width="1.6"/>
+<line x1="1208.0" y1="482.0" x2="723.5" y2="599.7" stroke="#1C1917" stroke-width="1.6"/>
+<g>
+    <line x1="448.0" y1="120.0" x2="555.0" y2="120.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="555.0,126.5 568.0,120.0 555.0,113.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="501.5" y="142.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«extend»</text>
+  </g>
+<g>
+    <line x1="712.0" y1="120.0" x2="839.0" y2="120.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="839.0,126.5 852.0,120.0 839.0,113.5" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="775.5" y="142.0" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="726.5" y1="437.8" x2="892.7" y2="472.0" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="891.4,478.3 905.4,474.6 894.0,465.6" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="805.1" y="476.4" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="708.0" y1="595.1" x2="915.3" y2="519.3" stroke="#1C1917" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <polyline points="917.6,525.4 927.5,514.8 913.1,513.2" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+    <text x="819.2" y="577.9" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#1C1917" stroke="#FFFFFF" stroke-width="5" paint-order="stroke">«include»</text>
+  </g>
+<g>
+    <line x1="467.3" y1="759.8" x2="590.4" y2="660.1" stroke="#1C1917" stroke-width="1.6"/>
+    <polygon points="602.9,650.1 595.5,666.3 585.4,653.9" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+  </g>
+<g>
+    <line x1="787.7" y1="759.5" x2="684.0" y2="661.5" stroke="#1C1917" stroke-width="1.6"/>
+    <polygon points="672.3,650.5 689.5,655.7 678.5,667.3" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6" stroke-linejoin="miter"/>
+  </g>
+<g>
+    <ellipse cx="330" cy="120" rx="118" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="330" y="120" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Display Login Error</text>
+  </g>
+<g>
+    <ellipse cx="640" cy="120" rx="72" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="640" y="120" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Log In</text>
+  </g>
+<g>
+    <ellipse cx="960" cy="120" rx="108" ry="34" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="960" y="120" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Verify Password</text>
+  </g>
+<g>
+    <ellipse cx="640" cy="270" rx="104" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="640" y="270" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Check Balance</text>
+  </g>
+<g>
+    <ellipse cx="640" cy="420" rx="104" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="640" y="420" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Transfer Funds</text>
+  </g>
+<g>
+    <ellipse cx="640" cy="620" rx="108" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="640" y="620" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Make Payment</text>
+  </g>
+<g>
+    <ellipse cx="990" cy="492" rx="108" ry="28" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="990" y="483" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Verify Sufficient</text><text x="990" y="501" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Funds</text>
+  </g>
+<g>
+    <ellipse cx="430" cy="790" rx="112" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="430" y="790" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Pay from Checking</text>
+  </g>
+<g>
+    <ellipse cx="820" cy="790" rx="108" ry="32" fill="#FFFFFF" stroke="#1C1917" stroke-width="1.6"/>
+    <text x="820" y="790" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Pay from Savings</text>
+  </g>
+<g>
+    <circle cx="78" cy="360" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M78 376 V420 M56 392 H100 M78 420 L60 448 M78 420 L96 448" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="78" y="456" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Customer</text>
+  </g>
+<g>
+    <circle cx="1248" cy="430" r="16" fill="#F5F5F4" stroke="#1C1917" stroke-width="1.6"/>
+    <path d="M1248 446 V490 M1226 462 H1270 M1248 490 L1230 518 M1248 490 L1266 518" fill="none" stroke="#1C1917" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="1248" y="526" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#1C1917">Bank</text>
+  </g>
+</svg>

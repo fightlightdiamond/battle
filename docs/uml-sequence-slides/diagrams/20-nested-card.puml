@@ -1,0 +1,25 @@
+@startuml
+!include style.iuml
+skinparam sequenceMessageSpacing 8
+actor Customer
+participant ATM
+participant "Bank Server" as Bank
+' White padding keeps the activation bar off the [card valid] guard.
+Customer -> ATM : insertCard()<color:#FFFFFF>MMMMMMMM</color>
+activate ATM
+ATM -> Bank : verifyCard(cardData)
+activate Bank
+alt card valid
+  Bank -->> ATM : cardValid
+  deactivate Bank
+  ATM -> Customer : requestPIN()
+  Customer -> ATM : enterPIN(pin)
+  ATM -> Bank : verifyPIN(cardId, pin)
+  activate Bank
+else card invalid
+  Bank -->> ATM : cardInvalid
+  deactivate Bank
+  ATM -> Customer : ejectCard()
+  deactivate ATM
+end
+@enduml

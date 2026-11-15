@@ -1,0 +1,10 @@
+@startuml
+!include style.iuml
+class Employee {
+  -name: String
+  -employeeId: Integer
+  -phoneNumber: String
+  -department: String
+  +updatePhoneNumber(newNumber: String): void
+}
+@enduml

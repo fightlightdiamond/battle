@@ -1,0 +1,12 @@
+@startuml
+!include style.iuml
+class Customer {
+  -customerName: String
+}
+class Order {
+  -orderId: Integer
+  -orderDate: Date
+  -status: OrderStatus
+}
+Customer "1" --> "0..*" Order : places
+@enduml

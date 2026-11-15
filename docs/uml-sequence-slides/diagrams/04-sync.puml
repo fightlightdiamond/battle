@@ -1,0 +1,11 @@
+@startuml
+!include style.iuml
+participant ATM
+participant "Bank Server" as Bank
+||20||
+ATM -> Bank : verifyCard(cardData)
+activate Bank
+Bank -->> ATM : cardValid
+deactivate Bank
+||30||
+@enduml

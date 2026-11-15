@@ -1,0 +1,12 @@
+@startuml
+!include style.iuml
+actor Customer
+participant ATM
+participant "Bank Server" as Bank
+loop while PIN invalid and attempts remain
+  ATM -> Customer : requestPIN()
+  Customer -> ATM : enterPIN(pin)
+  ATM -> Bank : verifyPIN(pin)
+  Bank -->> ATM : pinResult
+end
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+!include style.iuml
+skinparam sequenceMessageSpacing 8
+actor Customer
+participant ATM
+participant "Bank Server" as Bank
+participant "Bank Account" as Account
+activate ATM
+activate Bank
+activate Account
+alt sufficient funds
+  Bank -> Account : debit(amount)
+  Account -->> Bank : debitConfirmed
+  deactivate Account
+  Bank -->> ATM : withdrawalApproved
+  deactivate Bank
+  ATM -> Customer : dispenseCash(amount)
+else insufficient funds
+  deactivate Account
+  Bank -->> ATM : withdrawalDeclined
+  deactivate Bank
+  ATM -> Customer : displayInsufficientFunds()
+end
+ATM -> Customer : ejectCard()
+deactivate ATM
+@enduml

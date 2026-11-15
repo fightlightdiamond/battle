@@ -1,0 +1,6 @@
+@startuml
+!include style.iuml
+class Customer
+class Order
+Customer "1" --> "0..*" Order : places
+@enduml

@@ -1,0 +1,8 @@
+@startuml
+!include style.iuml
+participant ATM
+participant "Audit Service" as Audit
+||30||
+ATM ->> Audit : recordWithdrawalAttempt(event)
+||40||
+@enduml

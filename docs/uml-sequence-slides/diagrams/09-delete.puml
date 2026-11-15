@@ -1,0 +1,8 @@
+@startuml
+!include style.iuml
+participant ATM
+participant Session
+||30||
+ATM -> Session : close()
+destroy Session
+@enduml

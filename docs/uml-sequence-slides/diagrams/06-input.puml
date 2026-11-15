@@ -1,0 +1,9 @@
+@startuml
+!include style.iuml
+actor Customer
+participant ATM
+||20||
+ATM -> Customer : requestPIN()
+Customer -> ATM : enterPIN(pin)
+||30||
+@enduml

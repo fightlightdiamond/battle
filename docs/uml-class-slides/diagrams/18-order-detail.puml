@@ -1,0 +1,11 @@
+@startuml
+!include style.iuml
+class Order {
+  -orderId: Integer
+}
+class OrderDetail {
+  -quantity: Integer
+  -unitPrice: Decimal
+}
+Order "1" *-- "1..*" OrderDetail : contains
+@enduml

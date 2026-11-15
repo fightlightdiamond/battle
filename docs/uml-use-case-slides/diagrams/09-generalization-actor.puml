@@ -1,0 +1,15 @@
+@startuml
+!include style.iuml
+top to bottom direction
+actor "New Customer" as NC
+actor "Returning Customer" as RC
+actor Customer as C
+actor Bank as B
+rectangle "Banking App" {
+  usecase "Make Payment" as MP
+  NC -down-|> C
+  RC -down-|> C
+  C -down- MP
+  B -down- MP
+}
+@enduml

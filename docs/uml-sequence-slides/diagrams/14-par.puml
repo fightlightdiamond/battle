@@ -1,0 +1,11 @@
+@startuml
+!include style.iuml
+participant "Bank Server" as Bank
+participant "Audit Service" as Audit
+participant "Notification Service" as Notify
+par audit the withdrawal
+  Bank ->> Audit : recordWithdrawal(event)
+else notify the customer
+  Bank ->> Notify : sendWithdrawalAlert(event)
+end
+@enduml

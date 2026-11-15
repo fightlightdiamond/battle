@@ -1,0 +1,23 @@
+@startuml
+!include style.iuml
+actor User
+participant "Web App" as Web
+participant "Authentication Service" as Auth
+participant "User Repository" as Repo
+participant "Session Service" as Session
+activate Auth
+alt credentials valid
+  Auth -> Session : createSession(userId)
+  Session -->> Auth : sessionToken
+  Auth -->> Web : authenticationSucceeded(sessionToken)
+  Web -->> User : showAuthenticatedHome()
+else credentials invalid and attempts remain
+  Auth -->> Web : authenticationFailed()
+  Web -->> User : showLoginError()
+else third failed attempt
+  Auth -> Repo : lockAccount(userId)
+  Auth -->> Web : accountLocked()
+  Web -->> User : showAccountLocked()
+end
+deactivate Auth
+@enduml

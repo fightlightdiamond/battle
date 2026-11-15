@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UML Class Diagrams — Zoo and Online Shopping</title>
+    <style>/*__CSS__*/</style>
+  </head>
+  <body class="bg-stone-100 font-sans text-stone-900 antialiased">
+    <div id="progress" class="fixed inset-x-0 top-0 z-30 h-1 origin-left bg-teal-700"></div>
+
+    <main id="deck">
+      <section class="slide slide-dark relative overflow-hidden bg-stone-950 text-stone-50" data-title="Title" data-section="Opening">
+        <img src="photos/title-otter.jpg" alt="" class="pointer-events-none absolute inset-0 h-full w-full object-cover object-right" />
+        <div class="absolute inset-0 bg-gradient-to-r from-stone-950 from-10% via-stone-950/75 via-42% to-transparent"></div>
+        <div class="relative flex flex-1 flex-col justify-center px-16">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-teal-300">Teaching deck</p>
+          <h1 class="mt-6 max-w-5xl text-6xl font-semibold tracking-tight">UML Class Diagrams</h1>
+          <p class="mt-6 max-w-3xl text-3xl text-stone-300">Static structure, from one class to the Online Shopping model.</p>
+          <p class="mt-10 text-2xl text-stone-300">Prepared by <span class="font-semibold text-stone-50">Vincent</span></p>
+          <p class="mt-4 text-lg text-stone-400">Arrow keys move · F fullscreen · O slide list</p>
+          <p class="mt-8 text-xs text-stone-400">Photo: Mike Baird, CC BY 2.0</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Objectives" data-section="Opening">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Opening</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">After this session</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-x-10 gap-y-4 px-14 pb-16 text-xl leading-snug grid-cols-2">
+          <li>Explain what a Class Diagram represents.</li>
+          <li>Distinguish a class from an object.</li>
+          <li>Read names, attributes, and operations.</li>
+          <li>Interpret +, −, #, and ~ visibility.</li>
+          <li>Model generalization, association, aggregation, and composition.</li>
+          <li>Read multiplicity at both ends.</li>
+          <li>Separate structure from implementation detail.</li>
+          <li>Build and review a small Class Diagram.</li>
+          <li>Spot misuse of aggregation and composition.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Agenda" data-section="Opening">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Opening</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">How the session runs</h2>
+        </header>
+        <div class="mx-14 mt-5 overflow-hidden rounded-2xl border border-stone-200 bg-white text-xl">
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Purpose and diagram scope</span><span class="text-stone-500">10 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Class anatomy</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Attributes, operations, and visibility</span><span class="text-stone-500">25 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Generalization and abstract classes</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Association and navigability</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Aggregation and composition</span><span class="text-stone-500">25 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Multiplicity</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] border-b border-stone-200 px-6 py-3"><span>Online Shopping example</span><span class="text-stone-500">20 min</span></div>
+          <div class="grid grid-cols-[1fr_auto] bg-stone-900 px-6 py-3 font-semibold text-stone-50"><span>Exercises and review</span><span>30 min</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="What it is" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A map of static structure</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_440px] items-center gap-10 px-14 pb-8">
+          <div>
+            <p class="text-2xl leading-snug text-stone-700">A Class Diagram shows the classes that matter, the data they own, the behavior they offer, and how those classes are related.</p>
+            <p class="mt-8 text-2xl leading-snug">Multiplicity and navigability are constraints on that structure. Call order belongs on a sequence or activity diagram.</p>
+          </div>
+          <figure>
+            <img src="photos/park.jpg" alt="A wildlife park lawn, with a giant tortoise in front of the park house" class="h-72 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-xs text-stone-400">Trevor Rickard, CC BY-SA 2.0</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Five questions" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Five questions</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-4 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">1</span>What concepts exist?</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">2</span>What information does each one own?</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">3</span>What operations can it perform?</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">4</span>How are the concepts related?</li>
+          <li class="rounded-2xl bg-white px-6 py-4"><span class="mr-4 font-semibold text-teal-800">5</span>How many instances may participate?</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Limits" data-section="Purpose">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Purpose</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Leave these off the diagram</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-4 px-14 pb-16 text-2xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-6 py-5">The order of method calls</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Every getter and setter</li>
+          <li class="rounded-2xl bg-white px-6 py-5">Database tables as the model</li>
+          <li class="rounded-2xl bg-white px-6 py-5">UI widgets mixed with domain classes</li>
+        </ul>
+        <p class="px-14 pb-14 text-xl text-stone-600">Choose one abstraction level: conceptual, analysis, design, or implementation.</p>
+      </section>
+
+      <section class="slide" data-title="Compartments" data-section="Class">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Class</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Name, attributes, operations</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:02-anatomy-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">A class is a rectangle of up to three compartments. Empty compartments may be omitted.</p>
+      </section>
+
+      <section class="slide" data-title="Naming" data-section="Class">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Class</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Name the concept</h2>
+        </header>
+        <div class="mx-14 mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-2 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Prefer</span><span>Avoid</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Animal</span><span>Data</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>Employee</span><span>ManagerThing</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>ShoppingCart</span><span>ProcessObject</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-4"><span>OrderDetail</span><span>Stuff</span></div>
+        </div>
+        <p class="px-14 pt-6 text-xl text-stone-600">Singular noun. PascalCase. A domain concept, not a placeholder.</p>
+      </section>
+
+      <section class="slide" data-title="Class or object" data-section="Class">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Class</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A class is the type</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-6 px-14 pb-16 grid-cols-2">
+          <div class="rounded-2xl bg-white p-8">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">Class</p>
+            <p class="mt-3 text-3xl font-semibold">Animal</p>
+            <p class="mt-4 text-xl leading-snug text-stone-700">Defines the features every animal instance can have: name, id, age, and eat.</p>
+          </div>
+          <div class="overflow-hidden rounded-2xl bg-white">
+            <img src="photos/tortoise.jpg" alt="An Aldabra giant tortoise, one instance of Animal" class="h-44 w-full object-cover" />
+            <div class="p-6">
+              <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">Object</p>
+              <p class="mt-2 text-3xl font-semibold">ruth: Animal</p>
+              <p class="mt-3 text-xl leading-snug text-stone-700">name = "Ruth"<br />id = 304<br />age = 114</p>
+            </div>
+          </div>
+        </div>
+        <p class="px-14 pb-14 text-xl text-stone-600">A snapshot of one object belongs on an Object Diagram.</p>
+      </section>
+
+      <section class="slide" data-title="Attributes" data-section="Features">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Attributes</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Information an instance holds</h2>
+        </header>
+        <div class="flex flex-1 flex-col justify-center px-14 pb-16">
+          <p class="max-w-4xl rounded-2xl bg-stone-900 px-6 py-5 font-mono text-3xl text-stone-50">visibility name: Type = default</p>
+          <ul class="mt-8 grid max-w-3xl gap-3 text-2xl">
+            <li>Start with a lowercase letter. Use camelCase.</li>
+            <li>Give the attribute a specific type.</li>
+            <li>Do not store a value the model can derive.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Attribute or association" data-section="Features">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Attributes</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A value, or another class?</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-6 px-14 pb-16 text-2xl grid-cols-2">
+          <div class="rounded-2xl bg-white p-8">
+            <p class="font-semibold">Attribute</p>
+            <p class="mt-4 leading-snug text-stone-700">A value-like property. <span class="font-mono text-xl">-name: String</span> and <span class="font-mono text-xl">-dateOfBirth: Date</span>.</p>
+          </div>
+          <div class="rounded-2xl bg-white p-8">
+            <p class="font-semibold">Association</p>
+            <p class="mt-4 leading-snug text-stone-700">Another domain class participates. Do not hide Department behind <span class="font-mono text-xl">-departmentId: Integer</span>.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Operations" data-section="Features">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Operations</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Behavior the class offers</h2>
+        </header>
+        <div class="flex flex-1 flex-col justify-center gap-6 px-14 pb-16">
+          <p class="max-w-5xl rounded-2xl bg-stone-900 px-6 py-5 font-mono text-2xl text-stone-50">visibility name(parameter: Type): ReturnType</p>
+          <p class="max-w-4xl text-2xl leading-snug"><span class="font-mono">+setName(newName: String): void</span> is public, takes one String, and returns nothing.</p>
+          <p class="max-w-4xl text-2xl leading-snug text-stone-700">Parentheses mark an operation. An operation is the declared feature. A method is one implementation of it.</p>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Visibility" data-section="Features">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Visibility</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Who may refer to the member</h2>
+        </header>
+        <div class="mx-14 mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-3 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Symbol</span><span>Name</span><span>Typical meaning</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span class="font-mono">+</span><span>Public</span><span>Any client that can see the class</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span class="font-mono">−</span><span>Private</span><span>Only the owning class</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span class="font-mono">#</span><span>Protected</span><span>The class and its descendants</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-6 py-4"><span class="font-mono">~</span><span>Package</span><span>The same package</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Visibility example" data-section="Features">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Visibility</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">One class, four symbols</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:05-visibility-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Keep mutable state private. Expose behavior through public operations. Protected members stay rare.</p>
+      </section>
+
+      <section class="slide" data-title="Employee" data-section="Example">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Employee</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A first complete class</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:03-employee-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Is department a string, or a concept the model must reason about? We replace that string when we draw associations.</p>
+      </section>
+
+      <section class="slide" data-title="Map" data-section="Class">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Zoo</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Read the class. Two marks are next.</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:01-map-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Name, attributes, operations, and visibility are on Animal. The hollow triangle and the eats arrow are the next lessons.</p>
+      </section>
+
+      <section class="slide" data-title="Generalization" data-section="Generalization">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Three animals. One general class.</h2>
+        </header>
+        <div class="grid grid-cols-3 gap-4 px-14 pt-4">
+          <figure>
+            <img src="photos/otter.jpg" alt="A sea otter floating on its back" class="h-52 w-full rounded-2xl object-cover object-top" />
+            <figcaption class="mt-2 text-center text-xl font-semibold">Otter</figcaption>
+          </figure>
+          <figure>
+            <img src="photos/tortoise.jpg" alt="An Aldabra giant tortoise" class="h-52 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-center text-xl font-semibold">Tortoise</figcaption>
+          </figure>
+          <figure>
+            <img src="photos/loris.jpg" alt="A pygmy slow loris on a branch" class="h-52 w-full rounded-2xl object-cover object-right" />
+            <figcaption class="mt-2 text-center text-xl font-semibold">SlowLoris</figcaption>
+          </figure>
+        </div>
+        <p class="px-14 pt-3 text-xl text-stone-700">Each one is an Animal. Each may add features of its own.</p>
+        <p class="mx-14 mt-3 rounded-2xl bg-stone-900 px-6 py-4 text-2xl text-stone-50">Solid line. Hollow triangle on the general class.</p>
+        <p class="px-14 pt-2 text-xs text-stone-400">Photos: Marshal Hedin, CC BY-SA 2.0 · Yotcmdr, public domain · K.A.I. Nekaris, CC BY-SA 3.0</p>
+      </section>
+
+      <section class="slide" data-title="Zoo generalization" data-section="Generalization">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Otter adds whiskerLength</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:07-generalization-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Use it only when the specialized instance can stand in for the general type.</p>
+      </section>
+
+      <section class="slide" data-title="Is-a test" data-section="Generalization">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Generalization</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Both statements have to hold</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-6 px-14 pb-16 text-2xl grid-cols-2">
+          <div class="rounded-2xl bg-white p-8">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">1</p>
+            <p class="mt-3 leading-snug">The specialized class is a kind of the general class.</p>
+          </div>
+          <div class="rounded-2xl bg-white p-8">
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800">2</p>
+            <p class="mt-3 leading-snug">A specialized instance can be used wherever the general type is expected.</p>
+          </div>
+        </div>
+        <p class="px-14 pb-14 text-xl text-stone-600">Inheritance is not a trick for reusing code. Prefer delegation when the is-a test fails.</p>
+      </section>
+
+      <section class="slide" data-title="Abstract class" data-section="Generalization">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Abstract class</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Shared, but not instantiated</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:08-abstract-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">The italic name means Animal is abstract. The zoo creates a Tortoise, an Otter, or a SlowLoris.</p>
+      </section>
+
+      <section class="slide" data-title="Association" data-section="Association">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Association</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A structural link between instances</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[1fr_280px] gap-4 px-14 pt-3">
+          <div class="diagram min-h-0 rounded-2xl border border-stone-200 bg-white p-3">
+            <!--svg:09-association-->
+          </div>
+          <figure class="flex min-h-0 flex-col">
+            <img src="photos/urchin.jpg" alt="A purple sea urchin on a reef" class="min-h-0 w-full flex-1 rounded-2xl object-cover" />
+            <figcaption class="pt-2 text-center text-sm font-semibold">SeaUrchin</figcaption>
+          </figure>
+        </div>
+        <p class="px-14 pt-3 text-center text-lg text-stone-600">The verb phrase names the link. This open arrow shows navigability. Leave the arrow off when direction does not matter.</p>
+        <p class="px-14 pb-2 text-center text-xs text-stone-400">Diego Delso, CC BY-SA 4.0</p>
+      </section>
+
+      <section class="slide" data-title="Navigability" data-section="Association">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Association</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Two different questions</h2>
+        </header>
+        <div class="grid flex-1 content-center gap-6 px-14 pb-16 text-2xl grid-cols-2">
+          <div class="rounded-2xl bg-white p-8">
+            <p class="font-semibold">Navigability</p>
+            <p class="mt-4 leading-snug text-stone-700">Which direction can be traversed? An open arrow answers that, and only when the direction matters.</p>
+          </div>
+          <div class="rounded-2xl bg-white p-8">
+            <p class="font-semibold">Multiplicity</p>
+            <p class="mt-4 leading-snug text-stone-700">How many instances may participate? A number such as 0..* is not an arrow, and an arrow is not “many.”</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Department" data-section="Association">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Association</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Replace the department string</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:04-employee-dept-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Each employee works in exactly one department. A department has zero or many employees. The arrow says Employee can reach Department.</p>
+      </section>
+
+      <section class="slide" data-title="Aggregation" data-section="Aggregation">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Shared aggregation</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A hollow diamond on the whole</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:11-aggregation-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">A tortoise may belong to a creep and still exist on its own. Use the hollow diamond only when that aggregate meaning is real.</p>
+      </section>
+
+      <section class="slide" data-title="Aggregation caution" data-section="Aggregation">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Shared aggregation</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">A plain line is often more honest</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[340px_1fr] items-center gap-6 px-14">
+          <figure>
+            <img src="photos/tortoise-free.jpg" alt="An Aldabra giant tortoise walking across open grass" class="h-80 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-2 text-xs text-stone-400">Bjørn Christian Tørrissen, CC BY-SA 4.0</figcaption>
+          </figure>
+          <ul class="flex flex-col justify-center gap-4 text-2xl">
+            <li class="rounded-2xl bg-white px-6 py-4">Do not draw a hollow diamond just to say “has-a.”</li>
+            <li class="rounded-2xl bg-white px-6 py-4">Do not draw it just because a class holds a collection.</li>
+            <li class="rounded-2xl bg-white px-6 py-4">Do not draw it just because the part can exist alone.</li>
+          </ul>
+        </div>
+        <p class="px-14 py-4 text-xl text-stone-600">UML leaves shared aggregation weak. Prefer a plain association when the team cannot agree what the diamond adds.</p>
+      </section>
+
+      <section class="slide" data-title="Composition" data-section="Composition">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Composition</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A filled diamond on the whole</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:12-composition-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">One visitor center owns exactly one lobby, and one or more bathrooms. Each part belongs to that one center.</p>
+      </section>
+
+      <section class="slide" data-title="Ownership test" data-section="Composition">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Composition</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Ask before you fill the diamond</h2>
+        </header>
+        <div class="grid grid-cols-2 gap-4 px-14 pt-4">
+          <figure>
+            <img src="photos/zoo.jpg" alt="The entrance building of Riga Zoo" class="h-40 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-1 text-center text-sm font-semibold">VisitorCenter</figcaption>
+          </figure>
+          <figure>
+            <img src="photos/lobby.jpg" alt="A building lobby with a reception desk" class="h-40 w-full rounded-2xl object-cover" />
+            <figcaption class="mt-1 text-center text-sm font-semibold">Lobby</figcaption>
+          </figure>
+        </div>
+        <ol class="mt-3 grid flex-1 content-center gap-3 px-14 text-xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-3">Is the part owned by at most one whole at a time?</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Is the part’s identity meaningful inside that whole?</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Does the whole govern creation, transfer, or destruction?</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Would shared ownership contradict the domain?</li>
+        </ol>
+        <p class="px-14 py-3 text-lg text-stone-600">“Delete the whole, delete the part” is only an intuition. A database cascade does not prove composition.</p>
+        <p class="px-14 pb-1 text-center text-xs text-stone-400">Trogain, CC BY-SA 4.0 · PAULIX04, CC BY-SA 4.0</p>
+      </section>
+
+      <section class="slide" data-title="Compare diamonds" data-section="Composition">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Aggregation and composition</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Weak share, or exclusive ownership</h2>
+        </header>
+        <div class="mx-14 mt-4 overflow-hidden rounded-2xl border border-stone-200 bg-white text-xl">
+          <div class="grid grid-cols-3 bg-stone-900 px-5 py-3 font-semibold text-stone-50"><span></span><span>Shared aggregation</span><span>Composition</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-3"><span class="font-semibold">Mark</span><span>Hollow diamond</span><span>Filled diamond</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-3"><span class="font-semibold">Sharing</span><span>A part may be shared</span><span>At most one whole at a time</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-3"><span class="font-semibold">Lifecycle</span><span>Not necessarily tied</span><span>The whole normally governs it</span></div>
+          <div class="grid grid-cols-3 border-t border-stone-200 px-5 py-3"><span class="font-semibold">Use</span><span>Sparingly</span><span>Only with clear ownership</span></div>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Relationship kinds" data-section="Relationships">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Relationships</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The four marks, together</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:06-relationships-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Triangle on the general class. Open arrow for navigability. Hollow diamond for aggregation. Filled diamond for composition.</p>
+      </section>
+
+      <section class="slide" data-title="Multiplicity" data-section="Multiplicity">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Multiplicity</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">How many may participate</h2>
+        </header>
+        <div class="mx-14 mt-5 overflow-hidden rounded-2xl border border-stone-200 bg-white text-2xl">
+          <div class="grid grid-cols-2 bg-stone-900 px-6 py-4 font-semibold text-stone-50"><span>Written</span><span>Means</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-3"><span class="font-mono">1</span><span>Exactly one</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-3"><span class="font-mono">0..1</span><span>Zero or one</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-3"><span class="font-mono">* or 0..*</span><span>Zero or many</span></div>
+          <div class="grid grid-cols-2 border-t border-stone-200 px-6 py-3"><span class="font-mono">1..*</span><span>One or many</span></div>
+        </div>
+        <p class="px-14 pt-5 text-xl text-stone-600">The number is a domain rule. If the requirement is unknown, leave it unresolved.</p>
+      </section>
+
+      <section class="slide" data-title="Read both ends" data-section="Multiplicity">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Multiplicity</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Stand at one class, read the far number</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:14-orders-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">One customer places zero or many orders. Each order belongs to exactly one customer.</p>
+      </section>
+
+      <section class="slide" data-title="Dependency" data-section="Dependency">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Dependency</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Uses, without keeping a link</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:15-dependency-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">A dashed arrow. Typical signals are a parameter, a local variable, or a temporary service. Skip code-level noise.</p>
+      </section>
+
+      <section class="slide" data-title="Users" data-section="Shopping">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">Customer and Administrator are users</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:16-users-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">The triangles sit on User. Each specialized class adds its own behavior.</p>
+      </section>
+
+      <section class="slide" data-title="Places orders" data-section="Shopping">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A customer may have no orders yet</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:17-customer-orders-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">0..* is the customer’s history. 1 says every order has exactly one customer.</p>
+      </section>
+
+      <section class="slide" data-title="Order details" data-section="Shopping">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A line item belongs to one order</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:18-order-detail-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Composition: an order owns one or more details. A one-to-one order line would usually be suspicious.</p>
+      </section>
+
+      <section class="slide" data-title="Shopping cart" data-section="Shopping">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">The cart owns the items. The product is not a part.</h2>
+        </header>
+        <div class="diagram mx-14 mt-3 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-3">
+          <!--svg:19-cart-->
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">A customer owns one cart. A cart owns its items. Each item refers to a product that exists on its own.</p>
+      </section>
+
+      <section class="slide" data-title="Shipping" data-section="Shopping">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-4xl font-semibold tracking-tight">A snapshot owned by the order</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[260px_1fr] gap-4 px-14 pt-3">
+          <figure class="flex min-h-0 flex-col">
+            <img src="photos/parcel.jpg" alt="A shipping label being taped onto a parcel" class="min-h-0 w-full flex-1 rounded-2xl object-cover" style="object-position: center 22%" />
+            <figcaption class="pt-2 text-center text-xs text-stone-400">Meanwell Packaging, CC BY 2.0</figcaption>
+          </figure>
+          <div class="diagram min-h-0 rounded-2xl border border-stone-200 bg-white p-3">
+            <!--svg:20-shipping-->
+          </div>
+        </div>
+        <p class="px-14 py-3 text-center text-lg text-stone-600">Composition fits an order-specific address snapshot. A reusable customer address book wants a plain association instead.</p>
+      </section>
+
+      <section class="slide" data-title="Whole model" data-section="Shopping">
+        <header class="px-14 pt-6">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">The whole model</h2>
+        </header>
+        <div class="diagram mx-8 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <!--svg:21-shopping-->
+        </div>
+        <p class="px-14 py-2 text-center text-lg text-stone-600">Class names and relationships. The compartments are on the previous slides.</p>
+      </section>
+
+      <section class="slide" data-title="How to read it" data-section="Shopping">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Online Shopping</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Read the marks, not the layout</h2>
+        </header>
+        <div class="grid min-h-0 flex-1 grid-cols-[320px_1fr] gap-6 px-14 pb-6">
+          <img src="photos/cart.jpg" alt="A supermarket cart holding groceries" class="h-full max-h-[460px] w-full rounded-2xl object-cover" />
+          <ul class="flex flex-col justify-center gap-3 text-xl">
+            <li class="rounded-2xl bg-white px-6 py-3">Customer and Administrator specialize User.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">The customer owns one cart and places zero or many orders.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">Cart items and order details are owned parts. Products are not.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">An order owns its shipping snapshot.</li>
+            <li class="rounded-2xl bg-white px-6 py-3">Administrator updates the catalog through a dependency, not ownership.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="slide" data-title="Build steps" data-section="Workflow">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Building the diagram</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Eight passes, in this order</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-3 px-14 pb-16 text-xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">1.</span> State the view and its scope.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">2.</span> Keep concepts that have identity and responsibility.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">3.</span> Assign information and behavior.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">4.</span> Start with plain associations.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">5.</span> Add multiplicity from the rules.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">6.</span> Add generalization only after the is-a test.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">7.</span> Add visibility when the view needs it.</li>
+          <li class="rounded-2xl bg-white px-5 py-3"><span class="font-semibold text-teal-800">8.</span> Review ownership, both ends, and readability.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Mistakes" data-section="Review">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Mistakes that show up early</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-3 px-14 pb-16 text-lg leading-snug grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-3">Turning every noun into a class.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Drawing the database schema instead of the domain.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Inheriting only to reuse code.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Using a hollow diamond as decoration for “has-a.”</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Using composition because a delete cascades.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Reading 0..* as a navigable arrow.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Filling classes with getters and setters.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Guessing a multiplicity the requirements never stated.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Checklist" data-section="Review">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Review</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Before you keep the diagram</h2>
+        </header>
+        <ul class="grid flex-1 content-center gap-3 px-14 pb-16 text-xl grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-3">The view and abstraction level are stated.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Names are singular domain nouns.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Every generalization passes the is-a test.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Important classes are not hidden as id attributes.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Composition has exclusive ownership.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Both association ends have been read aloud.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Visibility is a decision, not decoration.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">A reader can see the structure without a tour.</li>
+        </ul>
+      </section>
+
+      <section class="slide slide-dark bg-stone-950 text-stone-50" data-title="Prompts" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-300">Ask the room</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Questions that keep the model honest</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-3 px-14 pb-16 text-2xl text-stone-200">
+          <li>Is this a class, an object, or only a value?</li>
+          <li>Which class owns this information?</li>
+          <li>What responsibility justifies this operation?</li>
+          <li>Is the relationship really is-a?</li>
+          <li>Could this part belong to two wholes at once?</li>
+          <li>What does the far multiplicity say?</li>
+          <li>Is this domain structure, or implementation structure?</li>
+          <li>Would a plain association be more precise?</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 1" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 1 · read a class</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">What does this class say?</h2>
+        </header>
+        <div class="mx-auto mt-6 w-[28rem] rounded-2xl border border-stone-300 bg-white font-mono text-xl">
+          <p class="border-b border-stone-300 px-5 py-3 text-center font-sans text-2xl font-semibold">Employee</p>
+          <div class="space-y-1 px-5 py-3">
+            <p>−name: String</p>
+            <p>−employeeId: Integer</p>
+            <p>−phoneNumber: String</p>
+          </div>
+          <div class="border-t border-stone-300 px-5 py-3">+updatePhoneNumber(newNumber: String): void</div>
+        </div>
+        <ol class="mx-14 mt-6 grid gap-2 text-xl">
+          <li>Which members are private?</li>
+          <li>Which member is public?</li>
+          <li>What parameter does the operation accept, and what does it return?</li>
+        </ol>
+        <p class="px-14 pt-4 text-lg text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 1 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 1</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-4 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">name, employeeId, and phoneNumber are private.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">updatePhoneNumber is public.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-4">It accepts newNumber: String and returns void.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 2" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 2 · choose the relationship</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Which line is it?</h2>
+        </header>
+        <ol class="flex flex-1 flex-col justify-center gap-3 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-3">Otter is a kind of Animal.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Otter eats SeaUrchin.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">VisitorCenter exclusively owns its Lobby.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">ReportService temporarily uses PdfExporter.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Creep groups tortoises that still exist on their own.</li>
+        </ol>
+        <p class="px-14 pb-12 text-lg text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 2 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 2</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-3 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Generalization</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Association</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Composition</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Dependency</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Shared aggregation. A plain association may still be enough.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 3" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 3 · multiplicity</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Read it from both ends</h2>
+        </header>
+        <p class="mx-14 mt-10 rounded-2xl bg-stone-900 px-8 py-8 text-center font-mono text-4xl text-stone-50">Customer "1" ——— "0..*" Order</p>
+        <p class="px-14 pt-8 text-2xl text-stone-700">What rule does each number state?</p>
+        <p class="px-14 pt-6 text-lg text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 3 answers" data-section="Practice">
+        <header class="px-14 pt-12">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 3</h2>
+        </header>
+        <ul class="flex flex-1 flex-col justify-center gap-4 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-5">One customer may have zero or many orders.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-5">Each order belongs to exactly one customer.</li>
+        </ul>
+      </section>
+
+      <section class="slide" data-title="Exercise 4" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 4 · find the problem</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">What is wrong with each claim?</h2>
+        </header>
+        <ol class="flex flex-1 flex-col justify-center gap-3 px-14 pb-16 text-2xl">
+          <li class="rounded-2xl bg-white px-6 py-3">Customer is the general class of Order.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Order is composed of Product, even though many orders share a product.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Every customer has exactly one order.</li>
+          <li class="rounded-2xl bg-white px-6 py-3">Employee stores departmentId, but the view must explain department membership.</li>
+        </ol>
+        <p class="px-14 pb-12 text-lg text-stone-500">Answers are on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 4 answers" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested answer</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Exercise 4</h2>
+        </header>
+        <ol class="flex flex-1 flex-col justify-center gap-3 px-14 pb-16 text-xl">
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">An order is not a kind of customer. That generalization fails the is-a test.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">A product exists independently and can be referenced by many orders. Use an association.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">1 to 1 blocks a customer with no orders and a customer with several.</li>
+          <li class="rounded-2xl border-l-8 border-teal-700 bg-white px-6 py-3">Model Department as a class and associate it when membership matters.</li>
+        </ol>
+      </section>
+
+      <section class="slide" data-title="Exercise 5" data-section="Practice">
+        <header class="px-14 pt-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Exercise 5 · Library</p>
+          <h2 class="mt-2 text-4xl font-semibold tracking-tight">Draw the class diagram</h2>
+        </header>
+        <div class="px-14 pt-3">
+          <img src="photos/library.jpg" alt="Bookshelves in a public library" class="h-32 w-full rounded-2xl object-cover" style="object-position: center 42%" />
+        </div>
+        <p class="px-14 pt-3 text-xl text-stone-600">Member, Librarian, Book, BookCopy, Loan, Reservation.</p>
+        <ul class="mt-3 grid flex-1 content-center gap-2 px-14 text-lg grid-cols-2">
+          <li class="rounded-2xl bg-white px-5 py-3">A book describes a title and may have several physical copies.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">A member may have zero or many loans.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Each loan concerns one book copy.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">A copy is on at most one active loan at a time.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">A member may reserve a book title.</li>
+          <li class="rounded-2xl bg-white px-5 py-3">Include one justified composition, and multiplicity where it matters.</li>
+        </ul>
+        <p class="px-14 py-4 text-lg text-stone-500">A suggested model is on the next slide.</p>
+      </section>
+
+      <section class="slide" data-title="Exercise 5 answers" data-section="Practice">
+        <header class="px-14 pt-6">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Suggested model</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">One library structure</h2>
+        </header>
+        <div class="diagram mx-8 mt-2 min-h-0 flex-1 rounded-2xl border border-stone-200 bg-white p-2">
+          <!--svg:22-library-->
+        </div>
+        <p class="px-14 py-2 text-center text-lg leading-snug text-stone-600">Book owns its copies. A loan refers to one copy. “At most one active loan” still needs a note: multiplicity alone cannot see time.</p>
+      </section>
+
+      <section class="slide" data-title="Takeaways" data-section="Close">
+        <header class="px-14 pt-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-teal-800">Close</p>
+          <h2 class="mt-1 text-3xl font-semibold tracking-tight">Keep these twelve</h2>
+        </header>
+        <ol class="grid flex-1 content-center gap-x-8 gap-y-2 px-14 pb-12 text-lg leading-snug grid-cols-2">
+          <li>The diagram is static structure, not call order.</li>
+          <li>A class is a type. An object is one instance.</li>
+          <li>Compartments hold the name, attributes, and operations.</li>
+          <li>Visibility is an access constraint.</li>
+          <li>Generalization is a real is-a relationship.</li>
+          <li>An abstract class is not instantiated.</li>
+          <li>Association is the default structural line.</li>
+          <li>Shared aggregation is weak. Use it sparingly.</li>
+          <li>Composition needs exclusive ownership.</li>
+          <li>Read multiplicity at both ends.</li>
+          <li>Navigability and multiplicity are different questions.</li>
+          <li>Keep the view scoped and traceable to the requirements.</li>
+        </ol>
+      </section>
+
+      <footer id="chrome" class="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex items-center justify-between px-8 py-3 text-sm text-stone-500">
+        <span id="section-label"></span>
+        <span id="counter"></span>
+        <span>← → · F · O</span>
+      </footer>
+    </main>
+
+    <div id="overview" class="fixed inset-0 z-40 hidden overflow-auto bg-stone-950/95 p-8 text-stone-50">
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-2xl font-semibold">Slides</h2>
+        <p class="text-stone-400">Click a slide, or press O or Esc</p>
+      </div>
+      <div id="overview-grid" class="grid grid-cols-2 gap-3"></div>
+    </div>
+
+    <script>
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const progress = document.getElementById("progress");
+      const counter = document.getElementById("counter");
+      const sectionLabel = document.getElementById("section-label");
+      const overview = document.getElementById("overview");
+      const overviewGrid = document.getElementById("overview-grid");
+      let index = 0;
+
+      slides.forEach((slide, slideIndex) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "rounded-xl bg-stone-800 px-4 py-3 text-left text-sm hover:bg-stone-700";
+        button.textContent = `${slideIndex + 1}. ${slide.dataset.title}`;
+        button.addEventListener("click", () => {
+          show(slideIndex);
+          closeOverview();
+        });
+        overviewGrid.appendChild(button);
+      });
+
+      function show(next) {
+        index = Math.max(0, Math.min(slides.length - 1, next));
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("is-active", slideIndex === index);
+        });
+        const current = slides[index];
+        document.body.classList.toggle("is-dark", current.classList.contains("slide-dark"));
+        sectionLabel.textContent = current.dataset.section || "";
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        progress.style.transform = `scaleX(${(index + 1) / slides.length})`;
+        document.title = `${current.dataset.title} — UML Class Diagrams`;
+      }
+
+      function openOverview() {
+        overview.classList.remove("hidden");
+      }
+
+      function closeOverview() {
+        overview.classList.add("hidden");
+      }
+
+      document.addEventListener("keydown", (event) => {
+        const overviewOpen = !overview.classList.contains("hidden");
+        if (event.key === "o" || event.key === "O") {
+          overviewOpen ? closeOverview() : openOverview();
+          return;
+        }
+        if (event.key === "Escape") {
+          closeOverview();
+          return;
+        }
+        if (overviewOpen) return;
+        if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(event.key)) {
+          event.preventDefault();
+          show(index + 1);
+        } else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(event.key)) {
+          event.preventDefault();
+          show(index - 1);
+        } else if (event.key === "Home") {
+          show(0);
+        } else if (event.key === "End") {
+          show(slides.length - 1);
+        } else if (event.key === "f" || event.key === "F") {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else document.documentElement.requestFullscreen();
+        }
+      });
+
+      document.getElementById("deck").addEventListener("click", (event) => {
+        if (event.target.closest("a, button")) return;
+        const x = event.clientX / window.innerWidth;
+        if (x > 0.78) show(index + 1);
+        else if (x < 0.22) show(index - 1);
+      });
+
+      function fit() {
+        const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+        document.getElementById("deck").style.transform = `translate(-50%, -50%) scale(${scale})`;
+      }
+
+      window.addEventListener("resize", fit);
+      fit();
+      show(0);
+    </script>
+  </body>
+</html>

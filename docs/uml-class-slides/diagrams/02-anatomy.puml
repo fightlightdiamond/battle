@@ -1,0 +1,10 @@
+@startuml
+!include style.iuml
+class Animal {
+  -name: String
+  -id: Integer
+  -age: Integer
+  +setName(newName: String): void
+  +eat(): void
+}
+@enduml
